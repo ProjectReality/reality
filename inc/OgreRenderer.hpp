@@ -80,10 +80,12 @@ private:
 	double	cam_frame_size[2];
 
   Ogre::Root*			ogre;
-  Ogre::Camera*			camera;
+  Ogre::Camera*			cameraEyeLeft;
+  Ogre::Camera*			cameraEyeRight;
   Ogre::SceneManager*		scene;
   Ogre::RenderWindow*		window;
-  Ogre::Viewport*		viewport;
+  Ogre::Viewport*		viewportLeft;
+  Ogre::Viewport*		viewportRight;
 
   std::map<std::string, Elem>	entities;
   //  std::map<std::string, Elem>	meshes;

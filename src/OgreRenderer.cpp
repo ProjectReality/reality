@@ -56,19 +56,32 @@ OgreRenderer::OgreRenderer(double camsize[2])
 
   scene = ogre->createSceneManager(Ogre::ST_GENERIC);
 
-  camera = scene->createCamera("Center"); // Currently only 1 cam
+  cameraEyeLeft = scene->createCamera("Left"); // Currently only 1 cam
+  cameraEyeRight = scene->createCamera("Right");
 
-  viewport =  window->addViewport(camera);
-  viewport->setBackgroundColour(Ogre::ColourValue(1.0,0.0,1.0));
- 
+  viewportLeft = window->addViewport(cameraEyeLeft,0, 0, 0, 0.5, 1);
+  viewportLeft->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 1.0));
 
-  camera->setAspectRatio(Ogre::Real(viewport->getActualWidth()) / Ogre::Real(viewport->getActualHeight()));
-  camera->setNearClipDistance(5);
+  viewportRight = window->addViewport(cameraEyeRight, 10, 0.5, 0, 0.5, 1);
+  viewportRight->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 1.0));
+
+  cameraEyeLeft->setAspectRatio(Ogre::Real(viewportLeft->getActualWidth()) / Ogre::Real(viewportLeft->getActualHeight()));
+  cameraEyeLeft->setNearClipDistance(5);
   //  camera->setFarClipDistance(1000);
 
   // Initial Camera position
-  camera->setPosition(Ogre::Vector3(0,0,300));
-  camera->lookAt(Ogre::Vector3(0,0,-300));
+  cameraEyeLeft->setPosition(Ogre::Vector3(-3, 0, 300));
+  cameraEyeLeft->lookAt(Ogre::Vector3(0, 0, -300));
+
+
+  cameraEyeRight->setAspectRatio(Ogre::Real(viewportRight->getActualWidth()) / Ogre::Real(viewportRight->getActualHeight()));
+  cameraEyeRight->setNearClipDistance(5);
+  //  camera->setFarClipDistance(1000);
+
+  // Initial Camera position
+  cameraEyeRight->setPosition(Ogre::Vector3(3, 0, 300));
+  cameraEyeRight->lookAt(Ogre::Vector3(0, 0, -300));
+
 
   scene->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 
