@@ -1,11 +1,3 @@
-/*
-* @Author: vayan
-* @Date:   2013-11-10 20:26:12
-* @Last Modified by:   vayan
-* @Last Modified time: 2013-11-10 20:26:12
-*/
-
-
 #include <opencv2/opencv.hpp>
 #include <opencv2/stitching/stitcher.hpp>
 #include <opencv2/highgui/highgui.hpp>

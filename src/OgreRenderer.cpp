@@ -9,6 +9,11 @@ OgreRenderer::OgreRenderer(double camsize[2])
 	//TODO : find better way
 	cam_frame_size[0] = camsize[0];
 	cam_frame_size[1] = camsize[1];
+
+	if (cam_frame_size[0] <= 0 || cam_frame_size[1] <= 0) {
+		std::cerr << "OgreRenderer::OgreRenderer() - frame size can't be 0, bye" << std::endl;
+		exit(11);
+	}
   
 	// -- Ogre init --
 

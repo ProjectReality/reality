@@ -1,10 +1,3 @@
-/*
-* @Author: vayan
-* @Date:   2013-11-10 20:24:32
-* @Last Modified by:   vayan
-* @Last Modified time: 2013-11-10 20:24:34
-*/
-
 #include "StereoCamera.hh"
 
 StereoCamera::StereoCamera() {
