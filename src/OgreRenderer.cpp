@@ -4,14 +4,15 @@
 
 
 
-OgreRenderer::OgreRenderer()
+OgreRenderer::OgreRenderer(double camsize[2])
 {
-
-  // -- Ogre init --
+	//TODO : find better way
+	cam_frame_size[0] = camsize[0];
+	cam_frame_size[1] = camsize[1];
+  
+	// -- Ogre init --
 
   ogre = new Ogre::Root("plugins.cfg");
-
-  //  ogre->getRenderSystemByName("OpenGL Rendering Subsystem") // Investigate here for manual config
 
   // Use the config file
   Ogre::ConfigFile	cfgFile;
@@ -66,13 +67,6 @@ OgreRenderer::OgreRenderer()
 
   scene->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 
-  // Background init 
-  // rightMat = Ogre::MaterialManager::getSingleton().create("rightCap", "General");
-  // rightMat->getTechnique(0)->getPass(0)->createTextureUnitState("rockwall.tga");
-  // rightMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-  // rightMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-  // rightMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-
   rightRect = new Ogre::Rectangle2D(true);
   rightRect->setCorners(-1.0, 1.0, 1.0, -1.0);
   rightRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
@@ -88,7 +82,7 @@ OgreRenderer::OgreRenderer()
   rightTex = Ogre::TextureManager::getSingleton().createManual("backgrounnndd2", 
 										 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 										 Ogre::TEX_TYPE_2D,      
-										 640, 480,			//VIDEO SIZE
+										 cam_frame_size[0], cam_frame_size[1],			//VIDEO SIZE
 										 0,                
 										 Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
 										 Ogre::TU_DEFAULT);
@@ -101,21 +95,6 @@ OgreRenderer::OgreRenderer()
   rightMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
   rightMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
   rightMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-
-
-  // render();
-  
-  // // Ressource loading
-  // Ogre::String lDirectoryToLoad = "assets";
-  // Ogre::String lNameOfResourceGroup = "Reality";
-  // bool lIsRecursive = true;
-
-  // Ogre::ResourceGroupManager& lRgMgr = Ogre::ResourceGroupManager::getSingleton();
-  // lRgMgr.createResourceGroup(lNameOfResourceGroup);
-  // lRgMgr.addResourceLocation(lDirectoryToLoad, "FileSystem", lNameOfResourceGroup, lIsRecursive);
-  // lRgMgr.initialiseResourceGroup(lNameOfResourceGroup);
-  // lRgMgr.loadResourceGroup(lNameOfResourceGroup);
-
 }
 
 OgreRenderer::~OgreRenderer()
@@ -189,28 +168,31 @@ void	OgreRenderer::render()
     alive = false;
 }
 
+Ogre::Image* OgreRenderer::MatToImage(cv::Mat in) {
+	Ogre::Image* out = new Ogre::Image();
+
+	Ogre::MemoryDataStream* rightStream = new Ogre::MemoryDataStream((void*) in.data, cam_frame_size[0] * cam_frame_size[1] * 3, false, false);
+	Ogre::DataStreamPtr ptr2(rightStream);
+	ptr2->seek(0);
+	out->loadRawData(ptr2, cam_frame_size[0], cam_frame_size[1], Ogre::PF_B8G8R8);
+	return out;
+}
+
 void	OgreRenderer::loadCam(cv::Mat left, cv::Mat right)
 {
+	Ogre::Image* imageLeft = MatToImage(left);
 
-
-  Ogre::MemoryDataStream* rightStream = new Ogre::MemoryDataStream((void*) right.data, 640 * 480 * 3, false, false);
-  Ogre::DataStreamPtr ptr2(rightStream);
-
-  ptr2->seek(0);
-  Ogre::Image* image2 = new Ogre::Image();
-  image2->loadRawData(ptr2, 640, 480, Ogre::PF_B8G8R8);
-
-  if (image2->getSize() >= 0) 
-    {
+	if (imageLeft->getSize() >= 0) {
       rightTex->unload();
-      rightTex->loadImage(*image2);
+	  rightTex->loadImage(*imageLeft);
+    } else {
+		std::cerr << "OgreRenderer::loadCam() - Couldn't load image cause empty" << std::endl;
     }
-  else
-    {
-      std::cout << "PROGDFAGSDGSDFG" << std::endl;
-    }
-  
-  
   rightRect->setMaterial("rightCap2");
-  image2->freeMemory();
+  imageLeft->freeMemory();
+}
+
+void OgreRenderer::setFrameSize(double size[2]) {
+	cam_frame_size[0] = size[0];
+	cam_frame_size[1] = size[1];
 }

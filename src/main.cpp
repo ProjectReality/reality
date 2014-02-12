@@ -6,9 +6,14 @@ int		main()
   IRenderer*	render;
   StereoCamera	camera;
   cv::Mat*		frame;
+  double		video_size[2];
   
-  render = new OgreRenderer();
   camera.OpenCamera();
+
+  video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
+  video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
+
+  render = new OgreRenderer(video_size);
 
   // Scene creation
   render->createEntity("Test", "");

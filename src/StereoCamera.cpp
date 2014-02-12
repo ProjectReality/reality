@@ -18,10 +18,17 @@ StereoCamera::~StereoCamera() {
 
 void StereoCamera::OpenCamera() {
 	camera[LEFT].open(0);
-	camera[RIGHT] = camera[LEFT];
+	camera[RIGHT].open(1);
 
-	if (!camera[LEFT].isOpened())  std::cerr << "StereoCamera: OpenCamera() - Couldn't Open Camera 1" << std::endl;
-	if (!camera[RIGHT].isOpened())  std::cerr << "StereoCamera: OpenCamera() - Couldn't Open Camera 2" << std::endl;
+	if (!camera[LEFT].isOpened()) {
+		std::cerr << "StereoCamera: OpenCamera() - Couldn't Open first Camera" << std::endl;
+		exit(11);
+	}
+	if (!camera[RIGHT].isOpened()) {
+		std::cerr << "StereoCamera: OpenCamera() - Couldn't Open second Camera" << std::endl << 
+			"StereoCamera: OpenCamera() - Mirroring the first camera" << std::endl;
+		camera[RIGHT] = camera[LEFT];
+	}
 	camera_open = true;
 	frame_available = true;
 }

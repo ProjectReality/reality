@@ -37,7 +37,7 @@ class				OgreRenderer: public IRenderer
 {
 public:
 
-				OgreRenderer();
+	OgreRenderer(double camsize[2]);
 				~OgreRenderer();
 
   //! Create a new entity in the scene
@@ -70,7 +70,14 @@ public:
   //! If windows still open
   bool				isAlive();
 
+  //! Convert an Opencv Mat into a Ogre Image
+  Ogre::Image* MatToImage(cv::Mat in);
+
+  void setFrameSize(double size[2]);
+
 private:
+
+	double	cam_frame_size[2];
 
   Ogre::Root*			ogre;
   Ogre::Camera*			camera;
