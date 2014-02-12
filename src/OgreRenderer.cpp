@@ -55,40 +55,44 @@ OgreRenderer::OgreRenderer(double camsize[2])
   // -- Scene init --
 
   scene = ogre->createSceneManager(Ogre::ST_GENERIC);
+  scene->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 
-  cameraEyeLeft = scene->createCamera("Left"); // Currently only 1 cam
-  cameraEyeRight = scene->createCamera("Right");
 
+  /*
+  * LEFT CAM AND VIEWPORT
+  */
+  cameraEyeLeft = scene->createCamera("Left");
+  
   viewportLeft = window->addViewport(cameraEyeLeft,0, 0, 0, 0.5, 1);
-  viewportLeft->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 1.0));
-
-  viewportRight = window->addViewport(cameraEyeRight, 10, 0.5, 0, 0.5, 1);
-  viewportRight->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 1.0));
 
   cameraEyeLeft->setAspectRatio(Ogre::Real(viewportLeft->getActualWidth()) / Ogre::Real(viewportLeft->getActualHeight()));
   cameraEyeLeft->setNearClipDistance(5);
-  //  camera->setFarClipDistance(1000);
 
-  // Initial Camera position
   cameraEyeLeft->setPosition(Ogre::Vector3(-3, 0, 300));
   cameraEyeLeft->lookAt(Ogre::Vector3(0, 0, -300));
 
+  /*
+  * RIGHT CAM AND VIEWPORT
+  */
+  cameraEyeRight = scene->createCamera("Right");
+  viewportRight = window->addViewport(cameraEyeRight, 10, 0.5, 0, 0.5, 1);
 
   cameraEyeRight->setAspectRatio(Ogre::Real(viewportRight->getActualWidth()) / Ogre::Real(viewportRight->getActualHeight()));
   cameraEyeRight->setNearClipDistance(5);
-  //  camera->setFarClipDistance(1000);
 
-  // Initial Camera position
   cameraEyeRight->setPosition(Ogre::Vector3(3, 0, 300));
   cameraEyeRight->lookAt(Ogre::Vector3(0, 0, -300));
 
 
-  scene->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+  /*
+  * BACKGROUND CAM
+  */
+
+  //TODO : Put two 
 
   rightRect = new Ogre::Rectangle2D(true);
   rightRect->setCorners(-1.0, 1.0, 1.0, -1.0);
   rightRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-  // rightRect->setMaterial("rightCap");  
 
   Ogre::AxisAlignedBox aabInf;
   aabInf.setInfinite();
@@ -129,7 +133,7 @@ void	OgreRenderer::createEntity(std::string _name, std::string _mesh)
     {
       entities[_name].name = _name;
       if ((_mesh == "") || (&_mesh == NULL)) 
-	entities[_name].ent = scene->createEntity(_name, "knot.mesh"); // Ogre::SceneManager::PT_CUBE
+	entities[_name].ent = scene->createEntity(_name, "knot.mesh");
       else
 	entities[_name].ent = scene->createEntity(_name, _mesh);
       entities[_name].node = scene->getRootSceneNode()->createChildSceneNode();
