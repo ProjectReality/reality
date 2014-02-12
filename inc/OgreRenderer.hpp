@@ -62,11 +62,10 @@ private:
   std::map<std::string, Elem>	entities;
   //  std::map<std::string, Elem>	meshes;
 
-  cv::Mat			leftCam;
   Ogre::MaterialPtr		leftMat;
   Ogre::Rectangle2D*		leftRect;
 
-  cv::Mat			rightCam;
+  Ogre::TexturePtr		rightTex;
   Ogre::MaterialPtr		rightMat;
   Ogre::Rectangle2D*		rightRect;
 };

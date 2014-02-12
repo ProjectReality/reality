@@ -84,6 +84,25 @@ OgreRenderer::OgreRenderer()
 
   scene->getRootSceneNode()->attachObject(rightRect);
 
+  // Init Right
+  rightTex = Ogre::TextureManager::getSingleton().createManual("backgrounnndd2", 
+										 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+										 Ogre::TEX_TYPE_2D,      
+										 640, 480,			//VIDEO SIZE
+										 0,                
+										 Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
+										 Ogre::TU_DEFAULT);
+
+  rightMat = Ogre::MaterialManager::getSingleton().create("rightCap2", // name
+									     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+  rightMat->getTechnique(0)->getPass(0)->createTextureUnitState("backgrounnndd2");
+  rightMat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+  rightMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+  rightMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+  rightMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+
   // render();
   
   // // Ressource loading
@@ -172,24 +191,6 @@ void	OgreRenderer::render()
 
 void	OgreRenderer::loadCam(cv::Mat left, cv::Mat right)
 {
-  //RIGHT
-  Ogre::TexturePtr mTexture2 = Ogre::TextureManager::getSingleton().createManual("backgrounnndd2", 
-										 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-										 Ogre::TEX_TYPE_2D,      
-										 640, 480,			//VIDEO SIZE
-										 0,                
-										 Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
-										 Ogre::TU_DEFAULT);
-
-  //RIGHT
-  Ogre::MaterialPtr material2 = Ogre::MaterialManager::getSingleton().create("rightCap2", // name
-									     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-
-  material2->getTechnique(0)->getPass(0)->createTextureUnitState("backgrounnndd2");
-  material2->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-  material2->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-  material2->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-  material2->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
 
   Ogre::MemoryDataStream* rightStream = new Ogre::MemoryDataStream((void*) right.data, 640 * 480 * 3, false, false);
@@ -201,8 +202,8 @@ void	OgreRenderer::loadCam(cv::Mat left, cv::Mat right)
 
   if (image2->getSize() >= 0) 
     {
-      mTexture2->unload();
-      mTexture2->loadImage(*image2);
+      rightTex->unload();
+      rightTex->loadImage(*image2);
     }
   else
     {
