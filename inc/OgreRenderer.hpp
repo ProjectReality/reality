@@ -91,11 +91,13 @@ private:
   //  std::map<std::string, Elem>	meshes;
 
   Ogre::MaterialPtr		leftMat;
-  Ogre::Rectangle2D*		leftRect;
+  Ogre::Rectangle2D*	leftRect;
+  Ogre::TexturePtr		leftTex;
 
-  Ogre::TexturePtr		rightTex;
   Ogre::MaterialPtr		rightMat;
-  Ogre::Rectangle2D*		rightRect;
+  Ogre::Rectangle2D*	rightRect;
+  Ogre::TexturePtr		rightTex;
+
 };
 
 #endif // _R_OGRERENDERER_HPP_

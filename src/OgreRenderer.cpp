@@ -64,6 +64,7 @@ OgreRenderer::OgreRenderer(double camsize[2])
   cameraEyeLeft = scene->createCamera("Left");
   
   viewportLeft = window->addViewport(cameraEyeLeft,0, 0, 0, 0.5, 1);
+  viewportLeft->setVisibilityMask(0xFFFFFF00);
 
   cameraEyeLeft->setAspectRatio(Ogre::Real(viewportLeft->getActualWidth()) / Ogre::Real(viewportLeft->getActualHeight()));
   cameraEyeLeft->setNearClipDistance(5);
@@ -76,6 +77,7 @@ OgreRenderer::OgreRenderer(double camsize[2])
   */
   cameraEyeRight = scene->createCamera("Right");
   viewportRight = window->addViewport(cameraEyeRight, 10, 0.5, 0, 0.5, 1);
+  viewportRight->setVisibilityMask(0xFFFF0F0);
 
   cameraEyeRight->setAspectRatio(Ogre::Real(viewportRight->getActualWidth()) / Ogre::Real(viewportRight->getActualHeight()));
   cameraEyeRight->setNearClipDistance(5);
@@ -91,14 +93,22 @@ OgreRenderer::OgreRenderer(double camsize[2])
   //TODO : Put two 
 
   rightRect = new Ogre::Rectangle2D(true);
-  rightRect->setCorners(-1.0, 1.0, 1.0, -1.0);
+  rightRect->setCorners(-1, 1.0, 1, -1.0);
   rightRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
+  rightRect->setVisibilityFlags(0xF0);
+
+  leftRect = new Ogre::Rectangle2D(true);
+  leftRect->setCorners(-1, 1.0, 1, -1.0);
+  leftRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
+  leftRect->setVisibilityFlags(0xF00);
 
   Ogre::AxisAlignedBox aabInf;
   aabInf.setInfinite();
   rightRect->setBoundingBox(aabInf);
+  leftRect->setBoundingBox(aabInf);
 
   scene->getRootSceneNode()->attachObject(rightRect);
+  scene->getRootSceneNode()->attachObject(leftRect);
 
   // Init Right
   rightTex = Ogre::TextureManager::getSingleton().createManual("backgrounnndd2", 
@@ -117,6 +127,26 @@ OgreRenderer::OgreRenderer(double camsize[2])
   rightMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
   rightMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
   rightMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+
+
+  leftTex = Ogre::TextureManager::getSingleton().createManual("backgrounnndd1",
+	  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+	  Ogre::TEX_TYPE_2D,
+	  cam_frame_size[0], cam_frame_size[1],			//VIDEO SIZE
+	  0,
+	  Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
+	  Ogre::TU_DEFAULT);
+
+  leftMat = Ogre::MaterialManager::getSingleton().create("rightCap1", // name
+	  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+  leftMat->getTechnique(0)->getPass(0)->createTextureUnitState("backgrounnndd1");
+  leftMat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+  leftMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+  leftMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+  leftMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
 }
 
 OgreRenderer::~OgreRenderer()
@@ -203,15 +233,20 @@ Ogre::Image* OgreRenderer::MatToImage(cv::Mat in) {
 void	OgreRenderer::loadCam(cv::Mat left, cv::Mat right)
 {
 	Ogre::Image* imageLeft = MatToImage(left);
+	Ogre::Image* imageRight = MatToImage(right);
 
-	if (imageLeft->getSize() >= 0) {
+	if (imageLeft->getSize() >= 0 || imageRight->getSize() >= 0) {
       rightTex->unload();
-	  rightTex->loadImage(*imageLeft);
+	  rightTex->loadImage(*imageRight);
+	  leftTex->unload();
+	  leftTex->loadImage(*imageLeft);
     } else {
 		std::cerr << "OgreRenderer::loadCam() - Couldn't load image cause empty" << std::endl;
     }
   rightRect->setMaterial("rightCap2");
+  leftRect->setMaterial("rightCap1");
   imageLeft->freeMemory();
+  imageRight->freeMemory();
 }
 
 void OgreRenderer::setFrameSize(double size[2]) {
