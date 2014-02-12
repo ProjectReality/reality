@@ -28,6 +28,11 @@ struct				Elem
   Ogre::SceneNode*		node;
 };
 
+
+//! 3D Engine
+/*!
+Class manage everything in the 3D Engine
+*/
 class				OgreRenderer: public IRenderer
 {
 public:
@@ -35,20 +40,34 @@ public:
 				OgreRenderer();
 				~OgreRenderer();
 
-  // General scene functions
+  //! Create a new entity in the scene
   void				createEntity(std::string _name, std::string _mesh);
-  void				createLight(std::string _name);
+
+  //! Change the position of an entity
   void				moveEntity(std::string _name, float x, float y, float z);
+
+  //! Change the rotation of an entity
   void				rotateEntity(std::string _name, float yaw, float pitch, float roll);
+
+  //! Create a new light in the scene
+  void				createLight(std::string _name);
+
+  //! Change the position of the light
   void				moveLight(std::string _name, float x, float y, float z);
 
-  // Functions related to assets loading
+  //! Load a new mesh in memory
   void				loadMesh(std::string _name, std::string _file);
+
+  //! Load a new texture in memory
   void				loadTexture(std::string _name, std::string _file);
 
-  // Other functions
+  //! Update the frame of the camera
   void				loadCam(cv::Mat left, cv::Mat right);
+
+  //! Produce one frame
   void				render();
+
+  //! If windows still open
   bool				isAlive();
 
 private:
