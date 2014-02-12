@@ -107,6 +107,8 @@ OgreRenderer::OgreRenderer(double camsize[2])
   rightRect->setBoundingBox(aabInf);
   leftRect->setBoundingBox(aabInf);
 
+
+
   scene->getRootSceneNode()->attachObject(rightRect);
   scene->getRootSceneNode()->attachObject(leftRect);
 
@@ -147,6 +149,8 @@ OgreRenderer::OgreRenderer(double camsize[2])
   leftMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
   leftMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
+  rightRect->setMaterial("rightCap2");
+  leftRect->setMaterial("rightCap1");
 }
 
 OgreRenderer::~OgreRenderer()
@@ -243,8 +247,6 @@ void	OgreRenderer::loadCam(cv::Mat left, cv::Mat right)
     } else {
 		std::cerr << "OgreRenderer::loadCam() - Couldn't load image cause empty" << std::endl;
     }
-  rightRect->setMaterial("rightCap2");
-  leftRect->setMaterial("rightCap1");
   imageLeft->freeMemory();
   imageRight->freeMemory();
 }
