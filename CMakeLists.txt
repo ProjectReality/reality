@@ -81,13 +81,15 @@ endif()
 set(HDRS
         ./inc/IRenderer.hpp
         ./inc/OgreRenderer.hpp
-        ./inc/StereoCamera.hh
+        ./inc/StereoCamera.hpp
+		./inc/Oculus.hpp
 )
 
 set(SRCS
         ./src/main.cpp
         ./src/OgreRenderer.cpp
         ./src/StereoCamera.cpp
+		./src/Oculus.cpp
 )
 
 include_directories( ${OIS_INCLUDE_DIRS}

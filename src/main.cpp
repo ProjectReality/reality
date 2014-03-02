@@ -1,5 +1,5 @@
 #include	"OgreRenderer.hpp"
-#include	"StereoCamera.hh"
+#include	"StereoCamera.hpp"
 
 int		main()
 {
@@ -7,7 +7,7 @@ int		main()
   StereoCamera	camera;
   cv::Mat*		frame;
   double		video_size[2];
-  
+
   camera.OpenCamera();
 
   video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);

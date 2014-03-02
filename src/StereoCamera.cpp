@@ -1,4 +1,4 @@
-#include "StereoCamera.hh"
+#include "StereoCamera.hpp"
 
 StereoCamera::StereoCamera() {
 	camera_open = false;
