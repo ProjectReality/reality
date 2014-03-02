@@ -2,8 +2,6 @@
 
 #include	"OgreRenderer.hpp"
 
-
-
 OgreRenderer::OgreRenderer(double camsize[2])
 {
 	//TODO : find better way
