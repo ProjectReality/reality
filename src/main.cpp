@@ -1,5 +1,6 @@
 #include	"OgreRenderer.hpp"
 #include	"StereoCamera.hpp"
+#include	"Oculus.hpp"
 
 int		main()
 {
