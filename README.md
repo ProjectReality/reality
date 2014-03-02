@@ -10,7 +10,7 @@
 * OpenCV <[http://opencv.org/](http://opencv.org/)>
 * Boost  <[http://www.boost.org/](http://www.boost.org/)>
 * Cmake  <[http://www.cmake.org](http://www.cmake.org)>       
-* Oculus SDK <[https://developer.oculusvr.com/]>(https://developer.oculusvr.com/?action=dl)
+* Oculus SDK <[https://developer.oculusvr.com/](https://developer.oculusvr.com/?action=dl)>
 
 # Windows
 
