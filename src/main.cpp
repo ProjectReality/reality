@@ -11,7 +11,10 @@ int		main()
 
   Oculus *rift = new Oculus();
 
+  //ugly test
   float test = rift->getDistordScale();
+  int xwindow = rift->getResolution()[0];
+  int ywindow = rift->getResolution()[1];
 
   camera.OpenCamera();
 
@@ -19,8 +22,7 @@ int		main()
   video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
   render = new OgreRenderer(video_size);
-  int xwindow = rift->getResolution()[0];
-  int ywindow = rift->getResolution()[1];
+ 
 
   // Scene creation
   render->createEntity("Test", "");
