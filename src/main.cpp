@@ -9,12 +9,18 @@ int		main()
   cv::Mat*		frame;
   double		video_size[2];
 
+  Oculus *rift = new Oculus();
+
+  float test = rift->getDistordScale();
+
   camera.OpenCamera();
 
   video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
   video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
   render = new OgreRenderer(video_size);
+  int xwindow = rift->getResolution()[0];
+  int ywindow = rift->getResolution()[1];
 
   // Scene creation
   render->createEntity("Test", "");
