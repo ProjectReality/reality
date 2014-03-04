@@ -44,6 +44,7 @@ public:
 	*/
 	std::array<int, 2> getResolution();
 
+	//! Get the stereo paramaters for each eyes first left [0] then right [1] 
 	StereoEyeParams* Oculus::getEyesParams();
 
 private:

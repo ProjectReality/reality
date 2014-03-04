@@ -74,6 +74,7 @@ public:
   //! Convert an Opencv Mat into a Ogre Image
   Ogre::Image* MatToImage(cv::Mat in);
 
+  //! Convert an OVR::Matrix4f to Ogre::Matrix4
   Ogre::Matrix4 OVRMat4toOgreMat4(OVR::Matrix4f matrix);
 
   void setFrameSize(double size[2]);

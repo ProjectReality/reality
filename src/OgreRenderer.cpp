@@ -86,8 +86,12 @@ OgreRenderer::OgreRenderer(double camsize[2], Oculus *rift)
   cameraEyeRight->lookAt(Ogre::Vector3(0, 0, -300));
 
   /*
-  * Update project matrix
+  * Update projection matrix
   */
+
+  //whitout these two _setProjectionMatrix crash
+  viewportLeft->update();
+  viewportRight->update();
 
   StereoEyeParams* eyes = rift->getEyesParams();
 
@@ -95,9 +99,7 @@ OgreRenderer::OgreRenderer(double camsize[2], Oculus *rift)
 
   Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(ocuProj);
 
-  //STRANGE whitout these two things _setProjectionMatrix crash
-  viewportLeft->update();
-  viewportRight->update();
+ 
 
   /*
   * BACKGROUND CAM
