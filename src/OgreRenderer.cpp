@@ -56,11 +56,7 @@ OgreRenderer::OgreRenderer(double camsize[2], Oculus *rift)
   scene = ogre->createSceneManager(Ogre::ST_GENERIC);
   scene->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 
-  StereoEyeParams* eyes = rift->getEyesParams();
-
-  Ogre::Matrix4 ocuProj = OVRMat4toOgreMat4(eyes[0].Projection);
-
-  Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(ocuProj);
+  
 
   /*
   * LEFT CAM AND VIEWPORT
@@ -89,6 +85,19 @@ OgreRenderer::OgreRenderer(double camsize[2], Oculus *rift)
   cameraEyeRight->setPosition(Ogre::Vector3(3, 0, 300));
   cameraEyeRight->lookAt(Ogre::Vector3(0, 0, -300));
 
+  /*
+  * Update project matrix
+  */
+
+  StereoEyeParams* eyes = rift->getEyesParams();
+
+  Ogre::Matrix4 ocuProj = OVRMat4toOgreMat4(eyes[0].Projection);
+
+  Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(ocuProj);
+
+  //STRANGE whitout these two things _setProjectionMatrix crash
+  viewportLeft->update();
+  viewportRight->update();
 
   /*
   * BACKGROUND CAM
@@ -155,6 +164,9 @@ OgreRenderer::OgreRenderer(double camsize[2], Oculus *rift)
 
   rightRect->setMaterial("rightCap2");
   leftRect->setMaterial("rightCap1");
+
+ 
+
 }
 
 OgreRenderer::~OgreRenderer()
