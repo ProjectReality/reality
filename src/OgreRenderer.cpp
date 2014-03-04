@@ -2,9 +2,10 @@
 
 #include	"OgreRenderer.hpp"
 
-OgreRenderer::OgreRenderer(double camsize[2])
+OgreRenderer::OgreRenderer(double camsize[2], Oculus *rift)
 {
-	//TODO : find better way
+	this->rift = rift;
+
 	cam_frame_size[0] = camsize[0];
 	cam_frame_size[1] = camsize[1];
 
@@ -55,6 +56,11 @@ OgreRenderer::OgreRenderer(double camsize[2])
   scene = ogre->createSceneManager(Ogre::ST_GENERIC);
   scene->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 
+  StereoEyeParams* eyes = rift->getEyesParams();
+
+  Ogre::Matrix4 ocuProj = OVRMat4toOgreMat4(eyes[0].Projection);
+
+  Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(ocuProj);
 
   /*
   * LEFT CAM AND VIEWPORT
@@ -220,6 +226,14 @@ void	OgreRenderer::render()
     alive = true;
   else
     alive = false;
+}
+
+Ogre::Matrix4 OgreRenderer::OVRMat4toOgreMat4(OVR::Matrix4f matrix) {
+	return Ogre::Matrix4(
+		matrix.M[0][0], matrix.M[0][1], matrix.M[0][2], matrix.M[0][3],
+		matrix.M[1][0], matrix.M[1][1], matrix.M[1][2], matrix.M[1][3],
+		matrix.M[2][0], matrix.M[2][1], matrix.M[2][2], matrix.M[2][3],
+		matrix.M[3][0], matrix.M[3][1], matrix.M[3][2], matrix.M[3][3]);
 }
 
 Ogre::Image* OgreRenderer::MatToImage(cv::Mat in) {

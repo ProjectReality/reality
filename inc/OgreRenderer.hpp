@@ -19,6 +19,7 @@
 #include	<SdkTrays.h>
 #include	<SdkCameraMan.h>
 
+#include	"Oculus.hpp"
 #include	"IRenderer.hpp"
 
 struct				Elem
@@ -37,7 +38,7 @@ class				OgreRenderer: public IRenderer
 {
 public:
 
-	OgreRenderer(double camsize[2]);
+	OgreRenderer(double camsize[2], Oculus *rift);
 				~OgreRenderer();
 
   //! Create a new entity in the scene
@@ -73,10 +74,12 @@ public:
   //! Convert an Opencv Mat into a Ogre Image
   Ogre::Image* MatToImage(cv::Mat in);
 
+  Ogre::Matrix4 OVRMat4toOgreMat4(OVR::Matrix4f matrix);
+
   void setFrameSize(double size[2]);
 
 private:
-
+	Oculus *rift;
 	double	cam_frame_size[2];
 
   Ogre::Root*			ogre;
@@ -97,6 +100,8 @@ private:
   Ogre::MaterialPtr		rightMat;
   Ogre::Rectangle2D*	rightRect;
   Ogre::TexturePtr		rightTex;
+
+  
 
 };
 

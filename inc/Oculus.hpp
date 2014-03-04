@@ -6,6 +6,7 @@
 #include <OVR.h>
 
 using namespace OVR;
+using namespace OVR::Util::Render;
 
 //! Oculus
 /*!
@@ -23,11 +24,14 @@ computed based on the eye distance and display size.
 nothing..
 
 */
+
 class Oculus
 {
 public:
 	Oculus();
 	~Oculus();
+
+	void Oculus::setDistordScale();
 
 	//! Computes the rendering scale that should be applied to the render texture
 	float getDistordScale();
@@ -40,10 +44,13 @@ public:
 	*/
 	std::array<int, 2> getResolution();
 
+	StereoEyeParams* Oculus::getEyesParams();
+
 private:
 	OVR::Ptr<DeviceManager> pManager;
 	OVR::Ptr<HMDDevice> pHMD;
 	HMDInfo hmd;
+	StereoConfig stereo;
 };
 
 

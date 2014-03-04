@@ -1,11 +1,14 @@
 #include "Oculus.hpp"
 
 Oculus::Oculus() {
+	//TODO : handle no oculus 
 	System::Init(Log::ConfigureDefaultLog(LogMask_All));
 	
 	pManager = *DeviceManager::Create();
 	pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
 	pHMD->GetDeviceInfo(&hmd);
+
+	setDistordScale();
 }
 
 Oculus::~Oculus() {
@@ -20,19 +23,22 @@ std::array<int, 2> Oculus::getResolution() {
 	return res;
 }
 
-float Oculus::getDistordScale() {
-	//TODO : Remove hardcod screen res
-	using namespace Util::Render;
-
-	float renderscale;
-	StereoConfig stereo;
-	
-	stereo.SetFullViewport(Viewport(0, 0, 800, 600));
+void Oculus::setDistordScale() {
+	stereo.SetFullViewport(Viewport(0, 0, hmd.HResolution, hmd.VResolution));
 	stereo.SetStereoMode(Stereo_LeftRight_Multipass);
 	stereo.SetHMDInfo(hmd);
 	stereo.SetDistortionFitPointVP(-1.f, 0.f);
+}
 
-	renderscale = stereo.GetDistortionScale();
+float Oculus::getDistordScale() {
+	return stereo.GetDistortionScale();
+}
 
-	return renderscale;
+StereoEyeParams* Oculus::getEyesParams() {
+	StereoEyeParams Eyes[2];
+
+	Eyes[0] = stereo.GetEyeRenderParams(StereoEye_Left);
+	Eyes[1] = stereo.GetEyeRenderParams(StereoEye_Right);
+
+	return Eyes;
 }

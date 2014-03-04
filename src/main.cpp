@@ -11,17 +11,14 @@ int		main()
 
   Oculus *rift = new Oculus();
 
-  //ugly test
-  float test = rift->getDistordScale();
-  int xwindow = rift->getResolution()[0];
-  int ywindow = rift->getResolution()[1];
+ 
 
   camera.OpenCamera();
 
   video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
   video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
-  render = new OgreRenderer(video_size);
+  render = new OgreRenderer(video_size, rift);
  
 
   // Scene creation
