@@ -83,6 +83,7 @@ set(HDRS
         ./inc/OgreRenderer.hpp
         ./inc/StereoCamera.hpp
 		./inc/Oculus.hpp
+		./inc/VirtualOculus.hpp
 )
 
 set(SRCS
@@ -90,6 +91,7 @@ set(SRCS
         ./src/OgreRenderer.cpp
         ./src/StereoCamera.cpp
 		./src/Oculus.cpp
+		./src/VirtualOculus.cpp
 )
 
 include_directories( ${OIS_INCLUDE_DIRS}

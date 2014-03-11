@@ -9,9 +9,14 @@ int		main()
   cv::Mat*		frame;
   double		video_size[2];
 
-  Oculus *rift = new Oculus();
+  VirtualOculus *rift = new VirtualOculus();
+  rift = rift->Init();
 
- 
+  //ugly test
+  float test = rift->getDistordScale();
+  int xwindow = rift->getResolution()[0];
+  int ywindow = rift->getResolution()[1];
+  //StereoEyeParams* eyes = rift->getEyesParams();
 
   camera.OpenCamera();
 

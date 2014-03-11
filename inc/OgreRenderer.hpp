@@ -38,7 +38,7 @@ class				OgreRenderer: public IRenderer
 {
 public:
 
-	OgreRenderer(double camsize[2], Oculus *rift);
+	OgreRenderer(double camsize[2], VirtualOculus *rift);
 				~OgreRenderer();
 
   //! Create a new entity in the scene
@@ -80,7 +80,7 @@ public:
   void setFrameSize(double size[2]);
 
 private:
-	Oculus *rift;
+	VirtualOculus *rift;
 	double	cam_frame_size[2];
 
   Ogre::Root*			ogre;

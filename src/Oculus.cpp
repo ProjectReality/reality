@@ -1,22 +1,27 @@
 #include "Oculus.hpp"
 
 Oculus::Oculus() {
-	//TODO : handle no oculus 
 	System::Init(Log::ConfigureDefaultLog(LogMask_All));
-	
+
 	pManager = *DeviceManager::Create();
 	pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
-	pHMD->GetDeviceInfo(&hmd);
 
+	if (pHMD) {
+		pHMD->GetDeviceInfo(&hmd);
+		//add sensor
+	} else {
+		//problem
+	}
 	setDistordScale();
 }
 
 Oculus::~Oculus() {
+	pManager.Clear();
 	System::Destroy();
 }
 
-std::array<int, 2> Oculus::getResolution() {
-	std::array<int, 2> res;
+int* Oculus::getResolution() {
+	int res[2];
 
 	res[0] = hmd.HResolution;
 	res[1] = hmd.VResolution;

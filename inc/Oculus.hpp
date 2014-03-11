@@ -1,12 +1,7 @@
 #ifndef		_R_OCULUS_HPP_
 #define		_R_OCULUS_HPP_
 
-#include <iostream>
-#include <array>
-#include <OVR.h>
-
-using namespace OVR;
-using namespace OVR::Util::Render;
+#include "VirtualOculus.hpp"
 
 //! Oculus
 /*!
@@ -19,13 +14,11 @@ Wrap the oculus SDK
 computed based on the eye distance and display size.
 *HMD (Head Mounted Display) aka the Oculus rift
 
-# Stuff
-
-nothing..
+# Important
 
 */
 
-class Oculus
+class Oculus : public VirtualOculus
 {
 public:
 	Oculus();
@@ -42,7 +35,7 @@ public:
 		The reported values are 1280 800 for the DK
 		@return respectivly vertical [0] and horizontal [1] resolution
 	*/
-	std::array<int, 2> getResolution();
+	int* getResolution();
 
 	//! Get the stereo paramaters for each eyes first left [0] then right [1] 
 	StereoEyeParams* Oculus::getEyesParams();
@@ -52,6 +45,7 @@ private:
 	OVR::Ptr<HMDDevice> pHMD;
 	HMDInfo hmd;
 	StereoConfig stereo;
+	bool OculusExist;
 };
 
 
