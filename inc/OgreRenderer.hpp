@@ -1,4 +1,3 @@
-
 #ifndef		_R_OGRERENDERER_HPP_
 #define		_R_OGRERENDERER_HPP_
 

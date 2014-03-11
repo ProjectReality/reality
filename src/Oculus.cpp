@@ -1,49 +1,38 @@
 #include "Oculus.hpp"
 
 Oculus::Oculus() {
-	System::Init(Log::ConfigureDefaultLog(LogMask_All));
-
-	pManager = *DeviceManager::Create();
-	pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
-
-	if (pHMD) {
-		pHMD->GetDeviceInfo(&hmd);
-		//add sensor
-	} else {
-		//problem
-	}
 	setDistordScale();
 }
 
 Oculus::~Oculus() {
-	pManager.Clear();
+	getpManager().Clear();
 	System::Destroy();
 }
 
 int* Oculus::getResolution() {
 	int res[2];
 
-	res[0] = hmd.HResolution;
-	res[1] = hmd.VResolution;
+	res[0] = getHMDInfo().HResolution;
+	res[1] = getHMDInfo().VResolution;
 	return res;
 }
 
 void Oculus::setDistordScale() {
-	stereo.SetFullViewport(Viewport(0, 0, hmd.HResolution, hmd.VResolution));
-	stereo.SetStereoMode(Stereo_LeftRight_Multipass);
-	stereo.SetHMDInfo(hmd);
-	stereo.SetDistortionFitPointVP(-1.f, 0.f);
+	getStereo().SetFullViewport(Viewport(0, 0, getHMDInfo().HResolution, getHMDInfo().VResolution));
+	getStereo().SetStereoMode(Stereo_LeftRight_Multipass);
+	getStereo().SetHMDInfo(getHMDInfo());
+	getStereo().SetDistortionFitPointVP(-1.f, 0.f);
 }
 
 float Oculus::getDistordScale() {
-	return stereo.GetDistortionScale();
+	return getStereo().GetDistortionScale();
 }
 
 StereoEyeParams* Oculus::getEyesParams() {
 	StereoEyeParams Eyes[2];
 
-	Eyes[0] = stereo.GetEyeRenderParams(StereoEye_Left);
-	Eyes[1] = stereo.GetEyeRenderParams(StereoEye_Right);
+	Eyes[0] = getStereo().GetEyeRenderParams(StereoEye_Left);
+	Eyes[1] = getStereo().GetEyeRenderParams(StereoEye_Right);
 
 	return Eyes;
 }

@@ -1,3 +1,6 @@
+#ifndef		_R_STEREO_CAM_HPP_
+#define		_R_STEREO_CAM_HPP_
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/stitching/stitcher.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -100,3 +103,5 @@ public:
 
     Mat* GetFrame();
 };
+
+#endif //_R_STEREO_CAM_HPP_

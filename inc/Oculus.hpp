@@ -39,13 +39,6 @@ public:
 
 	//! Get the stereo paramaters for each eyes first left [0] then right [1] 
 	StereoEyeParams* Oculus::getEyesParams();
-
-private:
-	OVR::Ptr<DeviceManager> pManager;
-	OVR::Ptr<HMDDevice> pHMD;
-	HMDInfo hmd;
-	StereoConfig stereo;
-	bool OculusExist;
 };
 
 
