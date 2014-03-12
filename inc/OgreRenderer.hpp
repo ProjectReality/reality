@@ -100,9 +100,6 @@ private:
   Ogre::MaterialPtr		rightMat;
   Ogre::Rectangle2D*	rightRect;
   Ogre::TexturePtr		rightTex;
-
-  
-
 };
 
 #endif // _R_OGRERENDERER_HPP_

@@ -5,6 +5,7 @@
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
 	this->rift = rift;
+	const Ogre::ColourValue g_defaultViewportColour(97 / 255.0f, 97 / 255.0f, 200 / 255.0f);
 
 	cam_frame_size[0] = camsize[0];
 	cam_frame_size[1] = camsize[1];
@@ -14,92 +15,99 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 		exit(11);
 	}
   
-	// -- Ogre init --
+  // -- Ogre init --
 
-  ogre = new Ogre::Root("plugins.cfg");
+  //TODO : load non debug plugin if release
+  ogre = new Ogre::Root("plugins_d.cfg");
 
-  // Use the config file
-  Ogre::ConfigFile	cfgFile;
-  cfgFile.load("resources.cfg");
+  if (!ogre->showConfigDialog()) { //show the config window
+	  exit(11);
+  }
 
-  // Go through all sections & settings in the file
-  Ogre::ConfigFile::SectionIterator seci = cfgFile.getSectionIterator();
- 
-  Ogre::String secName, typeName, archName;
-  while (seci.hasMoreElements())
-    {
-      secName = seci.peekNextKey();
-      Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
-      Ogre::ConfigFile::SettingsMultiMap::iterator i;
-      for (i = settings->begin(); i != settings->end(); ++i)
-        {
-	  typeName = i->first;
-	  archName = i->second;
-	  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
-        }
-    }
-  // Either restore the configuration from the file, or show dialog to set new options
-  if(!(ogre->restoreConfig() || ogre->showConfigDialog())) // If both fail
-    {
-      alive = false;
-      return;
-    }
-
-  window = ogre->initialise(true, "Reality Rendering Window");
-  
-
-  alive = true; // Ogre is now running
+  window = ogre->initialise(true, "Rendering Window"); //must init windows before load rsrc
 
 
   // -- Scene init --
+  scene = ogre->createSceneManager("OctreeSceneManager");
 
-  scene = ogre->createSceneManager(Ogre::ST_GENERIC);
-  scene->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+
+  // -- Ressource init --
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model", "FileSystem");
+
+  Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+ 
+  Ogre::MaterialPtr matLeft = Ogre::MaterialManager::getSingleton().getByName("Ogre/Compositor/Oculus");
+  Ogre::MaterialPtr matRight = matLeft->clone("Ogre/Compositor/Oculus/Right");
+  Ogre::GpuProgramParametersSharedPtr pParamsLeft = matLeft->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+  Ogre::GpuProgramParametersSharedPtr pParamsRight = matRight->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+
+  //use convert me
+  Ogre::Vector4 hmdwarp = Ogre::Vector4(rift->getStereo().GetDistortionK(0),
+	  rift->getStereo().GetDistortionK(1),
+	  rift->getStereo().GetDistortionK(2),
+	  rift->getStereo().GetDistortionK(3));
+
+  pParamsLeft->setNamedConstant("HmdWarpParam", hmdwarp);
+  pParamsRight->setNamedConstant("HmdWarpParam", hmdwarp);
+  pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
+  pParamsRight->setNamedConstant("LensCentre", 0.5f - (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
+
+  Ogre::CompositorPtr comp = Ogre::CompositorManager::getSingleton().getByName("OculusRight");
+  comp->getTechnique(0)->getOutputTargetPass()->getPass(0)->setMaterialName("Ogre/Compositor/Oculus/Right");
 
   
-
   /*
   * LEFT CAM AND VIEWPORT
   */
   cameraEyeLeft = scene->createCamera("Left");
   
-  viewportLeft = window->addViewport(cameraEyeLeft,0, 0, 0, 0.5, 1);
+  viewportLeft = window->addViewport(cameraEyeLeft, 0, 0.5f*0, 0, 0.5f, 1.0f);
+  viewportLeft->setBackgroundColour(g_defaultViewportColour);
   viewportLeft->setVisibilityMask(0xFFFFFF00);
 
-  cameraEyeLeft->setAspectRatio(Ogre::Real(viewportLeft->getActualWidth()) / Ogre::Real(viewportLeft->getActualHeight()));
-  cameraEyeLeft->setNearClipDistance(5);
+  cameraEyeLeft->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
+  cameraEyeLeft->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
+  cameraEyeLeft->setPosition((0 * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 0);
+  cameraEyeLeft->setAspectRatio(rift->getStereo().GetAspect());
+  cameraEyeLeft->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
 
-  cameraEyeLeft->setPosition(Ogre::Vector3(-3, 0, 300));
+  
   cameraEyeLeft->lookAt(Ogre::Vector3(0, 0, -300));
+
+  Ogre::Matrix4 proj = Ogre::Matrix4::IDENTITY;
+  float temp = rift->getStereo().GetProjectionCenterOffset();
+  proj.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * 0 - 1), 0, 0));
+  cameraEyeLeft->setCustomProjectionMatrix(true, proj * cameraEyeLeft->getProjectionMatrix());
+
+
+  Ogre::CompositorInstance *compo_left = Ogre::CompositorManager::getSingleton().addCompositor(viewportLeft, 0 == 0 ? "OculusLeft" : "OculusRight");
+  compo_left->setEnabled(true);
 
   /*
   * RIGHT CAM AND VIEWPORT
   */
   cameraEyeRight = scene->createCamera("Right");
-  viewportRight = window->addViewport(cameraEyeRight, 10, 0.5, 0, 0.5, 1);
+
+  viewportRight = window->addViewport(cameraEyeRight, 1, 0.5f * 1, 0, 0.5f, 1.0f);
+  viewportRight->setBackgroundColour(g_defaultViewportColour);
   viewportRight->setVisibilityMask(0xFFFF0F0);
-
-  cameraEyeRight->setAspectRatio(Ogre::Real(viewportRight->getActualWidth()) / Ogre::Real(viewportRight->getActualHeight()));
-  cameraEyeRight->setNearClipDistance(5);
-
-  cameraEyeRight->setPosition(Ogre::Vector3(3, 0, 300));
+  
+  cameraEyeRight->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
+  cameraEyeRight->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
+  cameraEyeRight->setPosition((1 * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 0);
+  cameraEyeRight->setAspectRatio(rift->getStereo().GetAspect());
+  cameraEyeRight->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
   cameraEyeRight->lookAt(Ogre::Vector3(0, 0, -300));
 
-  /*
-  * Update projection matrix
-  */
+  Ogre::Matrix4 proje = Ogre::Matrix4::IDENTITY;
+  float tempi = rift->getStereo().GetProjectionCenterOffset();
+  proje.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * 1 - 1), 0, 0));
+  cameraEyeRight->setCustomProjectionMatrix(true, proje * cameraEyeRight->getProjectionMatrix());
 
-  //whitout these two _setProjectionMatrix crash
-  viewportLeft->update();
-  viewportRight->update();
+  Ogre::CompositorInstance *compo_right = Ogre::CompositorManager::getSingleton().addCompositor(viewportRight, 1 == 0 ? "OculusLeft" : "OculusRight");
+  compo_right->setEnabled(true);
 
-  StereoEyeParams* eyes = rift->getEyesParams();
-
-  Ogre::Matrix4 ocuProj = OVRMat4toOgreMat4(eyes[0].Projection);
-
-  Ogre::Root::getSingleton().getRenderSystem()->_setProjectionMatrix(ocuProj);
-
- 
 
   /*
   * BACKGROUND CAM
@@ -121,8 +129,6 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
   aabInf.setInfinite();
   rightRect->setBoundingBox(aabInf);
   leftRect->setBoundingBox(aabInf);
-
-
 
   scene->getRootSceneNode()->attachObject(rightRect);
   scene->getRootSceneNode()->attachObject(leftRect);
@@ -168,7 +174,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
   leftRect->setMaterial("rightCap1");
 
  
-
+  alive = true; // Ogre is now running
 }
 
 OgreRenderer::~OgreRenderer()

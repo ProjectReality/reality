@@ -1,0 +1,19 @@
+uniform float2 LensCentre;
+uniform float2 Scale;
+uniform float2 ScaleIn;
+uniform float4 HmdWarpParam;
+
+// Scales input texture coordinates for distortion.
+float2 HmdWarp(float2 in01)
+{
+	float2 theta = (in01 - LensCentre) * ScaleIn; // Scales to [-1, 1]
+	float rSq = theta.x * theta.x + theta.y * theta.y;
+	float2 rvector = theta * (HmdWarpParam.x + HmdWarpParam.y * rSq + HmdWarpParam.z * rSq * rSq + HmdWarpParam.w * rSq * rSq * rSq);
+	return LensCentre + Scale * rvector;
+}
+
+float4 main_fp(float4 pos : POSITION, float2 iTexCoord : TEXCOORD0, uniform sampler2D RT : register(s0)) : COLOR
+{
+	float2 tc = HmdWarp(iTexCoord);
+	return float4(tex2D(RT, tc).rgb,1);
+}
