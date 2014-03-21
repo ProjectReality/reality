@@ -26,6 +26,7 @@ if(UNIX)
 	else ()
 	  message(SEND_ERROR "Failed to find module path.")
 	endif(EXISTS "/usr/local/lib/OGRE")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lXinerama -ludev") 
 endif(UNIX)
 
 if (CMAKE_BUILD_TYPE STREQUAL "")

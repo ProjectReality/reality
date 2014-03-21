@@ -24,7 +24,7 @@ public:
 	Oculus();
 	~Oculus();
 
-	void Oculus::setDistordScale();
+	void setDistordScale();
 
 	//! Computes the rendering scale that should be applied to the render texture
 	float getDistordScale();
@@ -38,7 +38,7 @@ public:
 	int* getResolution();
 
 	//! Get the stereo paramaters for each eyes first left [0] then right [1] 
-	StereoEyeParams* Oculus::getEyesParams();
+	StereoEyeParams* getEyesParams();
 };
 
 
