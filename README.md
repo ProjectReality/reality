@@ -14,22 +14,23 @@
 
 # Windows
 
+You can find everything you need in there : https://bitbucket.org/realityproject/reality/downloads
+
 ## Env setup
 
 
 ```
 #!
-BOOST_ROOT = root_boost
-OGRE_HOME  = root_ogre_sdk
-OGRE_DEPENDENCIES_DIR = root_dep_ogre (if build ogre needed)
-OPENCV_DIR = root_opencv_sdk (eg : foo\bar\opencv\build\x64\vc11)
-OCULUS_SDK_ROOT_DIR = root_sdk_oculus (eg : foo\bar\OculusSDK )
+BOOST_INC=C:\Users\vayan\Libs\boost_1_55
+BOOST_ROOT=C:\Users\vayan\Libs\boost_1_55
+CMAKE_MODULE_PATH=C:\Users\vayan\Libs\OgreSDK\CMake
+OCULUS_SDK_ROOT_DIR=C:\Users\vayan\Libs\OculusSDK
+OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
+OpenCV_DIR=C:\Users\vayan\Libs\opencv\build
+OPENCV_ROOT=C:\Users\vayan\Libs\opencv\build
 ```
 
-If you need to build Ogre you'll need :
-
-* DirectX Software Development Kit  <[http://www.microsoft.com/en-us/download/details.aspx?id=6812](http://www.microsoft.com/en-us/download/details.aspx?id=6812)>
-* OGRE DEPENDENCIES <[https://bitbucket.org/cabalistic/ogredeps](https://bitbucket.org/cabalistic/ogredeps)>
+Maybe you don't need every env but I don't remember which one work :)
 
 # Linux
 
