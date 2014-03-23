@@ -26,7 +26,7 @@ if(UNIX)
 	else ()
 	  message(SEND_ERROR "Failed to find module path.")
 	endif(EXISTS "/usr/local/lib/OGRE")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lXinerama -ludev") 
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lXinerama -ludev")
 endif(UNIX)
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
@@ -48,6 +48,8 @@ if(NOT OIS_FOUND)
 	message(SEND_ERROR "Failed to find OIS.")
 endif()
 
+message( OPENCV TEST ${OpenCV_INCLUDE_DIRS} )
+
 # Find Boost
 if (NOT OGRE_BUILD_PLATFORM_IPHONE)
 	if (WIN32 OR APPLE)
@@ -64,7 +66,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
 	endif ()
 	set(Boost_ADDITIONAL_VERSIONS "1.44" "1.44.0" "1.42" "1.42.0" "1.41.0" "1.41" "1.40.0" "1.40" "1.39.0" "1.39" "1.38.0" "1.38" "1.37.0" "1.37" )
 	# Components that need linking (NB does not include header-only components like bind)
-	set(OGRE_BOOST_COMPONENTS thread date_time)
+	set(OGRE_BOOST_COMPONENTS thread date_time system)
 	find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} QUIET)
 	if (NOT Boost_FOUND)
 		# Try again with the other type of libs
@@ -95,11 +97,13 @@ set(SRCS
 		./src/VirtualOculus.cpp
 )
 
-include_directories( ${OIS_INCLUDE_DIRS}
+include_directories(
+    ${OIS_INCLUDE_DIRS}
 	${OGRE_INCLUDE_DIRS}
 	${OGRE_SAMPLES_INCLUDEPATH}
 	${OGRE_Overlay_INCLUDE_DIRS}
 	${OCULUS_SDK_INCLUDE_DIRS}
+    ${OPENCV_INCLUDE_DIR}
 	./inc
 )
 
@@ -107,7 +111,16 @@ add_executable(ProjectReality WIN32 ${HDRS} ${SRCS})
 
 set_target_properties(ProjectReality PROPERTIES DEBUG_POSTFIX _d)
 
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OpenCV_LIBS} ${OCULUS_SDK_LIBRARY})
+if(WIN32)
+   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+   set_target_properties(ProjectReality PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
+   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
+   set_target_properties(ProjectReality PROPERTIES COMPILE_DEFINITIONS_RELWITHDEBINFO "_CONSOLE")
+   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:CONSOLE")
+   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
+endif(WIN32)
+
+target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OpenCV_LIBS} ${OCULUS_SDK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} )
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
