@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(ProjectReality)
 
-SET(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} )
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 if(WIN32)
 	set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
@@ -47,8 +48,6 @@ find_package(OIS REQUIRED)
 if(NOT OIS_FOUND)
 	message(SEND_ERROR "Failed to find OIS.")
 endif()
-
-message( OPENCV TEST ${OpenCV_INCLUDE_DIRS} )
 
 # Find Boost
 if (NOT OGRE_BUILD_PLATFORM_IPHONE)
@@ -120,61 +119,68 @@ if(WIN32)
    set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OpenCV_LIBS} ${OCULUS_SDK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} )
+target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} )
+target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
+
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
 
 # post-build copy for win32
 if(WIN32 AND NOT MINGW)
-	add_custom_command( TARGET ProjectReality PRE_BUILD
-		COMMAND if not exist .\\bin mkdir .\\bin )
 	add_custom_command( TARGET ProjectReality POST_BUILD
-		COMMAND copy \"$(TargetPath)\" .\\bin )
+		COMMAND copy \"$(TargetPath)\" . )
 endif(WIN32 AND NOT MINGW)
 
 if(MINGW OR UNIX)
-	set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+	set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 endif(MINGW OR UNIX)
 
 if(WIN32)
 
 	install(TARGETS ProjectReality
-		RUNTIME DESTINATION bin
+		RUNTIME DESTINATION .
 		CONFIGURATIONS All)
 
-	install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
-		DESTINATION ./
+    #FIX PROBLEM WITH VS2013
+	install(
+        FILES ${CMAKE_SOURCE_DIR}/dllfix/msvcp100d.dll ${CMAKE_SOURCE_DIR}/dllfix/msvcr100d.dll ${CMAKE_SOURCE_DIR}/dllfix/cg.dll
+		DESTINATION .
 		CONFIGURATIONS Release RelWithDebInfo Debug
 	)
 
-	install(FILES ${CMAKE_SOURCE_DIR}/bin/plugins.cfg
-		${CMAKE_SOURCE_DIR}/bin/resources.cfg
-		DESTINATION bin
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+        DESTINATION ./
+        CONFIGURATIONS Release RelWithDebInfo Debug
+    )
+
+	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
+		${CMAKE_SOURCE_DIR}/config/resources.cfg
+		DESTINATION .
 		CONFIGURATIONS Release RelWithDebInfo
 	)
 
-	install(FILES ${CMAKE_SOURCE_DIR}/bin/plugins_d.cfg
-		${CMAKE_SOURCE_DIR}/bin/resources_d.cfg
-		DESTINATION bin
+	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
+		${CMAKE_SOURCE_DIR}/config/resources_d.cfg
+		DESTINATION .
 		CONFIGURATIONS Debug
 	)
 
-        # NOTE: for the 1.7.1 sdk the OIS dll is called OIS.dll instead of libOIS.dll
-        # so you'll have to change that to make it work with 1.7.1
 	install(FILES ${OGRE_PLUGIN_DIR_REL}/OgreMain.dll
-		${OGRE_PLUGIN_DIR_REL}/RenderSystem_Direct3D9.dll
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
-		${OGRE_PLUGIN_DIR_REL}/libOIS.dll
-		DESTINATION bin
+        ${OGRE_PLUGIN_DIR_REL}/Plugin_CgProgramManager.dll
+        ${OGRE_PLUGIN_DIR_REL}/Plugin_OctreeSceneManager.dll
+		${OGRE_PLUGIN_DIR_REL}/OIS.dll
+		DESTINATION .
 		CONFIGURATIONS Release RelWithDebInfo
 	)
 
 	install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
-		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_Direct3D9_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
-		${OGRE_PLUGIN_DIR_DBG}/libOIS_d.dll
-		DESTINATION bin
+        ${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
+        ${OGRE_PLUGIN_DIR_DBG}/Plugin_OctreeSceneManager_d.dll
+		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
+		DESTINATION .
 		CONFIGURATIONS Debug
 	)
 
@@ -182,13 +188,13 @@ if(WIN32)
    # because they're not linked statically (it worked with 1.7.1 though)
    install(FILES ${Boost_DATE_TIME_LIBRARY_RELEASE}
       ${Boost_THREAD_LIBRARY_RELEASE}
-      DESTINATION bin
+      DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo
    )
 
    install(FILES ${Boost_DATE_TIME_LIBRARY_DEBUG}
       ${Boost_THREAD_LIBRARY_DEBUG}
-      DESTINATION bin
+      DESTINATION .
       CONFIGURATIONS Debug
    )
 endif(WIN32)
@@ -196,17 +202,17 @@ endif(WIN32)
 if(UNIX)
 
 	install(TARGETS ProjectReality
-		RUNTIME DESTINATION bin
+		RUNTIME DESTINATION .
 		CONFIGURATIONS All)
 
 	install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
-		DESTINATION ./
+		DESTINATION .
 		CONFIGURATIONS Release RelWithDebInfo Debug
 	)
 
-	install(FILES ${CMAKE_SOURCE_DIR}/bin/plugins.cfg
-		${CMAKE_SOURCE_DIR}/bin/resources.cfg
-		DESTINATION bin
+	install(FILES ${CMAKE_SOURCE_DIR}/plugins.cfg
+		${CMAKE_SOURCE_DIR}/resources.cfg
+		DESTINATION .
 		CONFIGURATIONS Release RelWithDebInfo Debug
 	)
 
