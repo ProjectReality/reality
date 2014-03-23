@@ -14,7 +14,7 @@
 
 # Windows
 
-You can find everything you need in there : https://bitbucket.org/realityproject/reality/downloads
+You can find everything you need in there : [realityproject/reality/downloads](https://bitbucket.org/realityproject/reality/downloads)
 
 ## Env setup
 
