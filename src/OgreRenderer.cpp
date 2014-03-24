@@ -15,7 +15,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 		exit(11);
 	}
   
-  // -- Ogre init --
+  // Ogre init
 
   ogre = new Ogre::Root();
 
@@ -26,11 +26,11 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
   window = ogre->initialise(true, "Rendering Window"); //must init windows before load rsrc
 
 
-  // -- Scene init --
+  // Scene init
   scene = ogre->createSceneManager("OctreeSceneManager");
 
 
-  // -- Ressource init --
+  // Ressource init
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model", "FileSystem");
 
@@ -41,12 +41,12 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
   Ogre::GpuProgramParametersSharedPtr pParamsLeft = matLeft->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
   Ogre::GpuProgramParametersSharedPtr pParamsRight = matRight->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
 
-  //use convert me
   Ogre::Vector4 hmdwarp = Ogre::Vector4(rift->getStereo().GetDistortionK(0),
 	  rift->getStereo().GetDistortionK(1),
 	  rift->getStereo().GetDistortionK(2),
 	  rift->getStereo().GetDistortionK(3));
 
+  // param used in the oculus cg program files
   pParamsLeft->setNamedConstant("HmdWarpParam", hmdwarp);
   pParamsRight->setNamedConstant("HmdWarpParam", hmdwarp);
   pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
@@ -57,122 +57,64 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
   
   /*
-  * LEFT CAM AND VIEWPORT
+  * GENERATE CAM AND VIEWPORT
   */
-  cameraEyeLeft = scene->createCamera("Left");
-  
-  viewportLeft = window->addViewport(cameraEyeLeft, 0, 0.5f*0, 0, 0.5f, 1.0f);
-  viewportLeft->setBackgroundColour(g_defaultViewportColour);
-  viewportLeft->setVisibilityMask(0xFFFFFF00);
 
-  cameraEyeLeft->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
-  cameraEyeLeft->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
-  cameraEyeLeft->setPosition((0 * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 0);
-  cameraEyeLeft->setAspectRatio(rift->getStereo().GetAspect());
-  cameraEyeLeft->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
+  for (size_t i = 0; i < 2; i++) {
+	  cameras[i] = scene->createCamera(i == 0 ? "Left" : "Right");
+	  viewports[i] = window->addViewport(cameras[i], i, 0.5f * i, 0, 0.5f, 1.0f);
+	  viewports[i]->setBackgroundColour(g_defaultViewportColour);
+	  viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0);
 
-  
-  cameraEyeLeft->lookAt(Ogre::Vector3(0, 0, -300));
+	  cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
+	  cameras[i]->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
+	  cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 0);
+	  cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
+	  cameras[i]->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
+	  cameras[i]->lookAt(Ogre::Vector3(0, 0, -300));
 
-  Ogre::Matrix4 proj = Ogre::Matrix4::IDENTITY;
-  float temp = rift->getStereo().GetProjectionCenterOffset();
-  proj.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * 0 - 1), 0, 0));
-  cameraEyeLeft->setCustomProjectionMatrix(true, proj * cameraEyeLeft->getProjectionMatrix());
+	  Ogre::Matrix4 proj = Ogre::Matrix4::IDENTITY;
+	  float temp = rift->getStereo().GetProjectionCenterOffset();
+	  proj.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * i - 1), 0, 0));
+	  cameras[i]->setCustomProjectionMatrix(true, proj * cameras[i]->getProjectionMatrix());
 
+	  compos[i] = Ogre::CompositorManager::getSingleton().addCompositor(viewports[i], i == 0 ? "OculusLeft" : "OculusRight");
+	  compos[i]->setEnabled(true);
 
-  Ogre::CompositorInstance *compo_left = Ogre::CompositorManager::getSingleton().addCompositor(viewportLeft, 0 == 0 ? "OculusLeft" : "OculusRight");
-  compo_left->setEnabled(true);
+  }
 
   /*
-  * RIGHT CAM AND VIEWPORT
+  * GENERATE RECT FOR CAM TEX
   */
-  cameraEyeRight = scene->createCamera("Right");
-
-  viewportRight = window->addViewport(cameraEyeRight, 1, 0.5f * 1, 0, 0.5f, 1.0f);
-  viewportRight->setBackgroundColour(g_defaultViewportColour);
-  viewportRight->setVisibilityMask(0xFFFF0F0);
-  
-  cameraEyeRight->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
-  cameraEyeRight->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
-  cameraEyeRight->setPosition((1 * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 0);
-  cameraEyeRight->setAspectRatio(rift->getStereo().GetAspect());
-  cameraEyeRight->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
-  cameraEyeRight->lookAt(Ogre::Vector3(0, 0, -300));
-
-  Ogre::Matrix4 proje = Ogre::Matrix4::IDENTITY;
-  float tempi = rift->getStereo().GetProjectionCenterOffset();
-  proje.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * 1 - 1), 0, 0));
-  cameraEyeRight->setCustomProjectionMatrix(true, proje * cameraEyeRight->getProjectionMatrix());
-
-  Ogre::CompositorInstance *compo_right = Ogre::CompositorManager::getSingleton().addCompositor(viewportRight, 1 == 0 ? "OculusLeft" : "OculusRight");
-  compo_right->setEnabled(true);
-
-
-  /*
-  * BACKGROUND CAM
-  */
-
-  //TODO : Put two 
-
-  rightRect = new Ogre::Rectangle2D(true);
-  rightRect->setCorners(-1, 1.0, 1, -1.0);
-  rightRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-  rightRect->setVisibilityFlags(0xF0);
-
-  leftRect = new Ogre::Rectangle2D(true);
-  leftRect->setCorners(-1, 1.0, 1, -1.0);
-  leftRect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-  leftRect->setVisibilityFlags(0xF00);
 
   Ogre::AxisAlignedBox aabInf;
   aabInf.setInfinite();
-  rightRect->setBoundingBox(aabInf);
-  leftRect->setBoundingBox(aabInf);
 
-  scene->getRootSceneNode()->attachObject(rightRect);
-  scene->getRootSceneNode()->attachObject(leftRect);
+  for (size_t i = 0; i < 2; i++) {
+	  rects[i] = new Ogre::Rectangle2D(true);
+	  rects[i]->setCorners(-1, 1.0, 1, -1.0);
+	  rects[i]->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
+	  rects[i]->setVisibilityFlags(i == 0 ? 0xF00 : 0xF0);
+	  rects[i]->setBoundingBox(aabInf);
+	  scene->getRootSceneNode()->attachObject(rects[i]);
 
-  // Init Right
-  rightTex = Ogre::TextureManager::getSingleton().createManual("backgrounnndd2", 
-										 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-										 Ogre::TEX_TYPE_2D,      
-										 cam_frame_size[0], cam_frame_size[1],			//VIDEO SIZE
-										 0,                
-										 Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
-										 Ogre::TU_DEFAULT);
+	  tex[i] = Ogre::TextureManager::getSingleton().createManual(i == 0 ? "TexLeft" : "TexRight",
+		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		  Ogre::TEX_TYPE_2D,
+		  cam_frame_size[0], cam_frame_size[1],			//VIDEO SIZE
+		  0,
+		  Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
+		  Ogre::TU_DEFAULT);
+	  mats[i] = Ogre::MaterialManager::getSingleton().create(i == 0 ? "MatLeft" : "MatRight", // name
+		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	  mats[i]->getTechnique(0)->getPass(0)->createTextureUnitState(i == 0 ? "TexLeft" : "TexRight");
+	  mats[i]->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+	  mats[i]->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	  mats[i]->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	  mats[i]->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
-  rightMat = Ogre::MaterialManager::getSingleton().create("rightCap2", // name
-									     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-
-  rightMat->getTechnique(0)->getPass(0)->createTextureUnitState("backgrounnndd2");
-  rightMat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-  rightMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-  rightMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-  rightMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-
-
-
-  leftTex = Ogre::TextureManager::getSingleton().createManual("backgrounnndd1",
-	  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-	  Ogre::TEX_TYPE_2D,
-	  cam_frame_size[0], cam_frame_size[1],			//VIDEO SIZE
-	  0,
-	  Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
-	  Ogre::TU_DEFAULT);
-
-  leftMat = Ogre::MaterialManager::getSingleton().create("rightCap1", // name
-	  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-
-  leftMat->getTechnique(0)->getPass(0)->createTextureUnitState("backgrounnndd1");
-  leftMat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-  leftMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-  leftMat->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-  leftMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-
-  rightRect->setMaterial("rightCap2");
-  leftRect->setMaterial("rightCap1");
-
- 
+	  rects[i]->setMaterial(i == 0 ? "MatLeft" : "MatRight");
+  } 
   alive = true; // Ogre is now running
 }
 
@@ -271,10 +213,10 @@ void	OgreRenderer::loadCam(cv::Mat left, cv::Mat right)
 	Ogre::Image* imageRight = MatToImage(right);
 
 	if (imageLeft->getSize() >= 0 || imageRight->getSize() >= 0) {
-      rightTex->unload();
-	  rightTex->loadImage(*imageRight);
-	  leftTex->unload();
-	  leftTex->loadImage(*imageLeft);
+	  tex[0]->unload();
+	  tex[0]->loadImage(*imageLeft);
+	  tex[1]->unload();
+	  tex[1]->loadImage(*imageRight);
     } else {
 		std::cerr << "OgreRenderer::loadCam() - Couldn't load image cause empty" << std::endl;
     }

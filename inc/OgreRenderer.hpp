@@ -83,23 +83,17 @@ private:
 	double	cam_frame_size[2];
 
   Ogre::Root*			ogre;
-  Ogre::Camera*			cameraEyeLeft;
-  Ogre::Camera*			cameraEyeRight;
-  Ogre::SceneManager*		scene;
-  Ogre::RenderWindow*		window;
-  Ogre::Viewport*		viewportLeft;
-  Ogre::Viewport*		viewportRight;
+  Ogre::SceneManager*	scene;
+  Ogre::RenderWindow*	window;
+
+  Ogre::Viewport*		viewports[2];
+  Ogre::Camera*			cameras[2];
+  Ogre::CompositorInstance *compos[2];
+  Ogre::MaterialPtr		mats[2];
+  Ogre::Rectangle2D*	rects[2];
+  Ogre::TexturePtr		tex[2];
 
   std::map<std::string, Elem>	entities;
-  //  std::map<std::string, Elem>	meshes;
-
-  Ogre::MaterialPtr		leftMat;
-  Ogre::Rectangle2D*	leftRect;
-  Ogre::TexturePtr		leftTex;
-
-  Ogre::MaterialPtr		rightMat;
-  Ogre::Rectangle2D*	rightRect;
-  Ogre::TexturePtr		rightTex;
 };
 
 #endif // _R_OGRERENDERER_HPP_
