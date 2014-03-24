@@ -17,8 +17,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
   
   // -- Ogre init --
 
-  //TODO : load non debug plugin if release
-  ogre = new Ogre::Root("plugins_d.cfg");
+  ogre = new Ogre::Root();
 
   if (!ogre->showConfigDialog()) { //show the config window
 	  exit(11);
