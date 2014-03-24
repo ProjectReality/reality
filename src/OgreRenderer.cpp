@@ -74,7 +74,6 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 	  cameras[i]->lookAt(Ogre::Vector3(0, 0, -300));
 
 	  Ogre::Matrix4 proj = Ogre::Matrix4::IDENTITY;
-	  float temp = rift->getStereo().GetProjectionCenterOffset();
 	  proj.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * i - 1), 0, 0));
 	  cameras[i]->setCustomProjectionMatrix(true, proj * cameras[i]->getProjectionMatrix());
 
