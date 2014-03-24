@@ -80,20 +80,9 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
 	set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
-set(HDRS
-        ./inc/IRenderer.hpp
-        ./inc/OgreRenderer.hpp
-        ./inc/StereoCamera.hpp
-		./inc/Oculus.hpp
-		./inc/VirtualOculus.hpp
-)
-
-set(SRCS
-        ./src/main.cpp
-        ./src/OgreRenderer.cpp
-        ./src/StereoCamera.cpp
-		./src/Oculus.cpp
-		./src/VirtualOculus.cpp
+file(GLOB ProjectReality_src
+    "inc/*.hpp"
+    "src/*.cpp"
 )
 
 include_directories(
@@ -106,7 +95,7 @@ include_directories(
 	./inc
 )
 
-add_executable(ProjectReality WIN32 ${HDRS} ${SRCS})
+add_executable(ProjectReality WIN32 ${ProjectReality_src})
 
 set_target_properties(ProjectReality PROPERTIES DEBUG_POSTFIX _d)
 
