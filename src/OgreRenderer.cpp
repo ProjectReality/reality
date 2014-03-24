@@ -64,7 +64,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 	  cameras[i] = scene->createCamera(i == 0 ? "Left" : "Right");
 	  viewports[i] = window->addViewport(cameras[i], i, 0.5f * i, 0, 0.5f, 1.0f);
 	  viewports[i]->setBackgroundColour(g_defaultViewportColour);
-	  viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0);
+	  viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0); //to hide some stuff between each viewport
 
 	  cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
 	  cameras[i]->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
@@ -80,7 +80,6 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 	  compos[i] = Ogre::CompositorManager::getSingleton().addCompositor(viewports[i], i == 0 ? "OculusLeft" : "OculusRight");
 	  compos[i]->setEnabled(true);
-
   }
 
   /*
@@ -94,18 +93,18 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 	  rects[i] = new Ogre::Rectangle2D(true);
 	  rects[i]->setCorners(-1, 1.0, 1, -1.0);
 	  rects[i]->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-	  rects[i]->setVisibilityFlags(i == 0 ? 0xF00 : 0xF0);
+	  rects[i]->setVisibilityFlags(i == 0 ? 0xF00 : 0xF0); //hide left rect in right viewport and inverse.
 	  rects[i]->setBoundingBox(aabInf);
 	  scene->getRootSceneNode()->attachObject(rects[i]);
 
 	  tex[i] = Ogre::TextureManager::getSingleton().createManual(i == 0 ? "TexLeft" : "TexRight",
 		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 		  Ogre::TEX_TYPE_2D,
-		  cam_frame_size[0], cam_frame_size[1],			//VIDEO SIZE
+		  cam_frame_size[0], cam_frame_size[1], //VIDEO SIZE
 		  0,
-		  Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME
+		  Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME (maybe not..)
 		  Ogre::TU_DEFAULT);
-	  mats[i] = Ogre::MaterialManager::getSingleton().create(i == 0 ? "MatLeft" : "MatRight", // name
+	  mats[i] = Ogre::MaterialManager::getSingleton().create(i == 0 ? "MatLeft" : "MatRight",
 		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	  mats[i]->getTechnique(0)->getPass(0)->createTextureUnitState(i == 0 ? "TexLeft" : "TexRight");
 	  mats[i]->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
