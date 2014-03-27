@@ -44,6 +44,7 @@ find_package(OpenCV REQUIRED)
 find_package(OGRE REQUIRED)
 find_package(OculusSDK REQUIRED)
 find_package(OIS REQUIRED)
+find_package(ARToolKit REQUIRED)
 
 if(NOT OIS_FOUND)
 	message(SEND_ERROR "Failed to find OIS.")
@@ -83,6 +84,8 @@ endif()
 file(GLOB ProjectReality_src
     "inc/*.hpp"
     "src/*.cpp"
+    "src/TinyXML/*.h"
+    "src/TinyXML/*.cpp"
 )
 
 include_directories(
@@ -92,6 +95,7 @@ include_directories(
 	${OGRE_Overlay_INCLUDE_DIRS}
 	${OCULUS_SDK_INCLUDE_DIRS}
     ${OPENCV_INCLUDE_DIR}
+    ${AR_SDK_INCLUDE_DIR}
 	./inc
 )
 
@@ -108,7 +112,7 @@ if(WIN32)
    set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} )
+target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${AR_SDK_LIBRARIES})
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
 
@@ -134,24 +138,35 @@ if(WIN32)
     #FIX PROBLEM WITH VS2013
 	install(
         FILES ${CMAKE_SOURCE_DIR}/dllfix/msvcp100d.dll ${CMAKE_SOURCE_DIR}/dllfix/msvcr100d.dll ${CMAKE_SOURCE_DIR}/dllfix/cg.dll
-		DESTINATION .
-		CONFIGURATIONS Release RelWithDebInfo Debug
+		DESTINATION ./Debug
+		CONFIGURATIONS Debug
 	)
-
+	
+	install(
+        FILES ${CMAKE_SOURCE_DIR}/dllfix/msvcp100d.dll ${CMAKE_SOURCE_DIR}/dllfix/msvcr100d.dll ${CMAKE_SOURCE_DIR}/dllfix/cg.dll
+		DESTINATION ./Release
+		CONFIGURATIONS Release RelWithDebInfo
+	)
+	
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
-        DESTINATION ./
-        CONFIGURATIONS Release RelWithDebInfo Debug
+        DESTINATION ./Release
+        CONFIGURATIONS Release RelWithDebInfo
+    )
+	
+	install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+        DESTINATION ./Debug
+        CONFIGURATIONS Debug
     )
 
 	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
 		${CMAKE_SOURCE_DIR}/config/resources.cfg
-		DESTINATION .
+		DESTINATION ./Release
 		CONFIGURATIONS Release RelWithDebInfo
 	)
 
 	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
 		${CMAKE_SOURCE_DIR}/config/resources_d.cfg
-		DESTINATION .
+		DESTINATION ./Debug
 		CONFIGURATIONS Debug
 	)
 
@@ -160,7 +175,7 @@ if(WIN32)
         ${OGRE_PLUGIN_DIR_REL}/Plugin_CgProgramManager.dll
         ${OGRE_PLUGIN_DIR_REL}/Plugin_OctreeSceneManager.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
-		DESTINATION .
+		DESTINATION ./Release
 		CONFIGURATIONS Release RelWithDebInfo
 	)
 
@@ -169,7 +184,7 @@ if(WIN32)
         ${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
         ${OGRE_PLUGIN_DIR_DBG}/Plugin_OctreeSceneManager_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
-		DESTINATION .
+		DESTINATION ./Debug
 		CONFIGURATIONS Debug
 	)
 
@@ -177,13 +192,13 @@ if(WIN32)
    # because they're not linked statically (it worked with 1.7.1 though)
    install(FILES ${Boost_DATE_TIME_LIBRARY_RELEASE}
       ${Boost_THREAD_LIBRARY_RELEASE}
-      DESTINATION .
+      DESTINATION ./Release
       CONFIGURATIONS Release RelWithDebInfo
    )
 
    install(FILES ${Boost_DATE_TIME_LIBRARY_DEBUG}
       ${Boost_THREAD_LIBRARY_DEBUG}
-      DESTINATION .
+      DESTINATION ./Debug
       CONFIGURATIONS Debug
    )
 endif(WIN32)
