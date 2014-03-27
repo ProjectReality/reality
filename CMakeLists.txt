@@ -84,7 +84,7 @@ endif()
 file(GLOB ProjectReality_src
     "inc/*.hpp"
     "src/*.cpp"
-    "src/TinyXML/*.h"
+    "inc/TinyXML/*.h"
     "src/TinyXML/*.cpp"
 )
 
