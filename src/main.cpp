@@ -27,7 +27,7 @@ int		main()
  
 
   // Scene creation
-  render->createEntity("Test", "");
+  render->createEntity("Test", "EarthGlobe.mesh");
   
   // Free grab & get to get rid of the first frame
   camera.GrabFrames();                                                                                                                                                                      

@@ -29,13 +29,19 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
   // Scene init
   scene = ogre->createSceneManager("OctreeSceneManager");
 
+  Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
 
   // Ressource init
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model", "FileSystem");
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/images", "FileSystem", "Assets");
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mat", "FileSystem", "Assets");
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mesh", "FileSystem", "Assets");
 
   Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+  Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Assets");
  
+
+
   Ogre::MaterialPtr matLeft = Ogre::MaterialManager::getSingleton().getByName("Ogre/Compositor/Oculus");
   Ogre::MaterialPtr matRight = matLeft->clone("Ogre/Compositor/Oculus/Right");
   Ogre::GpuProgramParametersSharedPtr pParamsLeft = matLeft->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
