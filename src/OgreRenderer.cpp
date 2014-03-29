@@ -28,7 +28,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
   // Scene init
   scene = ogre->createSceneManager("OctreeSceneManager");
-  scene->setAmbientLight(Ogre::ColourValue(10, 0, 0));
+  scene->setAmbientLight(Ogre::ColourValue(.6, .6, .6));
   scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
   scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
   scene->setShadowFarDistance(700);
