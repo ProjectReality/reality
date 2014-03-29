@@ -137,6 +137,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 	  rects[i]->setMaterial(i == 0 ? "MatLeft" : "MatRight");
   } 
   alive = true; // Ogre is now running
+  ShutDown = false;
 }
 
 OgreRenderer::~OgreRenderer()
@@ -176,6 +177,7 @@ void	OgreRenderer::moveEntity(std::string _name, float x, float y, float z) {
 		std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
 		return;
 	}  
+	entities[_name].node->setPosition(Ogre::Vector3(x, y, z));
 }
 
 void	OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, float roll) {
@@ -260,4 +262,24 @@ void	OgreRenderer::loadCam(cv::Mat left, cv::Mat right)
 void OgreRenderer::setFrameSize(double size[2]) {
 	cam_frame_size[0] = size[0];
 	cam_frame_size[1] = size[1];
+}
+
+bool OgreRenderer::getShutDown() {
+	return ShutDown;
+}
+
+
+//temp input handling
+
+bool OgreRenderer::keyPressed(const OIS::KeyEvent& ev)
+{
+	switch (ev.key)
+	{
+	case OIS::KC_ESCAPE:
+		ShutDown = true;
+		break;
+	default:
+		break;
+	}
+	return true;
 }

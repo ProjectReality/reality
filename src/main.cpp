@@ -36,6 +36,10 @@ int		main()
   // Render loop
   while(render->isAlive())
     {
+	  if (render->getShutDown()){
+		  return 0;
+	  }
+
 	  if (camera.FrameAvailable()) {
 		  frame = camera.GetFrame();
 		  render->loadCam(frame[0], frame[1]);

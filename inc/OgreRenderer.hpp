@@ -78,6 +78,13 @@ public:
 
   void setFrameSize(double size[2]);
 
+
+  //temp input handling
+  bool keyPressed(const OIS::KeyEvent& ev);
+
+  bool	getShutDown();
+
+
 private:
   VirtualOculus				*rift;
   double					cam_frame_size[2];

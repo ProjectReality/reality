@@ -25,9 +25,11 @@ public:
   virtual void	loadCam(cv::Mat left, cv::Mat right) = 0;
   virtual void	render() = 0;
   virtual bool	isAlive() = 0;
+  virtual bool	getShutDown() = 0;
 
 protected:
-  bool			alive; // Indicate status  
+  bool			alive; // Indicate status 
+  bool			ShutDown;
 };
 
 #endif
