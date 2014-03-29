@@ -5,7 +5,7 @@
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
 	this->rift = rift;
-	const Ogre::ColourValue g_defaultViewportColour(97 / 255.0f, 97 / 255.0f, 200 / 255.0f);
+	const Ogre::ColourValue g_defaultViewportColour(0,0,0);
 
 	cam_frame_size[0] = camsize[0];
 	cam_frame_size[1] = camsize[1];
@@ -28,9 +28,21 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
   // Scene init
   scene = ogre->createSceneManager("OctreeSceneManager");
-  scene->setAmbientLight(Ogre::ColourValue(0, 0, 0));
-  scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+  scene->setAmbientLight(Ogre::ColourValue(10, 0, 0));
+  scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+  scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
+  scene->setShadowFarDistance(700);
 
+  Ogre::Light* sunLight = scene->createLight("VayaLight");
+  sunLight->setPosition(1200, 100, 600);
+  sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
+  sunLight->setDiffuseColour(.35, .35, 0.38);
+  sunLight->setSpecularColour(.9, .9, 1);
+
+  Ogre::Vector3 dir(-1, -1, 0.5);
+  dir.normalise();
+  sunLight->setDirection(dir);
+  sunLight->setCastShadows(true);
 
   // Ressource init
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
