@@ -5,7 +5,7 @@
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
 	this->rift = rift;
-	const Ogre::ColourValue g_defaultViewportColour(97 / 255.0f, 97 / 255.0f, 200 / 255.0f);
+	const Ogre::ColourValue g_defaultViewportColour(0,0,0);
 
 	cam_frame_size[0] = camsize[0];
 	cam_frame_size[1] = camsize[1];
@@ -30,6 +30,22 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
   scene = ogre->createSceneManager("OctreeSceneManager");
 
   Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
+
+  scene->setAmbientLight(Ogre::ColourValue(.6, .6, .6));
+  scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+  scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
+  scene->setShadowFarDistance(700);
+
+  Ogre::Light* sunLight = scene->createLight("VayaLight");
+  sunLight->setPosition(1200, 100, 600);
+  sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
+  sunLight->setDiffuseColour(.35, .35, 0.38);
+  sunLight->setSpecularColour(.9, .9, 1);
+
+  Ogre::Vector3 dir(-1, -1, 0.5);
+  dir.normalise();
+  sunLight->setDirection(dir);
+  sunLight->setCastShadows(true);
 
   // Ressource init
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
@@ -74,7 +90,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 	  cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
 	  cameras[i]->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
-	  cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 0);
+	  cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 300);
 	  cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
 	  cameras[i]->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
 	  cameras[i]->lookAt(Ogre::Vector3(0, 0, -300));
