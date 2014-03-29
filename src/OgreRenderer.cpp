@@ -1,4 +1,5 @@
 #include	<iostream>
+#include	<boost/current_function.hpp>
 
 #include	"OgreRenderer.hpp"
 
@@ -11,7 +12,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 	cam_frame_size[1] = camsize[1];
 
 	if (cam_frame_size[0] <= 0 || cam_frame_size[1] <= 0) {
-		std::cerr << "OgreRenderer::OgreRenderer() - frame size can't be 0, bye" << std::endl;
+		std::cerr << "Fatal Error: OgreRenderer(): frame size can't be 0, bye" << std::endl;
 		exit(11);
 	}
   
@@ -90,7 +91,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 	  cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
 	  cameras[i]->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
-	  cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 300);
+	  cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 500);
 	  cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
 	  cameras[i]->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
 	  cameras[i]->lookAt(Ogre::Vector3(0, 0, -300));
@@ -147,7 +148,7 @@ OgreRenderer::~OgreRenderer()
 void	OgreRenderer::createEntity(std::string _name, std::string _mesh)
 {
   if ((_name.length() < 1))
-    std::cout << "createEntity: invalid name" << std::endl;     
+    std::cerr << "Error: createEntity: invalid name" << std::endl;     
   else if (entities[_name].name != _name)
     {
       entities[_name].name = _name;
@@ -159,28 +160,40 @@ void	OgreRenderer::createEntity(std::string _name, std::string _mesh)
       entities[_name].node->attachObject(entities[_name].ent);
     }
   else
-    std::cout << "createEntity: An entity already exists with this name" << std::endl; 
+	  std::cerr << "Error: createEntity: An entity already exists with this name" << std::endl;
 }
 
-void	OgreRenderer::createLight(std::string _name)
-{
+void	OgreRenderer::createLight(std::string _name) {
+	if (entities.find(_name) == entities.end()) {
+		std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
+		return;
+	}
 
 }
 
-void	OgreRenderer::moveEntity(std::string _name, float x, float y, float z)
-{
-  
+void	OgreRenderer::moveEntity(std::string _name, float x, float y, float z) {
+	if (entities.find(_name) == entities.end()) {
+		std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
+		return;
+	}  
 }
 
-void	OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, float roll)
-{
+void	OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, float roll) {
+	if (entities.find(_name) == entities.end()) {
+		std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
+		return;
+	}
+
   entities[_name].node->yaw(Ogre::Degree(yaw));
   entities[_name].node->pitch(Ogre::Degree(pitch));
   entities[_name].node->roll(Ogre::Degree(roll));
 }
 
-void	OgreRenderer::moveLight(std::string _name, float x, float y, float z)
-{
+void	OgreRenderer::moveLight(std::string _name, float x, float y, float z) {
+	if (entities.find(_name) == entities.end()) {
+		std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
+		return;
+	}
 
 }
 

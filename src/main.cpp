@@ -28,7 +28,7 @@ int		main()
 
   // Scene creation
   render->createEntity("Test", "EarthGlobe.mesh");
-  render->createEntity("Test2", "WoodenChair.mesh");
+  //render->createEntity("Test2", "WoodenChair.mesh");
   
   // Free grab & get to get rid of the first frame
   camera.GrabFrames();                                                                                                                                                                      
@@ -42,6 +42,7 @@ int		main()
 		  boost::thread new_pic(&StereoCamera::camWorker, camera);
 	  }
       render->rotateEntity("Test", 0, 1, 0);
+	  render->moveEntity("prout", 0, 0, 0);
       render->render();
     }
   delete render;
