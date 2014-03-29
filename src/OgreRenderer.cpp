@@ -28,6 +28,8 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
   // Scene init
   scene = ogre->createSceneManager("OctreeSceneManager");
+  scene->setAmbientLight(Ogre::ColourValue(0, 0, 0));
+  scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 
   // Ressource init
