@@ -36,4 +36,6 @@ Maybe you don't need every env but I don't remember which one work :)
 
 ## Env setup
 
-Just copy the OculusSDK folder in /usr/lib and it'll work
+Copy the OculusSDK folder in /usr/lib and it'll work.
+
+If you have some error about plugins you'll maybe need to compile Ogre 1.9 Plugin_CgProgramManager 
