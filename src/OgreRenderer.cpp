@@ -177,9 +177,7 @@ void    OgreRenderer::moveEntity(std::string _name, float x, float y, float z) {
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
         return;
     }
-    Ogre:Vector3 newpos = entities[_name].node->getPosition() + Ogre::Vector3(x, y, z);
-
-    entities[_name].node->setPosition(newpos);
+    entities[_name].node->setPosition(entities[_name].node->getPosition() + Ogre::Vector3(x, y, z));
 }
 
 void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, float roll) {
