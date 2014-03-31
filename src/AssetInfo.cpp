@@ -1,4 +1,4 @@
-#include "AssetInfo.h"
+#include "AssetInfo.hpp"
 
 AssetInfo::AssetInfo(std::string pName, std::string aName)
 :patternName(pName), assetName(aName)
@@ -13,10 +13,10 @@ AssetInfo::AssetInfo(std::string pName, std::string aName)
 
 AssetInfo::~AssetInfo()
 {
-	delete[] this->patt_center;
-	for (int i = 0; i < 3; i++)
-		delete[] this->patt_trans[i];
-	delete[] this->patt_center;
+	//delete[] this->patt_center;
+	//for (int i = 0; i < 3; i++)
+	//	delete[] this->patt_trans[i];
+	//delete[] this->patt_center;
 }
 
 
