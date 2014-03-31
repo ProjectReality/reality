@@ -36,4 +36,4 @@ Maybe you don't need every env but I don't remember which one work :)
 
 ## Env setup
 
-TODO
+Just copy the OculusSDK folder in /usr/lib and it'll work

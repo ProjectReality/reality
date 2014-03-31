@@ -6,33 +6,35 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} )
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 if(WIN32)
-	set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-	set(OGRE_SAMPLES_INCLUDEPATH
-		$ENV{OGRE_HOME}/Samples/include
-	)
-    link_libraries (winmm)
+  set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
+  set(OGRE_SAMPLES_INCLUDEPATH $ENV{OGRE_HOME}/Samples/include)
+  link_libraries (winmm)
 endif(WIN32)
 
 if(UNIX)
-	if(EXISTS "/usr/local/lib/OGRE/cmake")
-
-	  set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-	  set(OGRE_SAMPLES_INCLUDEPATH "/usr/local/share/OGRE/samples/Common/include/") # We could just *assume* that developers uses this basepath : /usr/local
-
-	elseif(EXISTS "/usr/lib/OGRE/cmake")
-
-	  set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-	  set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/") # Otherwise, this one
-
-	elseif(EXISTS "/usr/share/OGRE/cmake/modules") #for ubuntu
-	  
-	  set(CMAKE_MODULE_PATH "/usr/share/OGRE/cmake/modules;${CMAKE_MODULE_PATH}")
-	  set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/")
-	  
-	else ()
-	  message(SEND_ERROR "Failed to find module path.")
-	endif(EXISTS "/usr/local/lib/OGRE")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lXinerama -ludev")
+  if(EXISTS "/usr/lib/OculusSDK") #sdk oculus if installed here
+    set(OCULUS_SDK_ROOT_DIR "/usr/lib/OculusSDK")
+  endif()
+  
+  if(EXISTS "/usr/local/lib/OGRE/cmake")
+    
+    set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
+    set(OGRE_SAMPLES_INCLUDEPATH "/usr/local/share/OGRE/samples/Common/include/") # We could just *assume* that developers uses this basepath : /usr/local
+    
+  elseif(EXISTS "/usr/lib/OGRE/cmake")
+    
+    set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
+    set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/") # Otherwise, this one
+    
+  elseif(EXISTS "/usr/share/OGRE/cmake/modules") #for ubuntu ogre
+    
+    set(CMAKE_MODULE_PATH "/usr/share/OGRE/cmake/modules;${CMAKE_MODULE_PATH}")
+    set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/")
+    
+  else ()
+    message(SEND_ERROR "Failed to find module path.")
+  endif(EXISTS "/usr/local/lib/OGRE")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lXinerama -ludev")
 endif(UNIX)
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
@@ -51,7 +53,7 @@ find_package(OculusSDK REQUIRED)
 find_package(OIS REQUIRED)
 
 if(NOT OIS_FOUND)
-	message(SEND_ERROR "Failed to find OIS.")
+  message(SEND_ERROR "Failed to find OIS.")
 endif()
 
 # Find Boost
