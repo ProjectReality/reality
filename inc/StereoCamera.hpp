@@ -1,13 +1,13 @@
-#ifndef		_R_STEREO_CAM_HPP_
-#define		_R_STEREO_CAM_HPP_
+#ifndef _R_STEREO_CAM_HPP_
+#define _R_STEREO_CAM_HPP_
 
-#include <opencv2/opencv.hpp>
-#include <opencv2/stitching/stitcher.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include    <opencv2/opencv.hpp>
+#include    <opencv2/stitching/stitcher.hpp>
+#include    <opencv2/highgui/highgui.hpp>
 
-#include <boost/date_time.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
+#include    <boost/date_time.hpp>
+#include    <boost/filesystem.hpp>
+#include    <boost/thread.hpp>
 
 using namespace cv;
 
@@ -25,7 +25,7 @@ private:
     VideoCapture camera[2];
     Mat frame[2];
     bool camera_open;
-	bool frame_available;
+    bool frame_available;
 
 public:
     StereoCamera();
@@ -36,8 +36,8 @@ public:
     //! Output every property of the camera
     void TestCamera();
 
-	//! Tell if new frame in buffer
-	bool FrameAvailable();
+    //! Tell if new frame in buffer
+    bool FrameAvailable();
 
     //! Multi thread the grabbing of the two frame
     void GrabFrames();
@@ -99,7 +99,7 @@ public:
     //! To be used in a thread
     static void FrameWorker(VideoCapture cm, Mat *frame);
 
-	static void camWorker(StereoCamera camera);
+    static void camWorker(StereoCamera camera);
 
     Mat* GetFrame();
 };
