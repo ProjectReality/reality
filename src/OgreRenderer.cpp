@@ -238,7 +238,7 @@ Ogre::Image* OgreRenderer::MatToImage(cv::Mat in) {
     Ogre::MemoryDataStream* rightStream = new Ogre::MemoryDataStream((void*) in.data, cam_frame_size[0] * cam_frame_size[1] * 3, false, false);
     Ogre::DataStreamPtr ptr2(rightStream);
     ptr2->seek(0);
-    out->loadRawData(ptr2, cam_frame_size[0], cam_frame_size[1], Ogre::PF_B8G8R8);
+    out->loadRawData(ptr2, cam_frame_size[0], cam_frame_size[1], Ogre::PF_R8G8B8);
     return out;
 }
 

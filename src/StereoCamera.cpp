@@ -10,8 +10,8 @@ StereoCamera::~StereoCamera() {
 }
 
 void StereoCamera::OpenCamera() {
-    camera[LEFT].open(0);
-    camera[RIGHT].open(1);
+    camera[LEFT].open(1);
+    camera[RIGHT].open(0);
 
     if (!camera[LEFT].isOpened()) {
         std::cerr << "StereoCamera: OpenCamera() - Couldn't Open first Camera" << std::endl;
