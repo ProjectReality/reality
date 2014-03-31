@@ -31,61 +31,83 @@ struct        Elem
   Ogre::SceneNode*    node;
 };
 
-
-//! 3D Engine
-/*!
-Class manage everything in the 3D Engine
-*/
-class       OgreRenderer: public IRenderer
-{
-public:
+/**
+ * @brief 3D Engine
+ * @details Class manage everything in the 3D Engine
+ *
+ */
+ class       OgreRenderer: public IRenderer
+ {
+ public:
 
   OgreRenderer(double camsize[2], VirtualOculus *rift);
   ~OgreRenderer();
 
-  //! Create a new entity in the scene
-  void        createEntity(std::string _name, std::string _mesh);
+/**
+* @brief Create a new entity
+* @details add a new entity to the scene
+*
+* @param _name Name of the entity
+* @param _mesh Name of the mesh file to load
+*/
+void        createEntity(std::string _name, std::string _mesh);
 
-  //! Change the position of an entity
-  void        moveEntity(std::string _name, float x, float y, float z);
+/**
+ * @brief Move an entity in a direction
+ * @details Move in any direction (not reposition)
+ *
+ * @param _name Name of the entity to move
+ * @param x add or reduce the X position in space
+ * @param y add or reduce the Y position in space
+ * @param z add or reduce the Z position in space
+ */
+ void        moveEntity(std::string _name, float x, float y, float z);
 
-  //! Change the rotation of an entity
-  void        rotateEntity(std::string _name, float yaw, float pitch, float roll);
+ /**
+ * @brief Rotate an entity in a direction
+ * @details Rotate an entity in a direction
+ *
+ * @param _name Name of the entity to rotate
+ * @param yaw [description]
+ * @param pitch [description]
+ * @param roll [description]
+ */
+ void        rotateEntity(std::string _name, float yaw, float pitch, float roll);
 
   //! Create a new light in the scene
-  void        createLight(std::string _name);
+ void        createLight(std::string _name);
 
   //! Change the position of the light
-  void        moveLight(std::string _name, float x, float y, float z);
+ void        moveLight(std::string _name, float x, float y, float z);
 
   //! Load a new mesh in memory
-  void        loadMesh(std::string _name, std::string _file);
+ void        loadMesh(std::string _name, std::string _file);
 
   //! Load a new texture in memory
-  void        loadTexture(std::string _name, std::string _file);
+ void        loadTexture(std::string _name, std::string _file);
 
   //! Update the frame of the camera
-  void        loadCam(cv::Mat left, cv::Mat right);
+ void        loadCam(cv::Mat left, cv::Mat right);
 
   //! Produce one frame
-  void        render();
+ void        render();
 
   //! If windows still open
-  bool        isAlive();
+ bool        isAlive();
 
   //! Convert an Opencv Mat into a Ogre Image
-  Ogre::Image* MatToImage(cv::Mat in);
+ Ogre::Image* MatToImage(cv::Mat in);
 
   //! Convert an OVR::Matrix4f to Ogre::Matrix4
-  Ogre::Matrix4 OVRMat4toOgreMat4(OVR::Matrix4f matrix);
+ Ogre::Matrix4 OVRMat4toOgreMat4(OVR::Matrix4f matrix);
 
-  void setFrameSize(double size[2]);
+ void setFrameSize(double size[2]);
 
 
   //temp input handling
-  bool keyPressed(const OIS::KeyEvent& ev);
+ bool keyPressed(const OIS::KeyEvent& ev);
 
-  bool  getShutDown();
+ bool  getShutDown();
 
 
 private:
