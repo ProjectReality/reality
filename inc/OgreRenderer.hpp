@@ -1,22 +1,25 @@
 #ifndef		_R_OGRERENDERER_HPP_
 #define		_R_OGRERENDERER_HPP_
 
-#include	<OgreCamera.h>
-#include	<OgreEntity.h>
-#include	<OgreLogManager.h>
 #include	<OgreRoot.h>
-#include	<OgreViewport.h>
-#include	<OgreSceneManager.h>
-#include	<OgreRenderWindow.h>
-#include	<OgreConfigFile.h>
+#include <OgreCompositorInstance.h>
+#include <OgreCompositionPass.h>
+#include <OgreCompositionTargetPass.h>
+#include <OgreCompositorManager.h>
+#include <OgreWindowEventUtilities.h>
+#include        <OgreSceneManager.h>
+#include        <OgreCamera.h>
+#include        <OgreEntity.h>
+#include        <OgreLogManager.h>
+#include        <OgreViewport.h>
+#include        <OgreRenderWindow.h>
+#include        <OgreConfigFile.h>
 
-#include	<OISEvents.h>
-#include	<OISInputManager.h>
-#include	<OISKeyboard.h>
-#include	<OISMouse.h>
+#include        <OISEvents.h>
+#include        <OISInputManager.h>
+#include        <OISKeyboard.h>
+#include        <OISMouse.h>
 
-#include	<SdkTrays.h>
-#include	<SdkCameraMan.h>
 
 #include	"Oculus.hpp"
 #include	"IRenderer.hpp"
