@@ -63,6 +63,17 @@ void        createEntity(std::string _name, std::string _mesh);
  */
  void        moveEntity(std::string _name, float x, float y, float z);
 
+/**
+ * @brief Set a new position for an entity
+ * @details New coord in space
+ *
+ * @param _name Name of the entity
+ * @param x x
+ * @param y y
+ * @param z z
+ */
+ void newPosEntity(std::string _name, float x, float y, float z);
+
  /**
  * @brief Rotate an entity in a direction
  * @details Rotate an entity in a direction

@@ -172,6 +172,14 @@ void    OgreRenderer::createLight(std::string _name) {
 
 }
 
+void OgreRenderer::newPosEntity(std::string _name, float x, float y, float z) {
+    if (entities.find(_name) == entities.end()) {
+        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
+        return;
+    }
+    entities[_name].node->setPosition(Ogre::Vector3(x, y, z));
+}
+
 void    OgreRenderer::moveEntity(std::string _name, float x, float y, float z) {
     if (entities.find(_name) == entities.end()) {
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
@@ -185,7 +193,6 @@ void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, fl
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
         return;
     }
-
   entities[_name].node->yaw(Ogre::Degree(yaw));
   entities[_name].node->pitch(Ogre::Degree(pitch));
   entities[_name].node->roll(Ogre::Degree(roll));
