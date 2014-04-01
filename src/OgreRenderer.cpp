@@ -169,7 +169,6 @@ void    OgreRenderer::createLight(std::string _name) {
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
         return;
     }
-
 }
 
 void OgreRenderer::newPosEntity(std::string _name, float x, float y, float z) {
