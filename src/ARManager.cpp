@@ -6,7 +6,11 @@
 //---------------------------------------- CONSTRUCTOR --------------------------------------//
 ARManager::ARManager()
 {
-	detector = new ARma::PatternDetector(fixed_thresh, adapt_thresh, adapt_block_size, confidenceThreshold, norm_pattern_size, mode);
+	this->detector = new ARma::PatternDetector(fixed_thresh, adapt_thresh, adapt_block_size, confidenceThreshold, norm_pattern_size, mode);
+	CvMat* intrinsic = (CvMat*)cvLoad("Data/intrinsic.xml");
+	CvMat* distor = (CvMat*)cvLoad("Data/distortion.xml");
+	this->cameraMatrix = cvarrToMat(intrinsic);
+	this->distortions = cvarrToMat(distor);
 }
 
 //---------------------------------------- MAIN FUNCTIONS --------------------------------------//
@@ -74,7 +78,7 @@ void ARManager::arLoop(ARManager *ar)
 			ar->frameChange = false;
 			ar->m_marker.unlock();
 
-			ar->detector->detect(ar->frame, cameraMatrix, distortions, ar->patternLibrary, ar->detectedPattern);
+			ar->detector->detect(ar->frame, ar->cameraMatrix, ar->distortions, ar->patternLibrary, ar->detectedPattern);
 			if (!ar->detectedPattern.empty())
 			{
 				if (verbose) std::cout << "||||| Marker NUM : " << ar->detectedPattern.size() << std::endl;
@@ -127,7 +131,7 @@ int ARManager::loadPattern(const char* filename, std::vector<cv::Mat>& library, 
 {
 	Mat img = imread(filename, 0);
 
-	if (img.cols != img.rows){
+	if (img.data == NULL || img.cols != img.rows){
 		std::cerr << "Not a square pattern" << std::endl;
 		return -1;
 	}

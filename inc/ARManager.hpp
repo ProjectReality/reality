@@ -23,7 +23,6 @@
 
 #include	"TinyXML/tinyxml.h"
 #include	"AssetInfo.hpp"
-#include	"ARma/cameraparams.h"
 #include	"ARma/patterndetector.h"
 
 #pragma once
@@ -52,6 +51,8 @@ private:
 	bool						markerChange = false;
 	ARma::PatternDetector		*detector;
 	int							patternCount;
+	cv::Mat						cameraMatrix;
+	cv::Mat						distortions;
 
 public:
 	ARManager();
