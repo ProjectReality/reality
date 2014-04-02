@@ -3,43 +3,36 @@
 
 #include	<string>
 
-#include	<AR/param.h>
-#include	<AR/ar.h>
-
 #include	<boost/multi_array.hpp>
+
+#include	"ARma/pattern.h"
 
 #pragma once
 class AssetInfo
 {
 private:
-	ARMarkerInfo	info;
+	ARma::Pattern	info;
+	cv::Mat			patt_frame;
 	std::string		patternName;
 	std::string		assetName;
 	int				patt_id;
-	double			patt_width = 80.0;
-	double*			patt_center;
-	double**		patt_trans;
 
 
 public:
-	AssetInfo(std::string pName = "", std::string aName = "");
+	AssetInfo(std::string pName, std::string aName);
 	~AssetInfo();
 
 public:
-	void						setInfo(ARMarkerInfo mkInfo);
-	ARMarkerInfo				getInfo() const;
+	void						setInfo(ARma::Pattern mkInfo);
+	ARma::Pattern				getInfo() const;
 	void						setPattName(std::string pName);
 	std::string					getPattName() const;
 	void						setAssName(std::string aName);
 	std::string					getAssName() const;
 	void						setId(int p_id);
 	int							getId() const;
-	void						setWidth(double width);
-	double						getWidth() const;
-	void						setCenter(std::pair<double, double> center);
-	double*						getCenter() const;
-	void						setTranslation(double trans[3][4]);
-	double**					getTranslation() const;
+	cv::Mat						getPattFrame() const;
+	void						setPattFrame(cv::Mat p_frame);
 };
 
 #endif

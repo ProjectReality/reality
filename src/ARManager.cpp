@@ -1,26 +1,18 @@
 #include "ARManager.hpp"
+#include "ARma/patterndetector.h"
+#include "ARma/pattern.h"
 
 
 //---------------------------------------- CONSTRUCTOR --------------------------------------//
 ARManager::ARManager()
-{}
+{
+	detector = new ARma::PatternDetector(fixed_thresh, adapt_thresh, adapt_block_size, confidenceThreshold, norm_pattern_size, mode);
+}
 
 //---------------------------------------- MAIN FUNCTIONS --------------------------------------//
 
 void ARManager::init(std::string filename)
 {
-//	char           *cparam_name = "Data/camera_para.dat";
-//	char			*vconf = "Data\\WDM_camera_flipV.xml";
-//	int             xsize, ysize;
-//
-//	/* set the initial camera parameters */
-//	if (arParamLoad(cparam_name, 1, &cparam) < 0) {
-//		printf("Camera parameter load error !!\n");
-//		exit(0);
-//	}
-//
-//	arInitCparam(&cparam);
-//
 	if (verbose) std::cout << "ARManager.init() : Try to load database named " << filename.c_str() << std::endl;
 	TiXmlDocument doc(filename.c_str());
 	if (doc.LoadFile())
@@ -34,11 +26,7 @@ void ARManager::init(std::string filename)
 				if (child->FirstChildElement("pattern") && child->FirstChildElement("asset"))
 				{
 					AssetInfo	tmpAss(child->FirstChildElement("pattern")->GetText(), child->FirstChildElement("asset")->GetText());
-					tmpAss.setId(arLoadPatt(tmpAss.getPattName().c_str()));
-					if (tmpAss.getId() != -1)
-					{
-						markerList.insert(markerList.begin(), std::pair<int, AssetInfo>(tmpAss.getId(), tmpAss));
-					}
+					loadPattern(tmpAss.getPattName().c_str(), patternLibrary, patternCount);
 				}
 				child = child->NextSiblingElement("object");
 			}
@@ -80,30 +68,23 @@ void ARManager::arLoop(ARManager *ar)
 {
 	while (1)
 	{
-		if (ar->frameChange && ar->frame != NULL)
+		if (ar->frameChange)
 		{
-			std::cout << "Object 2" << std::endl;
-			ARMarkerInfo    *a_markerInfo;
-			int				markerNum;
-			std::cout << arActivatePatt(ar->markerList.begin()->first) << std::endl;
 			ar->m_marker.lock();
 			ar->frameChange = false;
+			ar->m_marker.unlock();
 
-
-			std::cout << "Object 3" << std::endl;
-			if (arDetectMarker(ar->getFrame(), ar->getTresh(), &a_markerInfo, &markerNum) >= 0)
+			ar->detector->detect(ar->frame, cameraMatrix, distortions, ar->patternLibrary, ar->detectedPattern);
+			if (!ar->detectedPattern.empty())
 			{
-				std::cout << "Object 1" << std::endl;
-				if (verbose) std::cout << "||||| Marker NUM : " << markerNum << std::endl;
+				if (verbose) std::cout << "||||| Marker NUM : " << ar->detectedPattern.size() << std::endl;
 				ar->clearMarker();
-				while (markerNum > 0)
+				for (std::vector<ARma::Pattern>::iterator it = ar->detectedPattern.begin(); it != ar->detectedPattern.end(); it++)
 				{
-					markerNum--;
-					ar->addMarker(a_markerInfo[markerNum]);
+					ar->addMarker(*it);
 				}
 				ar->validMarkers();
 			}
-			ar->m_marker.unlock();
 		}
 #ifdef _WIN32
 		Sleep(10);
@@ -124,7 +105,7 @@ void ARManager::clearMarker()
 	this->markerFound.clear();
 }
 
-void ARManager::addMarker(ARMarkerInfo info)
+void ARManager::addMarker(ARma::Pattern info)
 {
 
 	double								patt_trans[3][4];
@@ -132,8 +113,6 @@ void ARManager::addMarker(ARMarkerInfo info)
 	AssetInfo							ass = it->second;
 
 	ass.setInfo(info);
-	arGetTransMat(&info, ass.getCenter(), ass.getWidth(), patt_trans);
-	ass.setTranslation(patt_trans);
 	this->markerFound.push_back(ass);
 }
 
@@ -144,23 +123,42 @@ void ARManager::validMarkers()
 	this->m_marker.unlock();
 }
 
-void ARManager::change(cv::Mat frame)
+int ARManager::loadPattern(const char* filename, std::vector<cv::Mat>& library, int& patternCount)
 {
-	this->m_marker.lock();
-	arParamChangeSize(&cparam, frame.rows, frame.cols, &cparam);
-	this->m_marker.unlock();
+	Mat img = imread(filename, 0);
+
+	if (img.cols != img.rows){
+		std::cerr << "Not a square pattern" << std::endl;
+		return -1;
+	}
+
+	Mat src(norm_pattern_size, norm_pattern_size, CV_8UC1);
+	Point2f center((norm_pattern_size - 1) / 2.0f, (norm_pattern_size - 1) / 2.0f);
+	Mat rot_mat(2, 3, CV_32F);
+
+	resize(img, src, Size(norm_pattern_size, norm_pattern_size));
+	Mat subImg = src(Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4), Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4));
+	library.push_back(subImg);
+
+	rot_mat = getRotationMatrix2D(center, 90, 1.0);
+
+	for (int i = 1; i<4; i++){
+		Mat dst = Mat(norm_pattern_size, norm_pattern_size, CV_8UC1);
+		rot_mat = getRotationMatrix2D(center, -i * 90, 1.0);
+		warpAffine(src, dst, rot_mat, Size(norm_pattern_size, norm_pattern_size));
+		Mat subImg = dst(Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4), Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4));
+		library.push_back(subImg);
+	}
+
+	patternCount++;
+	return 1;
 }
 
 //---------------------------------------- GETTER & SETTER --------------------------------------//
-bool ARManager::setFrame(ARUint8 *p_frame)
+bool ARManager::setFrame(cv::Mat p_frame)
 {
 	if (this->m_marker.try_lock())
 	{
-		/*if (this->frame == NULL || strlen((char*)p_frame) > strlen((char*)this->frame))
-		{
-			this->frame = new ARUint8[strlen((char*)p_frame)];
-		}
-		strcpy((char*)this->frame, (char *)p_frame);*/
 		this->frame = p_frame;
 		this->frameChange = true;
 		this->m_marker.unlock();
@@ -169,7 +167,7 @@ bool ARManager::setFrame(ARUint8 *p_frame)
 	return false;
 }
 
-ARUint8* ARManager::getFrame() const
+cv::Mat ARManager::getFrame() const
 {
 	return (this->frame);
 }
@@ -190,15 +188,17 @@ std::list<AssetInfo> ARManager::getMarkers()
 	return (this->markerFound);
 }
 
-void ARManager::setTresh(int t)
+int ARManager::getCount() const
 {
-	this->threshold = t;
-}
-
-int ARManager::getTresh() const
-{
-	return (this->threshold);
+	return (patternCount);
 }
 
 //---------------------------------------- DESTRUCTOR --------------------------------------//
 ARManager::~ARManager() {}
+
+//---------------------------------------- Debug Function --------------------------------------//
+void ARManager::draw(cv::Mat& frame)
+{
+	for (std::list<AssetInfo>::iterator it = markerFound.begin(); it != markerFound.end(); it++)
+		it->getInfo().draw(frame, cameraMatrix, distortions);
+}
