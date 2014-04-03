@@ -198,6 +198,14 @@ if(UNIX)
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
+
+  elseif(EXISTS /usr/lib/OGRE) #where are plugin in ArchLinux
+    install(FILES 
+      /usr/lib/OGRE/RenderSystem_GL.so.${OGRE_VERSION}
+      /usr/lib/OGRE/Plugin_CgProgramManager.so.${OGRE_VERSION}
+      /usr/lib/OGRE/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
+      DESTINATION .
+      CONFIGURATIONS Release RelWithDebInfo Debug)
+
   endif()
 endif(UNIX)
-
