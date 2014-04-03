@@ -58,7 +58,7 @@ public:
 	~ARManager();
 
 public:
-	void						init(std::string filename = "db.xml");
+	void						init(std::string filename = "Data/db.xml");
 	void						start();
 	void						stop();
 	bool						setFrame(cv::Mat p_frame);
