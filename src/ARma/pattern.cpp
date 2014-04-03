@@ -38,7 +38,6 @@ namespace ARma {
 	void Pattern::getExtrinsics(int patternSize, const Mat& cameraMatrix, const Mat& distortions)
 	{
 
-		std::cout << "777777777777777" << std::endl;
 		CvMat objectPts;//header for 3D points of pat3Dpts
 		CvMat imagePts;//header for 2D image points of pat2Dpts 
 		CvMat intrinsics = cameraMatrix;
@@ -72,9 +71,7 @@ namespace ARma {
 		cvInitMatHeader(&imagePts, 4, 2, CV_32FC1, pat2DPts);
 		
 		//find extrinsic parameters
-		std::cout << "9999999999999" << std::endl;
 		cvFindExtrinsicCameraParams2(&objectPts, &imagePts, &intrinsics, &distCoeff, &rot, &tra);
-		std::cout << "5555555555555" << std::endl;
 	}
 
 	void Pattern::draw(Mat& frame, const Mat& camMatrix, const Mat& distMatrix)
@@ -123,9 +120,7 @@ namespace ARma {
 		//draw the line that reflects the orientation. It indicates the bottom side of the pattern
 		cv::line(frame, model2ImagePts.at(2), model2ImagePts.at(3), cvScalar(80,255,80), 3);
 
-		std::cout << "Grumpi2" << std::endl;
 		model2ImagePts.clear();
-		std::cout << "Grumpi3" << std::endl;
 
 	}
 

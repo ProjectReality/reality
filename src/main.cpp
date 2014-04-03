@@ -26,7 +26,6 @@ int		main()
   video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
   render = new OgreRenderer(video_size, rift);
- 
 
   // Scene creation
   render->createEntity("Test", "");
@@ -37,20 +36,21 @@ int		main()
   // AR init
   ar.init();
   ar.start();
-
+  //frame = camera.GetFrame();
+  //ar.setFrame(frame[0]);
   // Render loop
   while(render->isAlive())
     {
 	  if (ARManager::verbose)
 	  {
-		  if (ar.isChanged())
-		  {
-			  std::list<AssetInfo> markers = ar.getMarkers();
-			  for (std::list<AssetInfo>::iterator it = markers.begin(); it != markers.end(); it++)
-			  {
-				  std::cout << "Marker : " << it->getPattName() << std::endl;
-			  }
-		  }
+		  // if (ar.isChanged())
+		 // {
+			//  std::list<AssetInfo> markers = ar.getMarkers();
+		//	  for (std::list<AssetInfo>::iterator it = markers.begin(); it != markers.end(); it++)
+			//  {
+				//  std::cout << "Marker : " << markers.size() << std::endl;
+			//  }
+		 // }
 	  }
 	  if (camera.FrameAvailable()) {
 		  int				markerNum = -1;

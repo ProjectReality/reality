@@ -11,6 +11,7 @@ ARManager::ARManager()
 	CvMat* distor = (CvMat*)cvLoad("Data/distortion.xml");
 	this->cameraMatrix = cvarrToMat(intrinsic);
 	this->distortions = cvarrToMat(distor);
+	this->patternCount = 0;
 }
 
 //---------------------------------------- MAIN FUNCTIONS --------------------------------------//
@@ -31,6 +32,8 @@ void ARManager::init(std::string filename)
 				{
 					AssetInfo	tmpAss(child->FirstChildElement("pattern")->GetText(), child->FirstChildElement("asset")->GetText());
 					loadPattern(tmpAss.getPattName().c_str(), patternLibrary, patternCount);
+					tmpAss.setId(patternCount - 1);
+					markerList.insert(std::pair<int, AssetInfo>(patternCount - 1, tmpAss));
 				}
 				child = child->NextSiblingElement("object");
 			}
@@ -49,6 +52,7 @@ void ARManager::init(std::string filename)
 			std::cout << "Object" << std::endl;
 			std::cout << "Pattern : " << it->second.getPattName() << std::endl;
 			std::cout << "Asset : " << it->second.getAssName() << std::endl;
+			std::cout << "Id : " << it->second.getId() << std::endl;
 			std::cout << "---------------------------" << std::endl;
 		}
 
@@ -72,22 +76,25 @@ void ARManager::arLoop(ARManager *ar)
 {
 	while (1)
 	{
+		
 		if (ar->frameChange)
 		{
-			ar->m_marker.lock();
+			for (std::map<int, AssetInfo>::iterator it = ar->markerList.begin(); it != ar->markerList.end(); it++)
+				std::cout << "Tralala : " << it->second.getId() << std::endl;
+			boost::mutex::scoped_lock lock(ar->m_marker);
 			ar->frameChange = false;
-			ar->m_marker.unlock();
-
 			ar->detector->detect(ar->frame, ar->cameraMatrix, ar->distortions, ar->patternLibrary, ar->detectedPattern);
+
 			if (!ar->detectedPattern.empty())
 			{
-				if (verbose) std::cout << "||||| Marker NUM : " << ar->detectedPattern.size() << std::endl;
 				ar->clearMarker();
+				if (verbose) {
+					std::cout << "Number of pattern Found : " << ar->detectedPattern.size() << std::endl;
+				}
 				for (std::vector<ARma::Pattern>::iterator it = ar->detectedPattern.begin(); it != ar->detectedPattern.end(); it++)
 				{
 					ar->addMarker(*it);
 				}
-				ar->validMarkers();
 			}
 		}
 #ifdef _WIN32
@@ -95,6 +102,7 @@ void ARManager::arLoop(ARManager *ar)
 #else
 		usleep(10)
 #endif
+		ar->detectedPattern.clear();
 	}
 }
 
@@ -114,17 +122,15 @@ void ARManager::addMarker(ARma::Pattern info)
 
 	double								patt_trans[3][4];
 	std::map<int, AssetInfo>::iterator	it = this->markerList.find(info.id);
-	AssetInfo							ass = it->second;
+	if (it != this->markerList.end())
+	{
+		if (verbose) std::cout << "Marker id Found : " << it->second.getId() << std::endl;
+		AssetInfo							ass = it->second;
 
-	ass.setInfo(info);
-	this->markerFound.push_back(ass);
-}
-
-void ARManager::validMarkers()
-{
-	this->m_marker.lock();
-	this->markerChange = true;
-	this->m_marker.unlock();
+		ass.setInfo(info);
+		this->markerFound.push_back(ass);
+		this->markerChange = true;
+	}
 }
 
 int ARManager::loadPattern(const char* filename, std::vector<cv::Mat>& library, int& patternCount)
@@ -161,14 +167,10 @@ int ARManager::loadPattern(const char* filename, std::vector<cv::Mat>& library, 
 //---------------------------------------- GETTER & SETTER --------------------------------------//
 bool ARManager::setFrame(cv::Mat p_frame)
 {
-	if (this->m_marker.try_lock())
-	{
-		this->frame = p_frame;
-		this->frameChange = true;
-		this->m_marker.unlock();
-		return true;
-	}
-	return false;
+	//boost::mutex::scoped_lock	lock(this->m_marker);
+	this->frame = p_frame.clone();
+	this->frameChange = true;
+	return true;
 }
 
 cv::Mat ARManager::getFrame() const
@@ -203,6 +205,7 @@ ARManager::~ARManager() {}
 //---------------------------------------- Debug Function --------------------------------------//
 void ARManager::draw(cv::Mat& frame)
 {
+	boost::mutex::scoped_lock lock(this->m_marker);
 	for (std::list<AssetInfo>::iterator it = markerFound.begin(); it != markerFound.end(); it++)
 		it->getInfo().draw(frame, cameraMatrix, distortions);
 }

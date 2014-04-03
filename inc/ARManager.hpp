@@ -30,10 +30,10 @@ class ARManager
 {
 private:
 	const int					norm_pattern_size = 64;
-	const double				fixed_thresh = 40;
+	const double				fixed_thresh = 50;
 	const double				adapt_thresh = 5;			//non-used with FIXED_THRESHOLD mode
 	const int					adapt_block_size = 45;		//non-used with FIXED_THRESHOLD mode
-	const double				confidenceThreshold = 0.35;
+	const double				confidenceThreshold = 0.40;
 	const int					mode = 2;					//1:FIXED_THRESHOLD, 2: ADAPTIVE_THRESHOLD
 
 public:
