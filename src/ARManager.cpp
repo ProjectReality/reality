@@ -79,8 +79,6 @@ void ARManager::arLoop(ARManager *ar)
 		
 		if (ar->frameChange)
 		{
-			for (std::map<int, AssetInfo>::iterator it = ar->markerList.begin(); it != ar->markerList.end(); it++)
-				std::cout << "Tralala : " << it->second.getId() << std::endl;
 			boost::mutex::scoped_lock lock(ar->m_marker);
 			ar->frameChange = false;
 			ar->detector->detect(ar->frame, ar->cameraMatrix, ar->distortions, ar->patternLibrary, ar->detectedPattern);
@@ -162,6 +160,16 @@ int ARManager::loadPattern(const char* filename, std::vector<cv::Mat>& library, 
 
 	patternCount++;
 	return 1;
+}
+
+void ARManager::cleanVector(std::vector<ARma::Pattern>& p_Pattern)
+{
+
+}
+
+int ARManager::calcDist(std::vector<ARma::Pattern>& p_Pattern)
+{
+	return (0);
 }
 
 //---------------------------------------- GETTER & SETTER --------------------------------------//

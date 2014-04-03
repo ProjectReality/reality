@@ -44,7 +44,6 @@ find_package(OpenCV REQUIRED)
 find_package(OGRE REQUIRED)
 find_package(OculusSDK REQUIRED)
 find_package(OIS REQUIRED)
-find_package(ARToolKit REQUIRED)
 
 if(NOT OIS_FOUND)
 	message(SEND_ERROR "Failed to find OIS.")
@@ -86,8 +85,9 @@ file(GLOB ProjectReality_src
     "src/*.cpp"
     "inc/TinyXML/*.h"
     "src/TinyXML/*.cpp"
+	"inc/ARma/*.h"
+	"src/ARma/*.cpp"
 )
-
 include_directories(
     ${OIS_INCLUDE_DIRS}
 	${OGRE_INCLUDE_DIRS}
@@ -95,7 +95,6 @@ include_directories(
 	${OGRE_Overlay_INCLUDE_DIRS}
 	${OCULUS_SDK_INCLUDE_DIRS}
     ${OPENCV_INCLUDE_DIR}
-    ${AR_SDK_INCLUDE_DIR}
 	./inc
 )
 
@@ -112,7 +111,7 @@ if(WIN32)
    set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${AR_SDK_LIBRARIES})
+target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY})
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
 
@@ -158,12 +157,17 @@ if(WIN32)
         CONFIGURATIONS Debug
     )
 
+	install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
+        DESTINATION ./Release
+        CONFIGURATIONS Release RelWithDebInfo
+    )
+	
 	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
 		${CMAKE_SOURCE_DIR}/config/resources.cfg
 		DESTINATION ./Release
 		CONFIGURATIONS Release RelWithDebInfo
 	)
-
+	
 	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
 		${CMAKE_SOURCE_DIR}/config/resources_d.cfg
 		DESTINATION ./Debug

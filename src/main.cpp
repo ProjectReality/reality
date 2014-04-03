@@ -28,7 +28,7 @@ int		main()
   render = new OgreRenderer(video_size, rift);
 
   // Scene creation
-  render->createEntity("Test", "");
+  //render->createEntity("Test", "");
   
   // Free grab & get to get rid of the first frame
   camera.GrabFrames();                                                                                                                                                                      
@@ -62,11 +62,12 @@ int		main()
 		  if (ar.isChanged())
 		  {
 			  ar.draw(frame[0]);
+			  ar.draw(frame[1]);
 		  }
 		  render->loadCam(frame[0], frame[1]);
 		  boost::thread new_pic(&StereoCamera::camWorker, camera);
 	  }
-      render->rotateEntity("Test", 0, 1, 0);
+      //render->rotateEntity("Test", 0, 1, 0);
       render->render();
   }
   ar.stop();

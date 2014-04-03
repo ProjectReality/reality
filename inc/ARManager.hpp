@@ -20,7 +20,6 @@
 	#include	<Windows.h>
 #endif // _WIN32
 
-
 #include	"TinyXML/tinyxml.h"
 #include	"AssetInfo.hpp"
 #include	"ARma/patterndetector.h"
@@ -73,6 +72,8 @@ public:
 	void						change(cv::Mat frame);
 	int							loadPattern(const char* filename, std::vector<cv::Mat>& library, int& patternCount);
 	int							getCount() const;
+	void						cleanVector(std::vector<ARma::Pattern>& p_Pattern);
+	int							calcDist(std::vector<ARma::Pattern>& p_Pattern);
 
 private:
 	static void arLoop(ARManager *ar);
