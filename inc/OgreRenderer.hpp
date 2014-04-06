@@ -44,6 +44,31 @@ struct        Elem
   ~OgreRenderer();
 
 /**
+ * @brief Init everything for Ogre
+ * @details Init everything for Ogre
+ */
+ void init_all();
+
+/**
+ * @brief Init the two cameras
+ * @details Add two camera to the scene, on for each eye with
+ * settings value from the Oculus Rift SDK
+ */
+ void init_cameras();
+
+/**
+ * @brief Init two viewports
+ * @details Init two viewports with a visibility mask for each.
+ */
+ void init_viewports();
+
+/**
+ * @brief
+ * @details
+ */
+ void init_compositor();
+
+/**
 * @brief Create a new entity
 * @details add a new entity to the scene
 *
