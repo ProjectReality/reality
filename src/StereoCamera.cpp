@@ -1,23 +1,29 @@
 #include    "StereoCamera.hpp"
 
-StereoCamera::StereoCamera() {
+StereoCamera::StereoCamera()
+{
     camera_open = false;
     frame_available = false;
 }
 
-StereoCamera::~StereoCamera() {
-    if (camera_open) CloseCamera();
+StereoCamera::~StereoCamera()
+{
+    if (camera_open)
+        CloseCamera();
 }
 
-void StereoCamera::OpenCamera() {
+void StereoCamera::OpenCamera()
+{
     camera[LEFT].open(0);
     camera[RIGHT].open(1);
 
-    if (!camera[LEFT].isOpened()) {
+    if (!camera[LEFT].isOpened())
+    {
         std::cerr << "StereoCamera: OpenCamera() - Couldn't Open first Camera" << std::endl;
         exit(11);
     }
-    if (!camera[RIGHT].isOpened()) {
+    if (!camera[RIGHT].isOpened())
+    {
         std::cerr << "StereoCamera: OpenCamera() - Couldn't Open second Camera" << std::endl <<
         "StereoCamera: OpenCamera() - Mirroring the first camera" << std::endl;
         camera[RIGHT] = camera[LEFT];
@@ -26,29 +32,36 @@ void StereoCamera::OpenCamera() {
     frame_available = true;
 }
 
-void StereoCamera::CloseCamera() {
-    if (!camera[LEFT].isOpened())  camera[LEFT].release();
-    if (!camera[RIGHT].isOpened())  camera[RIGHT].release();
+void StereoCamera::CloseCamera()
+{
+    if (!camera[LEFT].isOpened())
+        camera[LEFT].release();
+    if (!camera[RIGHT].isOpened())
+        camera[RIGHT].release();
     camera_open = false;
     frame_available = false;
 }
 
-void StereoCamera::CameraSet(int param, double value, int camera_id) {
-    if (camera_id < 0) {
+void StereoCamera::CameraSet(int param, double value, int camera_id)
+{
+    if (camera_id < 0)
         camera[camera_id].set(param, value);
-    }
-    else {
+    else
+    {
         camera[LEFT].set(param, value);
         camera[RIGHT].set(param, value);
     }
 }
 
-double StereoCamera::CameraGet(int param, int camera_id) {
+double StereoCamera::CameraGet(int param, int camera_id)
+{
     return camera[camera_id].get(param);
 }
 
-void StereoCamera::TestCamera() {
-    for (int i = 0; i < 2; ++i) {
+void StereoCamera::TestCamera()
+{
+    for (int i = 0; i < 2; ++i)
+    {
         std::cout
         << "camera " << i << " - CV_CAP_PROP_POS_MSEC = " << camera[i].get(CV_CAP_PROP_POS_MSEC) << std::endl
         << "camera " << i << " - CV_CAP_PROP_POS_FRAMES = " << camera[i].get(CV_CAP_PROP_POS_FRAMES) << std::endl
@@ -73,20 +86,25 @@ void StereoCamera::TestCamera() {
     }
 }
 
-void StereoCamera::FrameWorker(VideoCapture cm, Mat *frame) {
-    if (!cm.grab()){
+void StereoCamera::FrameWorker(VideoCapture cm, Mat *frame)
+{
+    if (!cm.grab())
+    {
         std::cerr << "StereoCamera: FrameWorker() - Couldn't grab" << std::endl;
     }
-    if (!cm.retrieve(*frame)){
+    if (!cm.retrieve(*frame))
+    {
         std::cerr << "StereoCamera: FrameWorker() - Couldn't retrieve" << std::endl;
     }
 }
 
-void StereoCamera::camWorker(StereoCamera camera) {
+void StereoCamera::camWorker(StereoCamera camera)
+{
     camera.GrabFrames();
 }
 
-void StereoCamera::GrabFrames() {
+void StereoCamera::GrabFrames()
+{
     frame_available = false;
     boost::thread Thread_FrameLEFT(&StereoCamera::FrameWorker, camera[LEFT], &frame[LEFT]);
     boost::thread Thread_FrameRIGHT(&StereoCamera::FrameWorker, camera[RIGHT], &frame[RIGHT]);
@@ -96,11 +114,13 @@ void StereoCamera::GrabFrames() {
     frame_available = true;
 }
 
-bool StereoCamera::FrameAvailable() {
+bool StereoCamera::FrameAvailable()
+{
     return frame_available;
 }
 
-Mat* StereoCamera::GetFrame() {
+Mat* StereoCamera::GetFrame()
+{
     return frame;
 }
 

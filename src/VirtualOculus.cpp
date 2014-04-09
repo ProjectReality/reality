@@ -1,13 +1,16 @@
 #include    "Oculus.hpp"
 
-VirtualOculus::VirtualOculus() {
+VirtualOculus::VirtualOculus()
+{
 
 }
 
-VirtualOculus::~VirtualOculus() {
+VirtualOculus::~VirtualOculus()
+{
 }
 
-VirtualOculus* VirtualOculus::Init() {
+VirtualOculus* VirtualOculus::Init()
+{
     VirtualOculus *ocu;
 
     System::Init(Log::ConfigureDefaultLog(LogMask_All));
@@ -15,17 +18,18 @@ VirtualOculus* VirtualOculus::Init() {
     pManager = *DeviceManager::Create();
     pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
 
-    if (pHMD) {
+    if (pHMD)
+    {
         pHMD->GetDeviceInfo(&hmd);
         ocu = new Oculus();
     }
-    else {
+    else
         ocu = this;
-    }
     return ocu;
 }
 
-int* VirtualOculus::getResolution() {
+int* VirtualOculus::getResolution()
+{
     int res[2];
 
     res[0] = 800;
@@ -33,15 +37,18 @@ int* VirtualOculus::getResolution() {
     return res;
 }
 
-void VirtualOculus::setDistordScale() {
+void VirtualOculus::setDistordScale()
+{
 
 }
 
-float VirtualOculus::getDistordScale() {
+float VirtualOculus::getDistordScale()
+{
     return 1.7;
 }
 
-StereoEyeParams* VirtualOculus::getEyesParams() {
+StereoEyeParams* VirtualOculus::getEyesParams()
+{
     StereoEyeParams Eyes[2];
     //TODO
 

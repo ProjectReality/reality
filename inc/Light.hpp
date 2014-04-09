@@ -7,11 +7,12 @@
  * light placement
  */
 
-class Light {
-    public:
-        Light();
-        ~Light();
-    private:
+ class Light
+ {
+ public:
+    Light();
+    ~Light();
+private:
 };
 
 #endif

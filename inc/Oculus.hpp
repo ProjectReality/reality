@@ -39,7 +39,7 @@ public:
 
     //! Get the stereo paramaters for each eyes first left [0] then right [1]
         StereoEyeParams* getEyesParams();
-    };
+};
 
 
 #endif // _R_OCULUS_HPP_
