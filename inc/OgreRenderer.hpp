@@ -143,28 +143,24 @@ struct        Elem
 
     void setFrameSize(double size[2]);
 
-
-    //temp input handling
-    bool keyPressed(const OIS::KeyEvent& ev);
-
     bool  getShutDown();
 
 private:
-    VirtualOculus       *rift;
-    double          cam_frame_size[2];
+    VirtualOculus               *rift;
+    double                      cam_frame_size[2];
 
-    Ogre::Root*       ogre;
-    Ogre::SceneManager*   scene;
-    Ogre::RenderWindow*   window;
+    Ogre::Root*                 ogre;
+    Ogre::SceneManager*         scene;
+    Ogre::RenderWindow*         window;
 
-    Ogre::Viewport*     viewports[2];
-    Ogre::Camera*       cameras[2];
-    Ogre::CompositorInstance *compos[2];
-    Ogre::MaterialPtr     mats[2];
-    Ogre::Rectangle2D*    rects[2];
-    Ogre::TexturePtr      tex[2];
+    Ogre::Viewport*             viewports[2];
+    Ogre::Camera*               cameras[2];
+    Ogre::CompositorInstance    *compos[2];
+    Ogre::MaterialPtr           mats[2];
+    Ogre::Rectangle2D*          rects[2];
+    Ogre::TexturePtr            tex[2];
 
     std::map<std::string, Elem> entities;
 };
 
-#endif // _R_OGRERENDERER_HPP_
+#endif //_R_OGRERENDERER_HPP_

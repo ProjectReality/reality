@@ -17,7 +17,6 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
     }
 
     // Ogre init
-
     ogre = new Ogre::Root();
 
     if (!ogre->showConfigDialog()) //show the config window
@@ -62,7 +61,8 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
     Ogre::GpuProgramParametersSharedPtr pParamsLeft = matLeft->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
     Ogre::GpuProgramParametersSharedPtr pParamsRight = matRight->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
 
-    Ogre::Vector4 hmdwarp = Ogre::Vector4(rift->getStereo().GetDistortionK(0),
+    Ogre::Vector4 hmdwarp = Ogre::Vector4(
+        rift->getStereo().GetDistortionK(0),
         rift->getStereo().GetDistortionK(1),
         rift->getStereo().GetDistortionK(2),
         rift->getStereo().GetDistortionK(3));
@@ -78,10 +78,6 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 
     init_all();
-
-    /*
-    * GENERATE RECT FOR CAM TEX
-    */
 
     alive = true; // Ogre is now running
     ShutDown = false;
@@ -170,7 +166,7 @@ void OgreRenderer::init_background_camera()
             Ogre::TEX_TYPE_2D,
             cam_frame_size[0], cam_frame_size[1], //VIDEO SIZE
             0,
-            Ogre::PF_B8G8R8,     // PIXEL FORMAT OF OPENCV FRAME (maybe not..)
+            Ogre::PF_B8G8R8,
             Ogre::TU_DEFAULT);
 
         mats[i] = Ogre::MaterialManager::getSingleton().create(
@@ -328,19 +324,4 @@ void OgreRenderer::setFrameSize(double size[2])
 bool OgreRenderer::getShutDown()
 {
     return ShutDown;
-}
-
-//temp input handling
-
-bool OgreRenderer::keyPressed(const OIS::KeyEvent& ev)
-{
-    switch (ev.key)
-    {
-        case OIS::KC_ESCAPE:
-        ShutDown = true;
-        break;
-        default:
-        break;
-    }
-    return true;
 }
