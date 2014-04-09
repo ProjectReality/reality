@@ -1,0 +1,44 @@
+material EarthGlobe/CherryWood2DarkV
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture CherryWood2DarkV.jpg
+                filtering trilinear
+            }
+        }
+    }
+}
+
+material EarthGlobe/hoop2
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture hoop2.JPG
+                filtering trilinear
+            }
+        }
+    }
+}
+
+material EarthGlobe/shiny_brass
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture shiny_brass.jpg
+                filtering trilinear
+            }
+        }
+    }
+}

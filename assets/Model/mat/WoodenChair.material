@@ -1,0 +1,14 @@
+material WoodenChair/texture24
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture texture24.jpg
+                filtering trilinear
+            }
+        }
+    }
+}
