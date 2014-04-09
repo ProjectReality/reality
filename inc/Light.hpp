@@ -15,6 +15,8 @@
 #include  <OgreRenderWindow.h>
 #include  <OgreConfigFile.h>
 
+#include <boost/date_time/gregorian/gregorian.hpp>
+
 /**
  * @brief Class for light and shadow stuff in Ogre
  * @details Handle all the lights in Ogre, shadow settings, and
@@ -26,7 +28,9 @@
  public:
     Light(Ogre::SceneManager* scene);
     ~Light();
+    void GetTime();
 private:
+    Ogre::SceneManager* scene;
 };
 
 #endif

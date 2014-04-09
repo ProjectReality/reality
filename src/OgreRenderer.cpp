@@ -325,3 +325,5 @@ bool OgreRenderer::getShutDown()
 {
     return ShutDown;
 }
+
+Ogre::SceneManager* OgreRenderer::getScene() { return scene; }
