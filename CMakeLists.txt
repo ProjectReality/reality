@@ -223,6 +223,11 @@ if(UNIX)
 		DESTINATION .
 		CONFIGURATIONS Release RelWithDebInfo Debug
 	)
+	
+	install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
+        DESTINATION .
+        CONFIGURATIONS Release RelWithDebInfo Debug
+    )
 
 endif(UNIX)
 
