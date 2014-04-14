@@ -27,10 +27,10 @@ class Pattern
 		void getExtrinsics(int patternSize, const Mat& cameraMatrix, const Mat& distortions);
 
 		//augments image with 3D cubes. It;s too simple augmentation jsut for checking
-		void Pattern::draw(Mat& frame, const Mat& camMatrix, const Mat& distMatrix);
+		void draw(Mat& frame, const Mat& camMatrix, const Mat& distMatrix);
 
 		//computes the rotation matrix from the rotation vector using Rodrigues
-		void Pattern::rotationMatrix(const Mat& rotation_vector, Mat& rotation_matrix);
+		void rotationMatrix(const Mat& rotation_vector, Mat& rotation_matrix);
 		
 		//prints the properties of the patten and its transformation matrix
 		void showPattern(void);

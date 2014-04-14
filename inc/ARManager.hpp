@@ -28,12 +28,12 @@
 class ARManager
 {
 private:
-	const int					norm_pattern_size = 64;
-	const double				fixed_thresh = 50;
-	const double				adapt_thresh = 5;			//non-used with FIXED_THRESHOLD mode
-	const int					adapt_block_size = 45;		//non-used with FIXED_THRESHOLD mode
-	const double				confidenceThreshold = 0.40;
-	const int					mode = 2;					//1:FIXED_THRESHOLD, 2: ADAPTIVE_THRESHOLD
+	int					norm_pattern_size = 64;
+	double				fixed_thresh = 50;
+	double				adapt_thresh = 5;			//non-used with FIXED_THRESHOLD mode
+	int					adapt_block_size = 45;		//non-used with FIXED_THRESHOLD mode
+	double				confidenceThreshold = 0.40;
+	int					mode = 2;					//1:FIXED_THRESHOLD, 2: ADAPTIVE_THRESHOLD
 
 public:
 	static const bool			verbose = false;
@@ -46,8 +46,8 @@ private:
 	std::list<AssetInfo>		markerFound;
 	std::vector<cv::Mat>		patternLibrary;
 	std::vector<ARma::Pattern>	detectedPattern;
-	bool						frameChange = false;
-	bool						markerChange = false;
+	bool						frameChange;
+	bool						markerChange;
 	ARma::PatternDetector		*detector;
 	int							patternCount;
 	cv::Mat						cameraMatrix;

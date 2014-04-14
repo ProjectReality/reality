@@ -12,6 +12,16 @@ ARManager::ARManager()
 	this->cameraMatrix = cvarrToMat(intrinsic);
 	this->distortions = cvarrToMat(distor);
 	this->patternCount = 0;
+
+	this->frameChange = false;
+	this->markerChange = false;
+
+	this->norm_pattern_size = 64;
+	this->fixed_thresh = 50;
+	this->adapt_thresh = 5;
+	this->adapt_block_size = 45;
+	this->confidenceThreshold = 0.40;
+	this->mode = 2;
 }
 
 //---------------------------------------- MAIN FUNCTIONS --------------------------------------//
@@ -97,7 +107,7 @@ void ARManager::arLoop(ARManager *ar)
 #ifdef _WIN32
 		Sleep(10);
 #else
-		usleep(10)
+		usleep(10);
 #endif
 		ar->detectedPattern.clear();
 	}
