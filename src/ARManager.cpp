@@ -55,7 +55,6 @@ void ARManager::init(std::string filename)
 			std::cout << "Id : " << it->second.getId() << std::endl;
 			std::cout << "---------------------------" << std::endl;
 		}
-
 }
 
 void ARManager::start()

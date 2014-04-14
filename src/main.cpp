@@ -36,33 +36,24 @@ int		main()
   // AR init
   ar.init();
   ar.start();
-  //frame = camera.GetFrame();
-  //ar.setFrame(frame[0]);
-  // Render loop
+
   while(render->isAlive())
     {
-	  if (ARManager::verbose)
-	  {
-		  // if (ar.isChanged())
-		 // {
-			//  std::list<AssetInfo> markers = ar.getMarkers();
-		//	  for (std::list<AssetInfo>::iterator it = markers.begin(); it != markers.end(); it++)
-			//  {
-				//  std::cout << "Marker : " << markers.size() << std::endl;
-			//  }
-		 // }
-	  }
 	  if (camera.FrameAvailable()) {
-		  int				markerNum = -1;
-
 		  frame = camera.GetFrame(); 
-		  cv::Mat myFrame;
-		  frame->convertTo(myFrame, CV_8U);
 		  ar.setFrame(frame[0]);
 		  if (ar.isChanged())
 		  {
 			  ar.draw(frame[0]);
 			  ar.draw(frame[1]);
+			  if (ARManager::verbose)
+			  {
+				  std::list<AssetInfo>		markerFound = ar.getMarkers();
+				  ARma::Pattern pat = markerFound.front().getInfo();
+				  std::cout << "RotVec : " << pat.rotVec << std::endl;
+				  std::cout << "orientation : " << pat.orientation << std::endl;
+				  std::cout << "rotMat : " << pat.rotMat << std::endl;
+			  }
 		  }
 		  render->loadCam(frame[0], frame[1]);
 		  boost::thread new_pic(&StereoCamera::camWorker, camera);
