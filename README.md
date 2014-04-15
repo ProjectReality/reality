@@ -29,7 +29,6 @@ OCULUS_SDK_ROOT_DIR=C:\Users\vayan\Libs\OculusSDK
 OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
 OPENCV_DIR=C:\Users\vayan\Libs\opencv\build
 OPENCV_ROOT=C:\Users\vayan\Libs\opencv\build
-AR_ROOT=C:\Users\vayanAimeLesFrite\Libs\ARToolKit
 ```
 
 Maybe you don't need every env but I don't remember which one work :)
