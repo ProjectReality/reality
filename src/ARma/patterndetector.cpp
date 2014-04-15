@@ -15,14 +15,14 @@ namespace ARma
 	block_size = param3;//for adaptive image thresholding
 	mode = thresh_mode;//1 means fixed threshol, otherwise the adaptive algorithm is enabled
 	confThreshold = param4;//bound for accepted similarities between detected patterns and loaded patterns
-	normSize = param5;// the size of normalized ROI 
+	normSize = param5;// the size of normalized ROI
 	normROI = Mat(normSize,normSize,CV_8UC1);//normalized ROI
-	
+
 	//Masks for exterior(black) and interior area inside the pattern
 	patMask = Mat::ones(normSize,normSize,CV_8UC1);
 	Mat submat = patMask(cv::Range(normSize/4,3*normSize/4), cv::Range(normSize/4, 3*normSize/4));
 	submat = Scalar(0);
-	
+
 	patMaskInt = Mat::zeros(normSize,normSize,CV_8UC1);
 	submat = patMaskInt(cv::Range(normSize/4,3*normSize/4), cv::Range(normSize/4, 3*normSize/4));
 	submat = Scalar(1);
@@ -94,7 +94,7 @@ void PatternDetector::detect(const Mat& frame, const Mat& cameraMatrix, const Ma
 						}
 				}
 				Rect box(pMinX, pMinY, pMaxX-pMinX+1, pMaxY-pMinY+1);
-				
+
 				//find the upper left vertex
 				double d;
 				double dmin=(4*avsize*avsize);
@@ -116,8 +116,8 @@ void PatternDetector::detect(const Mat& frame, const Mat& cameraMatrix, const Ma
 
 				//refine corners
 				cornerSubPix(grayImage, refinedVertices, Size(3,3), Size(-1,-1), TermCriteria(1, 3, 1));
-				
-				//rotate vertices based on upper left vertex; this gives you the most trivial homogrpahy 
+
+				//rotate vertices based on upper left vertex; this gives you the most trivial homogrpahy
 				for(j=0; j<4;j++){
 					roi2DPts[j] = Point2f(refinedVertices.at((4+v1-j)%4).x - pMinX, refinedVertices.at((4+v1-j)%4).y - pMinY);
 				}
@@ -163,7 +163,7 @@ void PatternDetector::convertAndBinarize(const Mat& src, Mat& dst1, Mat& dst2, i
 	else {
 		src.copyTo(dst2);
 	}
-	
+
 	if (thresh_mode == 1){
 		threshold(dst2, dst1, thresh1, 255, CV_THRESH_BINARY_INV);
 	}
@@ -177,12 +177,12 @@ void PatternDetector::convertAndBinarize(const Mat& src, Mat& dst1, Mat& dst2, i
 
 void PatternDetector::normalizePattern(const Mat& src, const Point2f roiPoints[], Rect& rec, Mat& dst)
 {
-	
+
 
 	//compute the homography
 	Mat Homo(3,3,CV_32F);
 	Homo = getPerspectiveTransform( roiPoints, norm2DPts);
-	
+
 	cv::Mat subImg = src(cv::Range(rec.y, rec.y+rec.height), cv::Range(rec.x, rec.x+rec.width));
 
 	//warp the input based on the homography model to get the normalized ROI
@@ -203,7 +203,7 @@ int PatternDetector::identifyPattern(const Mat& src, std::vector<cv::Mat>& loade
 	double N = (double)(normSize*normSize/4);
 	double nom, den;
 
-	
+
 	Scalar mean_ext, std_ext, mean_int, std_int;
 
 	meanStdDev(src, mean_ext, std_ext, patMask);
@@ -218,23 +218,23 @@ int PatternDetector::identifyPattern(const Mat& src, std::vector<cv::Mat>& loade
 
 	//zero_mean_mode;
 	int zero_mean_mode = 1;
-	
+
 	//use correlation coefficient as a robust similarity measure
 	info.maxCor = -1.0;
 	for (j=0; j<(loadedPatterns.size()/4); j++){
 		for(i=0; i<4; i++){
-			
+
 			double const nnn = pow(norm(loadedPatterns.at(j*4+i)),2);
 
 			if (zero_mean_mode ==1){
 
 				double const mmm = mean(loadedPatterns.at(j*4+i)).val[0];
-			
+
 				nom = inter.dot(loadedPatterns.at(j*4+i)) - (N*mean_int.val[0]*mmm);
 				den = sqrt( (normSrcSq - (N*mean_int.val[0]*mean_int.val[0]) ) * (nnn - (N*mmm*mmm) ) );
 				tempsim = nom/den;
 			}
-			else 
+			else
 			{
 			tempsim = inter.dot(loadedPatterns.at(j*4+i))/(sqrt(normSrcSq*nnn));
 			}

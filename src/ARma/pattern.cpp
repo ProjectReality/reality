@@ -19,7 +19,7 @@ namespace ARma {
 	//convert rotation vector to rotation matrix (if you want to proceed with other libraries)
 	void Pattern::rotationMatrix(const Mat& rotation_vector, Mat& rotation_matrix)
 	{
-		Rodrigues(rotation_vector, rotation_matrix);		
+		Rodrigues(rotation_vector, rotation_matrix);
 	}
 
 	void Pattern::showPattern()
@@ -39,7 +39,7 @@ namespace ARma {
 	{
 
 		CvMat objectPts;//header for 3D points of pat3Dpts
-		CvMat imagePts;//header for 2D image points of pat2Dpts 
+		CvMat imagePts;//header for 2D image points of pat2Dpts
 		CvMat intrinsics = cameraMatrix;
 		CvMat distCoeff = distortions;
 		CvMat rot = rotVec;
@@ -69,7 +69,7 @@ namespace ARma {
 
 		cvInitMatHeader(&objectPts, 4, 3, CV_32FC1, pat3DPts);
 		cvInitMatHeader(&imagePts, 4, 2, CV_32FC1, pat2DPts);
-		
+
 		//find extrinsic parameters
 		cvFindExtrinsicCameraParams2(&objectPts, &imagePts, &intrinsics, &distCoeff, &rot, &tra);
 	}
@@ -96,12 +96,12 @@ namespace ARma {
 
 
 		std::vector<cv::Point2f> model2ImagePts;
-		/* project model 3D points to the image. Points through the transformation matrix 
-		(defined by rotVec and transVec) "are transfered" from the pattern CS to the 
-		camera CS, and then, points are projected using camera parameters 
+		/* project model 3D points to the image. Points through the transformation matrix
+		(defined by rotVec and transVec) "are transfered" from the pattern CS to the
+		camera CS, and then, points are projected using camera parameters
 		(camera matrix, distortion matrix) from the camera 3D CS to its image plane
 		*/
-		projectPoints(modelPts, rotVec, transVec, camMatrix, distMatrix, model2ImagePts); 
+		projectPoints(modelPts, rotVec, transVec, camMatrix, distMatrix, model2ImagePts);
 
 
 		//draw cube, or whatever

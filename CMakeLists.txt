@@ -89,7 +89,9 @@ endif()
 
 file(GLOB ProjectReality_src
   "inc/*.hpp"
+  "inc/*/*.h"
   "src/*.cpp"
+  "src/*/*.cpp"
   )
 
 include_directories(
