@@ -1,6 +1,8 @@
-#include  "OgreRenderer.hpp"
-#include  "StereoCamera.hpp"
-#include  "Oculus.hpp"
+#include	"OgreRenderer.hpp"
+#include	"StereoCamera.hpp"
+#include	"Oculus.hpp"
+#include	"ARManager.hpp"
+
 
 int   main()
 {
@@ -8,6 +10,7 @@ int   main()
     StereoCamera  camera;
     cv::Mat*    frame;
     double    video_size[2];
+    ARManager   ar;
 
     VirtualOculus *rift = new VirtualOculus();
     rift = rift->Init();
@@ -33,6 +36,10 @@ int   main()
     // Free grab & get to get rid of the first frame
     camera.GrabFrames();
 
+    // AR init
+  ar.init();
+  ar.start();
+
     // Render loop
     while(render->isAlive())
     {
@@ -41,7 +48,23 @@ int   main()
 
         if (camera.FrameAvailable())
         {
+
             frame = camera.GetFrame();
+            ar.setFrame(frame[0]);
+            if (ar.isChanged())
+            {
+              ar.draw(frame[0]);
+              ar.draw(frame[1]);
+              if (ARManager::verbose)
+              {
+                std::list<AssetInfo>    markerFound = ar.getMarkers();
+                ARma::Pattern pat = markerFound.front().getInfo();
+                std::cout << "RotVec : " << pat.rotVec << std::endl;
+                std::cout << "orientation : " << pat.orientation << std::endl;
+                std::cout << "rotMat : " << pat.rotMat << std::endl;
+              }
+            }
+
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
         }
@@ -49,8 +72,9 @@ int   main()
         render->moveEntity("Test", 0.6, 0, 0);
         render->render();
     }
+    ar.stop();
     delete render;
     return 0;
 }
 
-// invest: utiliser le même flux webcam pour les deux viewports en le dćalant
+

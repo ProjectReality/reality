@@ -88,14 +88,14 @@ void StereoCamera::TestCamera()
 
 void StereoCamera::FrameWorker(VideoCapture cm, Mat *frame)
 {
-    if (!cm.grab())
+	if (!cm.grab())
     {
-        std::cerr << "StereoCamera: FrameWorker() - Couldn't grab" << std::endl;
-    }
-    if (!cm.retrieve(*frame))
+		std::cerr << "StereoCamera: FrameWorker() - Couldn't grab" << std::endl;
+	}
+	if (!cm.retrieve(*frame, CV_LOAD_IMAGE_UNCHANGED))
     {
-        std::cerr << "StereoCamera: FrameWorker() - Couldn't retrieve" << std::endl;
-    }
+		std::cerr << "StereoCamera: FrameWorker() - Couldn't retrieve" << std::endl;
+	}
 }
 
 void StereoCamera::camWorker(StereoCamera camera)
