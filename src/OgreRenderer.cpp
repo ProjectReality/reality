@@ -236,11 +236,9 @@ void OgreRenderer::setRotationEntity(std::string _name, float yaw, float pitch, 
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
         return;
     }
-
     Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
     Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
     Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
-
     entities[_name].node->setOrientation(y*p*r);
 }
 
@@ -251,11 +249,9 @@ void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, fl
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
         return;
     }
-
     Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
     Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
     Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
-
     entities[_name].node->rotate(y*p*r);
 }
 
