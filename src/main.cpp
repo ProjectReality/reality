@@ -68,7 +68,7 @@ int   main()
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
         }
-        render->rotateEntity("Test", 0, 1, 0);
+        render->rotateEntity("Test", 5, 1, 1);
         render->moveEntity("Test", 0.6, 0, 0);
         render->render();
     }

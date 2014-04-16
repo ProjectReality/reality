@@ -38,6 +38,7 @@ struct        Elem
  */
  class       OgreRenderer: public IRenderer
  {
+
  public:
 
     OgreRenderer(double camsize[2], VirtualOculus *rift);
@@ -69,6 +70,10 @@ struct        Elem
     void init_compositor();
 
 
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     */
     void init_background_camera();
 
 
@@ -101,7 +106,7 @@ struct        Elem
     * @param y y
     * @param z z
     */
-    void newPosEntity(std::string _name, float x, float y, float z);
+    void        setPosEntity(std::string _name, float x, float y, float z);
 
     /**
     * @brief Rotate an entity in a direction
@@ -114,31 +119,94 @@ struct        Elem
     */
     void        rotateEntity(std::string _name, float yaw, float pitch, float roll);
 
-    //! Create a new light in the scene
+
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param _name [description]
+     * @param x [description]
+     * @param y [description]
+     * @param z [description]
+     */
+    void  setRotationEntity(std::string _name, float yaw, float pitch, float roll);
+
+
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param _name [description]
+     */
     void        createLight(std::string _name);
 
-    //! Change the position of the light
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param _name [description]
+     * @param x [description]
+     * @param y [description]
+     * @param z [description]
+     */
     void        moveLight(std::string _name, float x, float y, float z);
 
-    //! Load a new mesh in memory
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param _name [description]
+     * @param _file [description]
+     */
     void        loadMesh(std::string _name, std::string _file);
 
-    //! Load a new texture in memory
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param _name [description]
+     * @param _file [description]
+     */
     void        loadTexture(std::string _name, std::string _file);
 
-    //! Update the frame of the camera
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param left [description]
+     * @param right [description]
+     */
     void        loadCam(cv::Mat left, cv::Mat right);
 
-    //! Produce one frame
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     */
     void        render();
 
-    //! If windows still open
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     * @return [description]
+     */
     bool        isAlive();
 
-    //! Convert an Opencv Mat into a Ogre Image
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param in [description]
+     * @return [description]
+     */
     Ogre::Image* MatToImage(cv::Mat in);
 
-    //! Convert an OVR::Matrix4f to Ogre::Matrix4
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     * @param matrix [description]
+     * @return [description]
+     */
     Ogre::Matrix4 OVRMat4toOgreMat4(OVR::Matrix4f matrix);
 
     void setFrameSize(double size[2]);
