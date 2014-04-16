@@ -16,6 +16,7 @@ public:
     virtual void  moveEntity(std::string _name, float x, float y, float z) = 0;
     virtual void  setPosEntity(std::string _name, float x, float y, float z)= 0;
     virtual void  rotateEntity(std::string _name, float x, float y, float z) = 0;
+    virtual void  setRotationEntity(std::string _name, float x, float y, float z) = 0;
     virtual void  moveLight(std::string _name, float x, float y, float z) = 0;
 
   // Functions related to assets loading
