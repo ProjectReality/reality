@@ -15,6 +15,11 @@
 #include  <OgreRenderWindow.h>
 #include  <OgreConfigFile.h>
 
+
+#include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/date_time/time_zone_base.hpp>
+
+
 /**
  * @brief Class for light and shadow stuff in Ogre
  * @details Handle all the lights in Ogre, shadow settings, and
