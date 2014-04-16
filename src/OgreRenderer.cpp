@@ -190,7 +190,7 @@ void    OgreRenderer::createEntity(std::string _name, std::string _mesh)
     {
         entities[_name].name = _name;
         if ((_mesh == "") || (&_mesh == NULL))
-            entities[_name].ent = scene->createEntity(_name, "knot.mesh");
+            entities[_name].ent = scene->createEntity(_name, "Cube.mesh");
         else
             entities[_name].ent = scene->createEntity(_name, _mesh);
         entities[_name].node = scene->getRootSceneNode()->createChildSceneNode();

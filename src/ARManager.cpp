@@ -88,12 +88,18 @@ void ARManager::arLoop(ARManager *ar)
 		
 		if (ar->frameChange)
 		{
-			boost::mutex::scoped_lock lock(ar->m_marker);
-			ar->frameChange = false;
-			ar->detector->detect(ar->frame, ar->cameraMatrix, ar->distortions, ar->patternLibrary, ar->detectedPattern);
+			cv::Mat fr;
+			if (true)
+			{
+				boost::mutex::scoped_lock lock(ar->m_marker);
+				fr = ar->frame.clone();
+				ar->frameChange = false;
+			}
+			ar->detector->detect(fr, ar->cameraMatrix, ar->distortions, ar->patternLibrary, ar->detectedPattern);
 
 			if (!ar->detectedPattern.empty())
 			{
+				boost::mutex::scoped_lock lock(ar->m_marker);
 				ar->clearMarker();
 				if (verbose) {
 					std::cout << "Number of pattern Found : " << ar->detectedPattern.size() << std::endl;
@@ -135,6 +141,8 @@ void ARManager::addMarker(ARma::Pattern info)
 		AssetInfo							ass = it->second;
 
 		ass.setInfo(info);
+		ass.getInfo().rotationMatrix(ass.getInfo().rotVec, ass.getInfo().rotMat);
+		ass.setRot();
 		this->markerFound.push_back(ass);
 		this->markerChange = true;
 	}
@@ -184,7 +192,7 @@ int ARManager::calcDist(std::vector<ARma::Pattern>& p_Pattern)
 //---------------------------------------- GETTER & SETTER --------------------------------------//
 bool ARManager::setFrame(cv::Mat p_frame)
 {
-	//boost::mutex::scoped_lock	lock(this->m_marker);
+	boost::mutex::scoped_lock	lock(this->m_marker);
 	this->frame = p_frame.clone();
 	this->frameChange = true;
 	return true;
@@ -202,13 +210,13 @@ void ARManager::setMarkerList(std::map<int, AssetInfo> &markers)
 
 std::list<AssetInfo> ARManager::getMarkers()
 {
+	boost::mutex::scoped_lock lock(m_marker);
 	if (this->markerChange)
 	{
-		this->m_marker.lock();
 		this->markerChange = false;
-		this->m_marker.unlock();
 	}
-	return (this->markerFound);
+	std::list<AssetInfo> m(this->markerFound.begin(), this->markerFound.end());
+	return (m);
 }
 
 int ARManager::getCount() const

@@ -2,7 +2,7 @@
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
-
+#include	<math.h> 
 
 int   main()
 {
@@ -30,15 +30,15 @@ int   main()
 
 
     // Scene creation
-    render->createEntity("Test", "EarthGlobe.mesh");
-    //render->createEntity("Test2", "WoodenChair.mesh");
+    //render->createEntity("Test", "Cube.mesh");
+    render->createEntity("Test2", "Spider.mesh");
 
     // Free grab & get to get rid of the first frame
     camera.GrabFrames();
 
     // AR init
-  ar.init();
-  ar.start();
+	ar.init();
+	ar.start();
 
     // Render loop
     while(render->isAlive())
@@ -53,23 +53,15 @@ int   main()
             ar.setFrame(frame[0]);
             if (ar.isChanged())
             {
-              ar.draw(frame[0]);
-              ar.draw(frame[1]);
-              if (ARManager::verbose)
-              {
                 std::list<AssetInfo>    markerFound = ar.getMarkers();
-                ARma::Pattern pat = markerFound.front().getInfo();
-                std::cout << "RotVec : " << pat.rotVec << std::endl;
-                std::cout << "orientation : " << pat.orientation << std::endl;
-                std::cout << "rotMat : " << pat.rotMat << std::endl;
-              }
+                AssetInfo pat = markerFound.front();
+				render->setRotationEntity("Test2", pat.getYaw(), pat.getPitch(), pat.getRoll());
+				render->setPosEntity("Test2", pat.getInfo().transVec.at<float>(0)*5, -pat.getInfo().transVec.at<float>(1)*5, -pat.getInfo().transVec.at<float>(2));
             }
-
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
-        }
-        render->rotateEntity("Test", 5, 1, 1);
-        render->moveEntity("Test", 0.6, 0, 0);
+		}
+		//render->moveEntity("Test", 0.2, 0.2, 0);
         render->render();
     }
     ar.stop();

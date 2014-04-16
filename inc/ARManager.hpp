@@ -36,7 +36,7 @@ private:
 	int					mode = 2;					//1:FIXED_THRESHOLD, 2: ADAPTIVE_THRESHOLD
 
 public:
-	static const bool			verbose = false;
+	static const bool			verbose = true;
 
 private:
 	boost::mutex				m_marker;
