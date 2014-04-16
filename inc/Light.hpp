@@ -31,7 +31,9 @@
  public:
     Light(Ogre::SceneManager* scene);
     ~Light();
+    void GetTime();
 private:
+    Ogre::SceneManager* scene;
 };
 
 #endif

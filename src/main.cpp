@@ -1,6 +1,7 @@
 #include  "OgreRenderer.hpp"
 #include  "StereoCamera.hpp"
 #include  "Oculus.hpp"
+#include  "Light.hpp"
 
 int   main()
 {
@@ -32,6 +33,8 @@ int   main()
 
     // Free grab & get to get rid of the first frame
     camera.GrabFrames();
+
+    Light *l = new Light(render->getScene());
 
     // Render loop
     while(render->isAlive())

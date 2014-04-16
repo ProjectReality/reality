@@ -27,6 +27,7 @@ public:
     virtual void  render() = 0;
     virtual bool  isAlive() = 0;
     virtual bool  getShutDown() = 0;
+    virtual Ogre::SceneManager* getScene() = 0;
 
 protected:
     bool      alive; // Indicate status
