@@ -101,7 +101,7 @@ struct        Elem
     * @param y y
     * @param z z
     */
-    void newPosEntity(std::string _name, float x, float y, float z);
+    void setPosEntity(std::string _name, float x, float y, float z);
 
     /**
     * @brief Rotate an entity in a direction
