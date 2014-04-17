@@ -94,7 +94,7 @@ void AssetInfo::setRot()
 void AssetInfo::setPos()
 {
 	float p_x = info.transVec.at<float>(0) * 4;
-	float p_y = -info.transVec.at<float>(1) * 10;
+	float p_y = -info.transVec.at<float>(1) * 9;
 	float p_z = -info.transVec.at<float>(2);
 
 	this->x = p_x;

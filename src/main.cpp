@@ -59,7 +59,7 @@ int   main()
 				//pat.getInfo().showPattern();
 				//std::cout << "_________________-----------------------------_______________________" << std::endl;
 				//std::cout << "Rows = " << frame->rows << " Cols = " << frame->cols << std::endl;
-				std::cout << pat << std::endl;
+				std::cout << pat << std::endl; 
 				render->setRotationEntity("Test", pat.pitch, pat.roll, pat.yaw);
 				render->setPosEntity("Test", pat.x, pat.y, pat.z);
             }
