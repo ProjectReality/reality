@@ -143,6 +143,7 @@ void ARManager::addMarker(ARma::Pattern info)
 		ass.setInfo(info);
 		ass.getInfo().rotationMatrix(ass.getInfo().rotVec, ass.getInfo().rotMat);
 		ass.setRot();
+		ass.setPos();
 		this->markerFound.push_back(ass);
 		this->markerChange = true;
 	}

@@ -30,8 +30,8 @@ int   main()
 
 
     // Scene creation
-    //render->createEntity("Test", "Cube.mesh");
-    render->createEntity("Test2", "Spider.mesh");
+    render->createEntity("Test", "EarthGlobe.mesh");
+    //render->createEntity("Test2", "WoodenChair.mesh");
 
     // Free grab & get to get rid of the first frame
     camera.GrabFrames();
@@ -54,14 +54,20 @@ int   main()
             if (ar.isChanged())
             {
                 std::list<AssetInfo>    markerFound = ar.getMarkers();
-                AssetInfo pat = markerFound.front();
-				render->setRotationEntity("Test2", pat.getYaw(), pat.getPitch(), pat.getRoll());
-				render->setPosEntity("Test2", pat.getInfo().transVec.at<float>(0)*5, -pat.getInfo().transVec.at<float>(1)*5, -pat.getInfo().transVec.at<float>(2));
+				AssetInfo pat = markerFound.front();
+				std::cout << "_____________________________________________________________________" << std::endl;
+				//pat.getInfo().showPattern();
+				//std::cout << "_________________-----------------------------_______________________" << std::endl;
+				//std::cout << "Rows = " << frame->rows << " Cols = " << frame->cols << std::endl;
+				std::cout << pat << std::endl;
+				render->setRotationEntity("Test", pat.pitch, pat.roll, pat.yaw);
+				render->setPosEntity("Test", pat.x, pat.y, pat.z);
             }
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
 		}
-		//render->moveEntity("Test", 0.2, 0.2, 0);
+		//render->setRotationEntity("Test", 0, 0, 0);
+		//render->setPosEntity("Test", 1, 1, -200);
         render->render();
     }
     ar.stop();

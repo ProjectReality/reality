@@ -17,9 +17,15 @@ private:
 	std::string		patternName;
 	std::string		assetName;
 	int				patt_id;
+
+public:
+	// In ogre use in the order Pitch, Roll, Yaw
 	float			yaw;
 	float			pitch;
 	float			roll;
+	float			x;
+	float			y;
+	float			z;
 
 
 public:
@@ -44,6 +50,9 @@ public:
 	void						setRoll(float p_roll);
 	float						getRoll() const;
 	void						setRot();
+	void						setPos();
 };
+
+std::ostream& operator<<(std::ostream& os, const AssetInfo& obj);
 
 #endif
