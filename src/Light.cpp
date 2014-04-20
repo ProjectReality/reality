@@ -18,9 +18,9 @@ double Light::meanLong(double x){
     float tpi = 2 * pi;
 
     float b = x / tpi;
-    float a = tpi * (b - ((x > 0) ? 1 : (((b < 0) ? -1 : 0) * floor(fabs(b)))));
+    float a = tpi * (b - (floor(fabs(b))));
     if (a < 0)
-        a = tpi + a;
+        a += tpi;
     return a;
 }
 
