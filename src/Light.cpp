@@ -14,8 +14,7 @@ Light::~Light()
 }
 
 double Light::meanLong(double x){
-    float pi = 3.1415926;
-    float tpi = 2 * pi;
+    float tpi = 2 * 3.1415926;
 
     float b = x / tpi;
     float a = tpi * (b - ((b > 0) ? 1 : (((b < 0) ? -1 : 0) * floor(fabs(b)))));
@@ -27,7 +26,6 @@ double Light::meanLong(double x){
 double Light::GetPositionSun(int year, int month, int day, int hour, int mins) {
     //some constant
     double pi = 3.1415926;
-    double tpi = 2 * pi;
     double rads = pi / 180;
     double degs = 180 / pi;
     double hourUT = hour + mins / 60;
@@ -41,28 +39,26 @@ double Light::GetPositionSun(int year, int month, int day, int hour, int mins) {
             367 * year - 7 * (year + (month + 9) / 12) / 4 +
             275 * month / 9 + day - 730531.5 + hourUT / 24;
 
-    // Obliquity of the ecliptic
+    //Obliquity of the ecliptic
     double obliq = 23.439 * rads - .0000004 * rads * d;
 
-    //Find the Mean Longitude of the Sun
+    //Mean Longitude of the Sun (mLongSun)
     double mLongSun = meanLong(280.461 * rads + .9856474 * rads * d);
 
-    //Find the Mean anomaly of the Sun
+    //Mean anomaly of the Sun (mAnoSun)
     double mAnoSun = meanLong(357.528 * rads + .9856003 * rads * d);
 
-    //Find the ecliptic longitude of the sun
+    //Ecliptic longitude of the sun (lambda)
     double lambda = meanLong(mLongSun + 1.915 * rads * sin(mAnoSun) + .02 * rads * sin(2 * mAnoSun));
 
-
-    //Find the Right Ascension (alpha) and Declination (delta) of the Sun
-    double x = cos(obliq) * sin(lambda);
-    double y = cos(lambda);
+    //Right Ascension (alpha) and Declination (delta) of the Sun
     double alpha = atan2(cos(obliq) * sin(lambda), cos(lambda));
-
     double delta = asin(sin(obliq) * sin(lambda));
 
-    double r = 1.00014 - .01671 * cos(mAnoSun) - .00014 * cos(2 * mAnoSun); //distance
+    //Earth - Sun distance
+    double r = 1.00014 - .01671 * cos(mAnoSun) - .00014 * cos(2 * mAnoSun);
 
+    //Equation of Ocarina of Time
     double eqtime = (mLongSun - alpha) * degs * 4; // equation of time
 
     double longi = lambda * degs; //longitude
