@@ -35,6 +35,7 @@ int   main()
     camera.GrabFrames();
 
     Light *l = new Light(render->getScene());
+    l->GetPositionSun(1997,8,7,11,0);
 
     // Render loop
     while(render->isAlive())

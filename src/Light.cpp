@@ -5,7 +5,7 @@
 Light::Light(Ogre::SceneManager* scene)
 {
     this->scene = scene;
-    GetTime();
+    getTime();
 }
 
 Light::~Light()
@@ -18,7 +18,7 @@ double Light::meanLong(double x){
     float tpi = 2 * pi;
 
     float b = x / tpi;
-    float a = tpi * (b - floor(fabs(b)));
+    float a = tpi * (b - ((x > 0) ? 1 : (((b < 0) ? -1 : 0) * floor(fabs(b)))));
     if (a < 0)
         a = tpi + a;
     return a;
@@ -29,6 +29,7 @@ double Light::GetPositionSun(int year, int month, int day, int hourUT, int mins)
     double pi = 3.1415926;
     double tpi = 2 * pi;
     double rads = pi / 180;
+    double degs = 180 / pi;
     hourUT = hourUT + mins / 60;
 
     /*
@@ -72,6 +73,7 @@ double Light::GetPositionSun(int year, int month, int day, int hourUT, int mins)
     double RA = alpha * degs / 15; //Right Ascension
     double DEC = delta * degs; //Declination
 
+    return 0.0;
 }
 
 void Light::getTime()
