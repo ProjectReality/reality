@@ -18,9 +18,9 @@ double Light::meanLong(double x){
     float tpi = 2 * pi;
 
     float b = x / tpi;
-    float a = tpi * (b - (floor(fabs(x))));
+    float a = tpi * (b - ((b > 0) ? 1 : (((b < 0) ? -1 : 0) * floor(fabs(b)))));
     if (a < 0)
-        a += tpi;
+        a = tpi + a;
     return a;
 }
 
@@ -57,11 +57,7 @@ double Light::GetPositionSun(int year, int month, int day, int hourUT, int mins)
     //Find the Right Ascension (alpha) and Declination (delta) of the Sun
     double x = cos(obliq) * sin(lambda);
     double y = cos(lambda);
-    double alpha = tan(x / y);
-    if (x < 0)
-        alpha += pi;
-    if (y < 0 && x > 0)
-        alpha += tpi;
+    double alpha = atan2(cos(obliq) * sin(lambda), cos(lambda));
 
     double delta = asin(sin(obliq) * sin(lambda));
 
