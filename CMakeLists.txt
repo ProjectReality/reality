@@ -190,6 +190,11 @@ if(UNIX)
     RUNTIME DESTINATION .
     CONFIGURATIONS All)  
 
+  #unix need normal plugin file in debug
+  install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
+    ${CMAKE_SOURCE_DIR}/config/resources.cfg
+    DESTINATION .
+    CONFIGURATIONS Debug)
 
   if(EXISTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}) #where are plugin in ubuntu
     install(FILES 
