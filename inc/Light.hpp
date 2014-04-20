@@ -34,7 +34,7 @@
     void    getTime();
     int     getUTC(int hour, int timezone);
     double  meanLong(double x);
-    double  GetPositionSun(int year, int month, int day, int hourUT, int min);
+    double  GetPositionSun(int year, int month, int day, int hour, int min);
 private:
     Ogre::SceneManager* scene;
 };

@@ -24,13 +24,13 @@ double Light::meanLong(double x){
     return a;
 }
 
-double Light::GetPositionSun(int year, int month, int day, int hourUT, int mins) {
+double Light::GetPositionSun(int year, int month, int day, int hour, int mins) {
     //some constant
     double pi = 3.1415926;
     double tpi = 2 * pi;
     double rads = pi / 180;
     double degs = 180 / pi;
-    hourUT = hourUT + mins / 60;
+    double hourUT = hour + mins / 60;
 
     /*
      * Get the days to J2000
@@ -61,11 +61,11 @@ double Light::GetPositionSun(int year, int month, int day, int hourUT, int mins)
 
     double delta = asin(sin(obliq) * sin(lambda));
 
-    double r = 1.00014 - .01671 * cos(mAnoSun) - .00014 * cos(2 * mAnoSun);
+    double r = 1.00014 - .01671 * cos(mAnoSun) - .00014 * cos(2 * mAnoSun); //distance
 
-    double equation = (mLongSun - alpha) * degs * 4;
+    double eqtime = (mLongSun - alpha) * degs * 4; // equation of time
 
-    double longi = lambda * degs;
+    double longi = lambda * degs; //longitude
     double RA = alpha * degs / 15; //Right Ascension
     double DEC = delta * degs; //Declination
 
