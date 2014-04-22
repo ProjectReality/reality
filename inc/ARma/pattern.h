@@ -23,6 +23,11 @@ class Pattern
 
 		~Pattern(){};
 		
+		Mat&	getRotvec();
+		Mat&	getTransvec();
+		Mat&	getRotMat();
+
+
 		//solves the exterior orientation problem between patten and camera
 		void getExtrinsics(int patternSize, const Mat& cameraMatrix, const Mat& distortions);
 
