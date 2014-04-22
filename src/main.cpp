@@ -1,14 +1,10 @@
+#include	<cmath>
 
 #include	"OgreRenderer.hpp"
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
-<<<<<<< HEAD
 #include    "Light.hpp"
-
-=======
-#include	<math.h> 
->>>>>>> master
 
 int   main()
 {
