@@ -35,6 +35,20 @@ namespace ARma {
 		}
 	}
 
+	Mat&	Pattern::getRotvec()
+	{
+		return this->rotVec;
+	}
+
+	Mat&	Pattern::getTransvec()
+	{
+		return this->transVec;
+	}
+
+	Mat&	Pattern::getRotMat()
+	{
+		return this->rotMat;
+	}
 	void Pattern::getExtrinsics(int patternSize, const Mat& cameraMatrix, const Mat& distortions)
 	{
 
