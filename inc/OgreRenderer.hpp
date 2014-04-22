@@ -114,12 +114,6 @@ struct        Elem
     */
     void        rotateEntity(std::string _name, float yaw, float pitch, float roll);
 
-    //! Create a new light in the scene
-    void        createLight(std::string _name);
-
-    //! Change the position of the light
-    void        moveLight(std::string _name, float x, float y, float z);
-
     //! Load a new mesh in memory
     void        loadMesh(std::string _name, std::string _file);
 

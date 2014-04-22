@@ -12,11 +12,9 @@ public:
 
   // General scene functions
     virtual void  createEntity(std::string _name, std::string _mesh) = 0;
-    virtual void  createLight(std::string _name) = 0;
     virtual void  moveEntity(std::string _name, float x, float y, float z) = 0;
     virtual void  newPosEntity(std::string _name, float x, float y, float z)= 0;
     virtual void  rotateEntity(std::string _name, float x, float y, float z) = 0;
-    virtual void  moveLight(std::string _name, float x, float y, float z) = 0;
 
   // Functions related to assets loading
     virtual void  loadMesh(std::string _name, std::string _file) = 0;

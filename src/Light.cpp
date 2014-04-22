@@ -17,7 +17,7 @@ Light::~Light()
 
 }
 
-void   Light::CreateSunLight(std::string name, Ogre::Vector3 pos)
+void   Light::createSun(std::string name, Ogre::Vector3 pos)
 {
     Ogre::Light* sunLight = scene->createLight(name);
     sunLight->setPosition(pos);
@@ -32,6 +32,24 @@ void   Light::CreateSunLight(std::string name, Ogre::Vector3 pos)
     Lights.push_back(sunLight);
 }
 
+void Light::remove(Ogre::Light *l)
+{
+    scene->destroyLight(l);
+    Lights.remove(l);
+}
+
+void Light::remove(std::string name)
+{
+    for (std::list<Ogre::Light*>::iterator it=Lights.begin(); it!=Lights.end(); ++it)
+    {
+        Ogre::Light *mL = *it;
+        if (mL->getName() == name) {
+            Lights.erase(it);
+            scene->destroyLight(mL);
+        }
+    }
+}
+
 double Light::meanLong(double x)
 {
     float tpi = 2 * 3.1415926;
@@ -43,7 +61,7 @@ double Light::meanLong(double x)
     return a;
 }
 
-double Light::GetPositionSun(int year, int month, int day, int hour, int mins)
+double Light::getPositionSun(int year, int month, int day, int hour, int mins)
 {
     //some constant
     double pi = 3.1415926;

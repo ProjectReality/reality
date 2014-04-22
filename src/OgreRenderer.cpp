@@ -34,7 +34,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
 
-    l->CreateSunLight("vayalight", Ogre::Vector3(500,100,600));
+    l->createSun("vayalight", Ogre::Vector3(500,100,600));
 
     // Ressource init
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
@@ -191,15 +191,6 @@ void    OgreRenderer::createEntity(std::string _name, std::string _mesh)
         std::cerr << "Error: createEntity: An entity already exists with this name" << std::endl;
 }
 
-void    OgreRenderer::createLight(std::string _name)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-}
-
 void OgreRenderer::newPosEntity(std::string _name, float x, float y, float z)
 {
     if (entities.find(_name) == entities.end())
@@ -230,15 +221,6 @@ void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, fl
     entities[_name].node->yaw(Ogre::Degree(yaw));
     entities[_name].node->pitch(Ogre::Degree(pitch));
     entities[_name].node->roll(Ogre::Degree(roll));
-}
-
-void    OgreRenderer::moveLight(std::string _name, float x, float y, float z)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
 }
 
 // Functions related to assets loading

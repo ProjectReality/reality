@@ -34,11 +34,13 @@ class Light
 public:
     Light(Ogre::SceneManager* scene);
     ~Light();
-    void    CreateSunLight(std::string name, Ogre::Vector3 pos);
+    void    createSun(std::string name, Ogre::Vector3 pos);
     void    getTime();
     int     getUTC(int localhour, int timezone);
-    double  GetPositionSun(int year, int month, int day, int hour, int min);
-
+    double  getPositionSun(int year, int month, int day, int hour, int min);
+    void    remove(Ogre::Light *l);
+    void    remove(std::string name);
+    void    move();
 private:
     double  meanLong(double x);
 private:
