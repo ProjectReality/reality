@@ -30,15 +30,11 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
     // Scene init
     scene = ogre->createSceneManager("OctreeSceneManager");
 
+    Light *l = new Light(scene);
+
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
 
-    scene->setAmbientLight(Ogre::ColourValue(.6, .6, .6));
-    scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-    scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
-    scene->setShadowFarDistance(700);
-
-    Light *l = new Light(scene);
-    l->CreateSunLight("vayalight", Ogre::Vector3(1200,100,600));
+    l->CreateSunLight("vayalight", Ogre::Vector3(500,100,600));
 
     // Ressource init
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");

@@ -5,7 +5,11 @@
 Light::Light(Ogre::SceneManager* scene)
 {
     this->scene = scene;
-    getTime();
+
+    //scene->setAmbientLight(Ogre::ColourValue(.6, .6, .6));
+    scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+    scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
+    scene->setShadowFarDistance(700);
 }
 
 Light::~Light()
@@ -15,7 +19,6 @@ Light::~Light()
 
 void   Light::CreateSunLight(std::string name, Ogre::Vector3 pos)
 {
-    //1200, 100, 600
     Ogre::Light* sunLight = scene->createLight(name);
     sunLight->setPosition(pos);
     sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
