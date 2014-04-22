@@ -32,10 +32,9 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
     scene = ogre->createSceneManager("OctreeSceneManager");
 
     Light *l = new Light(scene);
+    l->createSun("vayalight", Ogre::Vector3(500,100,600));
 
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
-
-    l->createSun("vayalight", Ogre::Vector3(500,100,600));
 
     // Ressource init
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
@@ -118,7 +117,7 @@ void OgreRenderer::init_viewports()
 
     for (size_t i = 0; i < 2; i++)
     {
-        viewports[i] = window->addViewport(cameras[1], i, 0.5f * i, 0, 0.5f, 1.0f);
+        viewports[i] = window->addViewport(cameras[i], i, 0.5f * i, 0, 0.5f, 1.0f);
         viewports[i]->setBackgroundColour(g_defaultViewportColour);
         viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0); //to hide some stuff between each viewport
     }

@@ -17,7 +17,6 @@ public:
     virtual void  rotateEntity(std::string _name, float x, float y, float z) = 0;
 
     virtual void  setRotationEntity(std::string _name, float x, float y, float z) = 0;
-    virtual void  moveLight(std::string _name, float x, float y, float z) = 0;
 
   // Functions related to assets loading
     virtual void  loadMesh(std::string _name, std::string _file) = 0;

@@ -130,26 +130,6 @@ struct        Elem
      */
     void  setRotationEntity(std::string _name, float yaw, float pitch, float roll);
 
-
-    /**
-     * @brief [brief description]
-     * @details [long description]
-     *
-     * @param _name [description]
-     */
-    void        createLight(std::string _name);
-
-    /**
-     * @brief [brief description]
-     * @details [long description]
-     *
-     * @param _name [description]
-     * @param x [description]
-     * @param y [description]
-     * @param z [description]
-     */
-    void        moveLight(std::string _name, float x, float y, float z);
-
     /**
      * @brief [brief description]
      * @details [long description]
