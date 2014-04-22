@@ -3,8 +3,12 @@
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
+<<<<<<< HEAD
 #include    "Light.hpp"
 
+=======
+#include	<math.h> 
+>>>>>>> master
 
 int   main()
 {
@@ -41,8 +45,8 @@ int   main()
     Light *l = new Light(render->getScene());
     l->getPositionSun(1997,8,7,11,0);
     // AR init
-  ar.init();
-  ar.start();
+	ar.init();
+	ar.start();
 
 
     // Render loop
@@ -58,23 +62,21 @@ int   main()
             ar.setFrame(frame[0]);
             if (ar.isChanged())
             {
-              ar.draw(frame[0]);
-              ar.draw(frame[1]);
-              if (ARManager::verbose)
-              {
                 std::list<AssetInfo>    markerFound = ar.getMarkers();
-                ARma::Pattern pat = markerFound.front().getInfo();
-                std::cout << "RotVec : " << pat.rotVec << std::endl;
-                std::cout << "orientation : " << pat.orientation << std::endl;
-                std::cout << "rotMat : " << pat.rotMat << std::endl;
-              }
+				AssetInfo pat = markerFound.front();
+				std::cout << "_____________________________________________________________________" << std::endl;
+				//pat.getInfo().showPattern();
+				//std::cout << "_________________-----------------------------_______________________" << std::endl;
+				//std::cout << "Rows = " << frame->rows << " Cols = " << frame->cols << std::endl;
+				std::cout << pat << std::endl; 
+				render->setRotationEntity("Test", pat.pitch, pat.roll, pat.yaw);
+				render->setPosEntity("Test", pat.x, pat.y, pat.z);
             }
-
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
-        }
-        render->rotateEntity("Test", 5, 1, 1);
-        render->moveEntity("Test", 0.6, 0, 0);
+		}
+		//render->setRotationEntity("Test", 0, 0, 0);
+		//render->setPosEntity("Test", 1, 1, -200);
         render->render();
     }
     ar.stop();
