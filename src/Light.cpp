@@ -13,7 +13,24 @@ Light::~Light()
 
 }
 
-double Light::meanLong(double x){
+void   Light::CreateSunLight(std::string name, Ogre::Vector3 pos)
+{
+    //1200, 100, 600
+    Ogre::Light* sunLight = scene->createLight(name);
+    sunLight->setPosition(pos);
+    sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
+    sunLight->setDiffuseColour(.35, .35, 0.38);
+    sunLight->setSpecularColour(.9, .9, 1);
+
+    Ogre::Vector3 dir(-1, -1, 0.5);
+    dir.normalise();
+    sunLight->setDirection(dir);
+    sunLight->setCastShadows(true);
+    Lights.push_back(sunLight);
+}
+
+double Light::meanLong(double x)
+{
     float tpi = 2 * 3.1415926;
 
     float b = x / tpi;
@@ -23,7 +40,8 @@ double Light::meanLong(double x){
     return a;
 }
 
-double Light::GetPositionSun(int year, int month, int day, int hour, int mins) {
+double Light::GetPositionSun(int year, int month, int day, int hour, int mins)
+{
     //some constant
     double pi = 3.1415926;
     double rads = pi / 180;
@@ -35,8 +53,7 @@ double Light::GetPositionSun(int year, int month, int day, int hour, int mins) {
      * hourUT is UT in decimal hours
      * only work until 2099 :/
       */
-    double d =
-            367 * year - 7 * (year + (month + 9) / 12) / 4 +
+    double d = 367 * year - 7 * (year + (month + 9) / 12) / 4 +
             275 * month / 9 + day - 730531.5 + hourUT / 24;
 
     //Obliquity of the ecliptic
@@ -65,7 +82,12 @@ double Light::GetPositionSun(int year, int month, int day, int hour, int mins) {
     double RA = alpha * degs / 15; //Right Ascension
     double DEC = delta * degs; //Declination
 
-    return 0.0;
+    return RA;
+}
+
+int Light::getUTC(int localhour, int timezone)
+{
+    return localhour + timezone;
 }
 
 void Light::getTime()

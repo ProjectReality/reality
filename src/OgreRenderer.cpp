@@ -2,6 +2,7 @@
 #include    <boost/current_function.hpp>
 
 #include    "OgreRenderer.hpp"
+#include    "Light.hpp"
 
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
@@ -36,16 +37,8 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
     scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
     scene->setShadowFarDistance(700);
 
-    Ogre::Light* sunLight = scene->createLight("VayaLight");
-    sunLight->setPosition(1200, 100, 600);
-    sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
-    sunLight->setDiffuseColour(.35, .35, 0.38);
-    sunLight->setSpecularColour(.9, .9, 1);
-
-    Ogre::Vector3 dir(-1, -1, 0.5);
-    dir.normalise();
-    sunLight->setDirection(dir);
-    sunLight->setCastShadows(true);
+    Light *l = new Light(scene);
+    l->CreateSunLight("vayalight", Ogre::Vector3(1200,100,600));
 
     // Ressource init
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
