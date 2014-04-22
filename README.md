@@ -11,6 +11,7 @@
 * Boost  <[http://www.boost.org/](http://www.boost.org/)>
 * Cmake  <[http://www.cmake.org](http://www.cmake.org)>
 * Oculus SDK <[https://developer.oculusvr.com/](https://developer.oculusvr.com/?action=dl)>
+* ARToolKit <[http://www.hitl.washington.edu/artoolkit/](http://www.hitl.washington.edu/artoolkit/download/)>
 
 # Windows
 
@@ -26,7 +27,7 @@ BOOST_ROOT=C:\Users\vayan\Libs\boost_1_55
 CMAKE_MODULE_PATH=C:\Users\vayan\Libs\OgreSDK\CMake
 OCULUS_SDK_ROOT_DIR=C:\Users\vayan\Libs\OculusSDK
 OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
-OpenCV_DIR=C:\Users\vayan\Libs\opencv\build
+OPENCV_DIR=C:\Users\vayan\Libs\opencv\build
 OPENCV_ROOT=C:\Users\vayan\Libs\opencv\build
 ```
 

@@ -15,22 +15,22 @@ if(UNIX)
   if(EXISTS "/usr/lib/OculusSDK") #sdk oculus if installed here
     set(OCULUS_SDK_ROOT_DIR "/usr/lib/OculusSDK")
   endif()
-  
+
   if(EXISTS "/usr/local/lib/OGRE/cmake")
-    
+
     set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
     set(OGRE_SAMPLES_INCLUDEPATH "/usr/local/share/OGRE/samples/Common/include/") # We could just *assume* that developers uses this basepath : /usr/local
-    
+
   elseif(EXISTS "/usr/lib/OGRE/cmake")
-    
+
     set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
     set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/") # Otherwise, this one
-    
+
   elseif(EXISTS "/usr/share/OGRE/cmake/modules") #for ubuntu ogre
-    
+
     set(CMAKE_MODULE_PATH "/usr/share/OGRE/cmake/modules;${CMAKE_MODULE_PATH}")
     set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/")
-    
+
   else ()
     message(SEND_ERROR "Failed to find module path.")
   endif()
@@ -80,7 +80,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
     find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} QUIET)
   endif()
   find_package(Boost QUIET)
-  
+
   # Set up referencing of Boost
   include_directories(${Boost_INCLUDE_DIR})
   add_definitions(-DBOOST_ALL_NO_LIB)
@@ -89,7 +89,9 @@ endif()
 
 file(GLOB ProjectReality_src
   "inc/*.hpp"
+  "inc/*/*.h"
   "src/*.cpp"
+  "src/*/*.cpp"
   )
 
 include_directories(
@@ -148,14 +150,18 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
   DESTINATION ./
   CONFIGURATIONS Release RelWithDebInfo Debug)
 
-if(WIN32)	
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
+  DESTINATION ./
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+
+if(WIN32)
   #FIX PROBLEM WITH VS2013
   install(
-    FILES ${CMAKE_SOURCE_DIR}/dllfix/msvcp100d.dll 
+    FILES ${CMAKE_SOURCE_DIR}/dllfix/msvcp100d.dll
     ${CMAKE_SOURCE_DIR}/dllfix/msvcr100d.dll ${CMAKE_SOURCE_DIR}/dllfix/cg.dll
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo Debug)
-  
+
   install(FILES ${OGRE_PLUGIN_DIR_REL}/OgreMain.dll
     ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
     ${OGRE_PLUGIN_DIR_REL}/Plugin_CgProgramManager.dll
@@ -163,7 +169,7 @@ if(WIN32)
     ${OGRE_PLUGIN_DIR_REL}/OIS.dll
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo)
-  
+
   install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
@@ -178,7 +184,7 @@ if(WIN32)
     ${Boost_THREAD_LIBRARY_RELEASE}
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo)
-  
+
   install(FILES ${Boost_DATE_TIME_LIBRARY_DEBUG}
     ${Boost_THREAD_LIBRARY_DEBUG}
     DESTINATION .
@@ -188,7 +194,7 @@ endif(WIN32)
 if(UNIX)
   install(TARGETS ProjectReality
     RUNTIME DESTINATION .
-    CONFIGURATIONS All)  
+    CONFIGURATIONS All)
 
   #unix need normal plugin file in debug
   install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
@@ -197,7 +203,7 @@ if(UNIX)
     CONFIGURATIONS Debug)
 
   if(EXISTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}) #where are plugin in ubuntu
-    install(FILES 
+    install(FILES
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/RenderSystem_GL.so.${OGRE_VERSION}
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_CgProgramManager.so.${OGRE_VERSION}
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
@@ -205,7 +211,7 @@ if(UNIX)
       CONFIGURATIONS Release RelWithDebInfo Debug)
 
   elseif(EXISTS /usr/lib/OGRE) #where are plugin in ArchLinux
-    install(FILES 
+    install(FILES
       /usr/lib/OGRE/RenderSystem_GL.so.${OGRE_VERSION}
       /usr/lib/OGRE/Plugin_CgProgramManager.so.${OGRE_VERSION}
       /usr/lib/OGRE/Plugin_OctreeSceneManager.so.${OGRE_VERSION}

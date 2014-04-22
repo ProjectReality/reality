@@ -22,6 +22,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
     Ogre::LogManager::getSingleton().getDefaultLog()->setDebugOutputEnabled(false);
 
+
     if (!ogre->showConfigDialog()) //show the config window
         exit(11);
 
@@ -191,7 +192,7 @@ void    OgreRenderer::createEntity(std::string _name, std::string _mesh)
         std::cerr << "Error: createEntity: An entity already exists with this name" << std::endl;
 }
 
-void OgreRenderer::newPosEntity(std::string _name, float x, float y, float z)
+void OgreRenderer::setPosEntity(std::string _name, float x, float y, float z)
 {
     if (entities.find(_name) == entities.end())
     {
@@ -208,7 +209,20 @@ void    OgreRenderer::moveEntity(std::string _name, float x, float y, float z)
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
         return;
     }
-    entities[_name].node->setPosition(entities[_name].node->getPosition() + Ogre::Vector3(x, y, z));
+    entities[_name].node->translate(Ogre::Vector3(x, y, z));
+}
+
+void OgreRenderer::setRotationEntity(std::string _name, float yaw, float pitch, float roll)
+{
+    if (entities.find(_name) == entities.end())
+    {
+        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
+        return;
+    }
+    Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
+    Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
+    Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
+    entities[_name].node->setOrientation(y*p*r);
 }
 
 void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, float roll)
@@ -218,9 +232,10 @@ void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, fl
         std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
         return;
     }
-    entities[_name].node->yaw(Ogre::Degree(yaw));
-    entities[_name].node->pitch(Ogre::Degree(pitch));
-    entities[_name].node->roll(Ogre::Degree(roll));
+    Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
+    Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
+    Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
+    entities[_name].node->rotate(y*p*r);
 }
 
 // Functions related to assets loading

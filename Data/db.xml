@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone=no>
+<db>
+	<object>
+		<pattern>Data/patterns/hiro.png</pattern>
+		<asset>Data/assets/pear.mesh</asset>
+	</object>
+	<object>
+		<pattern>Data/patterns/1.jpg</pattern>
+		<asset>Data/assets/object.mesh</asset>
+	</object>
+	<object>
+		<pattern>Data/patterns/spider.png</pattern>
+		<asset>Data/assets/plop.mesh</asset>
+	</object>
+</db>
