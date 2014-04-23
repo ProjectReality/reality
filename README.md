@@ -6,7 +6,7 @@
 
 ## Build Requirements
 
-* Ogre3D 1.9 ([WindowsVC12](https://bitbucket.org/realityproject/reality/downloads/OgreSDK_vc12_v1-9-0.zip]) ([Linux Source](https://bitbucket.org/realityproject/reality/downloads/sinbad-ogre-dd30349ea667.zipogre-1.9-source.zipogre-source-1.9.tar.gz))   <[http://www.ogre3d.org/](http://www.ogre3d.org/)>
+* Ogre3D 1.9 ([WindowsVC12](https://bitbucket.org/realityproject/reality/downloads/OgreSDK_vc12_v1-9-0.zip) ([Linux Source](https://bitbucket.org/realityproject/reality/downloads/sinbad-ogre-dd30349ea667.zipogre-1.9-source.zipogre-source-1.9.tar.gz))   <[http://www.ogre3d.org/](http://www.ogre3d.org/)>
 * OpenCV 2.4.8 ([Windows](https://bitbucket.org/realityproject/reality/downloads/opencv-2.4.8.exe)) ([Linux](https://bitbucket.org/realityproject/reality/downloads/opencv-linux-2.4.8.zip))  <[http://opencv.org/](http://opencv.org/)>
 * Boost 1.55 ([All](https://bitbucket.org/realityproject/reality/downloads/boost_1_55.zip))  <[http://www.boost.org/](http://www.boost.org/)>
 * Cmake  <[http://www.cmake.org](http://www.cmake.org)>
