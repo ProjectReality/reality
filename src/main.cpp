@@ -1,9 +1,11 @@
+#include <cmath>
+#include <map>
+
 #include	"OgreRenderer.hpp"
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
 #include    "Object.hpp"
-#include	<math.h> 
 
 int   main()
 {
@@ -12,7 +14,7 @@ int   main()
     cv::Mat*    frame;
     double    video_size[2];
     ARManager   ar;
-    std::list<Object*>  objects;
+    std::map<std::string,Object*> objects;
 
     VirtualOculus *rift = new VirtualOculus();
     rift = rift->Init();
@@ -30,10 +32,10 @@ int   main()
 
     render = new OgreRenderer(video_size, rift);
 
-    Object* test = new Object("Test", "EarthGlobe.mesh", render->getScene());
+    Object* testobj = new Object("Test", "EarthGlobe.mesh", render->getScene());
     // Scene creation
     //render->createEntity("Test", "EarthGlobe.mesh");
-    objects.push_back(test);
+    objects["Test"] = testobj;
     //render->createEntity("Test2", "WoodenChair.mesh");
 
     // Free grab & get to get rid of the first frame
@@ -63,8 +65,8 @@ int   main()
 				//std::cout << "_________________-----------------------------_______________________" << std::endl;
 				//std::cout << "Rows = " << frame->rows << " Cols = " << frame->cols << std::endl;
 				std::cout << pat << std::endl; 
-				render->setRotationEntity("Test", pat.pitch, pat.roll, pat.yaw);
-				render->setPosEntity("Test", pat.x, pat.y, pat.z);
+                objects["Test"]->setRotation(pat.pitch, pat.roll, pat.yaw);
+                objects["Test"]->setPosition(pat.x, pat.y, pat.z);
             }
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);

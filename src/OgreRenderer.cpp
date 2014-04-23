@@ -37,17 +37,6 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
     scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
     scene->setShadowFarDistance(700);
 
-    Ogre::Light* sunLight = scene->createLight("VayaLight");
-    sunLight->setPosition(1200, 100, 600);
-    sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
-    sunLight->setDiffuseColour(.35, .35, 0.38);
-    sunLight->setSpecularColour(.9, .9, 1);
-
-    Ogre::Vector3 dir(-1, -1, 0.5);
-    dir.normalise();
-    sunLight->setDirection(dir);
-    sunLight->setCastShadows(true);
-
     // Ressource init
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/images", "FileSystem", "Assets");
@@ -182,88 +171,6 @@ void OgreRenderer::init_background_camera()
         mats[i]->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
         rects[i]->setMaterial(i == 0 ? "MatLeft" : "MatRight");
-    }
-}
-
-void    OgreRenderer::createEntity(std::string _name, std::string _mesh)
-{
-    if ((_name.length() < 1))
-        std::cerr << "Error: createEntity: invalid name" << std::endl;
-    else if (entities[_name].name != _name)
-    {
-        entities[_name].name = _name;
-        if ((_mesh == "") || (&_mesh == NULL))
-            entities[_name].ent = scene->createEntity(_name, "Cube.mesh");
-        else
-            entities[_name].ent = scene->createEntity(_name, _mesh);
-        entities[_name].node = scene->getRootSceneNode()->createChildSceneNode();
-        entities[_name].node->attachObject(entities[_name].ent);
-    }
-    else
-        std::cerr << "Error: createEntity: An entity already exists with this name" << std::endl;
-}
-
-void    OgreRenderer::createLight(std::string _name)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-}
-
-void OgreRenderer::setPosEntity(std::string _name, float x, float y, float z)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    entities[_name].node->setPosition(Ogre::Vector3(x, y, z));
-}
-
-void    OgreRenderer::moveEntity(std::string _name, float x, float y, float z)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    entities[_name].node->translate(Ogre::Vector3(x, y, z));
-}
-
-void OgreRenderer::setRotationEntity(std::string _name, float yaw, float pitch, float roll)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
-    Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
-    Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
-    entities[_name].node->setOrientation(y*p*r);
-}
-
-void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, float roll)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
-    Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
-    Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
-    entities[_name].node->rotate(y*p*r);
-}
-
-void    OgreRenderer::moveLight(std::string _name, float x, float y, float z)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
     }
 }
 

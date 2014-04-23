@@ -25,13 +25,7 @@
 #include  <opencv2/opencv.hpp>
 
 #include  "Oculus.hpp"
-
-struct        Elem
-{
-    std::string     name;
-    Ogre::Entity*     ent;
-    Ogre::SceneNode*    node;
-};
+#include  "Object.hpp"
 
  /**
  * @brief 3D Engine
@@ -77,81 +71,6 @@ struct        Elem
      * @details [long description]
      */
     void init_background_camera();
-
-
-    /**
-    * @brief Create a new entity
-    * @details add a new entity to the scene
-    *
-    * @param _name Name of the entity
-    * @param _mesh Name of the mesh file to load
-    */
-    void        createEntity(std::string _name, std::string _mesh);
-
-    /**
-    * @brief Move an entity in a direction
-    * @details Move in any direction (not reposition)
-    *
-    * @param _name Name of the entity to move
-    * @param x add or reduce the X position in space
-    * @param y add or reduce the Y position in space
-    * @param z add or reduce the Z position in space
-    */
-    void        moveEntity(std::string _name, float x, float y, float z);
-
-    /**
-    * @brief Set a new position for an entity
-    * @details New coord in space
-    *
-    * @param _name Name of the entity
-    * @param x x
-    * @param y y
-    * @param z z
-    */
-    void        setPosEntity(std::string _name, float x, float y, float z);
-
-    /**
-    * @brief Rotate an entity in a direction
-    * @details Rotate an entity in a direction
-    *
-    * @param _name Name of the entity to rotate
-    * @param yaw [description]
-    * @param pitch [description]
-    * @param roll [description]
-    */
-    void        rotateEntity(std::string _name, float yaw, float pitch, float roll);
-
-
-    /**
-     * @brief [brief description]
-     * @details [long description]
-     *
-     * @param _name [description]
-     * @param x [description]
-     * @param y [description]
-     * @param z [description]
-     */
-    void  setRotationEntity(std::string _name, float yaw, float pitch, float roll);
-
-
-    /**
-     * @brief [brief description]
-     * @details [long description]
-     *
-     * @param _name [description]
-     */
-    void        createLight(std::string _name);
-
-    /**
-     * @brief [brief description]
-     * @details [long description]
-     *
-     * @param _name [description]
-     * @param x [description]
-     * @param y [description]
-     * @param z [description]
-     */
-    void        moveLight(std::string _name, float x, float y, float z);
 
     /**
      * @brief [brief description]
@@ -230,8 +149,6 @@ private:
     Ogre::MaterialPtr           mats[2];
     Ogre::Rectangle2D*          rects[2];
     Ogre::TexturePtr            tex[2];
-
-    std::map<std::string, Elem> entities;
 
     bool alive;
     bool ShutDown;
