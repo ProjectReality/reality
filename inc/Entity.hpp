@@ -8,6 +8,7 @@ class Entity
 {   
 public:
     Entity(std::string _name, std::string _mesh, Ogre::SceneManager* scene);
+    ~Entity();
 
     void setPosition(float x, float y, float z);
     void setPosition(Ogre::Vector3 pos);

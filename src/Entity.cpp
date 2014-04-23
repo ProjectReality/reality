@@ -13,6 +13,11 @@ Entity::Entity(std::string _name, std::string _mesh, Ogre::SceneManager* scene)
     this->node->attachObject(ent);
 }
 
+Entity::~Entity()
+{
+    this->scene->destroyEntity(this->name);
+}
+
 void Entity::setPosition(float x, float y, float z)
 {
    this->node->setPosition(Ogre::Vector3(x, y, z));

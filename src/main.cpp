@@ -14,7 +14,7 @@ int   main()
     cv::Mat*    frame;
     double    video_size[2];
     ARManager   ar;
-    std::map<std::string,Object*> objects;
+    std::map<std::string, Object*> objects;
 
     VirtualOculus *rift = new VirtualOculus();
     rift = rift->Init();
@@ -32,10 +32,9 @@ int   main()
 
     render = new OgreRenderer(video_size, rift);
 
-    Object* testobj = new Object("Test", "EarthGlobe.mesh", render->getScene());
     // Scene creation
     //render->createEntity("Test", "EarthGlobe.mesh");
-    objects["Test"] = testobj;
+    objects["Test"] = new Object("Test", "EarthGlobe.mesh", render->getScene());
     //render->createEntity("Test2", "WoodenChair.mesh");
 
     // Free grab & get to get rid of the first frame
