@@ -6,11 +6,11 @@
 
 ## Build Requirements
 
-* Ogre3D   <[http://www.ogre3d.org/](http://www.ogre3d.org/)>
-* OpenCV <[http://opencv.org/](http://opencv.org/)>
-* Boost  <[http://www.boost.org/](http://www.boost.org/)>
+* Ogre3D 1.9 ([WindowsVC12](https://bitbucket.org/realityproject/reality/downloads/OgreSDK_vc12_v1-9-0.zip) ([Linux Source](https://bitbucket.org/realityproject/reality/downloads/sinbad-ogre-dd30349ea667.zipogre-1.9-source.zipogre-source-1.9.tar.gz))   <[http://www.ogre3d.org/](http://www.ogre3d.org/)>
+* OpenCV 2.4.8 ([Windows](https://bitbucket.org/realityproject/reality/downloads/opencv-2.4.8.exe)) ([Linux](https://bitbucket.org/realityproject/reality/downloads/opencv-linux-2.4.8.zip))  <[http://opencv.org/](http://opencv.org/)>
+* Boost 1.55 ([All](https://bitbucket.org/realityproject/reality/downloads/boost_1_55.zip))  <[http://www.boost.org/](http://www.boost.org/)>
 * Cmake  <[http://www.cmake.org](http://www.cmake.org)>
-* Oculus SDK <[https://developer.oculusvr.com/](https://developer.oculusvr.com/?action=dl)>
+* Oculus SDK 0.2.5c ([Windows](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_win_0.2.5c.zip)) ([Linux](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_linux_0.2.5c.tar.gz))  <[https://developer.oculusvr.com/](https://developer.oculusvr.com/?action=dl)>
 * ARToolKit <[http://www.hitl.washington.edu/artoolkit/](http://www.hitl.washington.edu/artoolkit/download/)>
 
 # Windows
