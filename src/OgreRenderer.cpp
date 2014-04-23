@@ -338,6 +338,11 @@ void OgreRenderer::setFrameSize(double size[2])
     cam_frame_size[1] = size[1];
 }
 
+Ogre::SceneManager* OgreRenderer::getScene()
+{
+    return scene;
+}
+
 bool OgreRenderer::getShutDown()
 {
     return ShutDown;

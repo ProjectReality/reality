@@ -2,15 +2,17 @@
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
+#include    "Object.hpp"
 #include	<math.h> 
 
 int   main()
 {
-    IRenderer*  render;
+    OgreRenderer*  render;
     StereoCamera  camera;
     cv::Mat*    frame;
     double    video_size[2];
     ARManager   ar;
+    std::list<Object*>  objects;
 
     VirtualOculus *rift = new VirtualOculus();
     rift = rift->Init();
@@ -28,9 +30,10 @@ int   main()
 
     render = new OgreRenderer(video_size, rift);
 
-
+    Object* test = new Object("Test", "EarthGlobe.mesh", render->getScene());
     // Scene creation
-    render->createEntity("Test", "EarthGlobe.mesh");
+    //render->createEntity("Test", "EarthGlobe.mesh");
+    objects.push_back(test);
     //render->createEntity("Test2", "WoodenChair.mesh");
 
     // Free grab & get to get rid of the first frame

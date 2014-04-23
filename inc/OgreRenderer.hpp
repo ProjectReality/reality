@@ -1,6 +1,8 @@
 #ifndef _R_OGRERENDERER_HPP_
 #define _R_OGRERENDERER_HPP_
 
+#include  <string>
+
 #include  <OgreRoot.h>
 #include  <OgreCompositorInstance.h>
 #include  <OgreCompositionPass.h>
@@ -20,9 +22,9 @@
 #include  <OISKeyboard.h>
 #include  <OISMouse.h>
 
+#include  <opencv2/opencv.hpp>
 
 #include  "Oculus.hpp"
-#include  "IRenderer.hpp"
 
 struct        Elem
 {
@@ -36,7 +38,7 @@ struct        Elem
  * @details Class manage everything in the 3D Engine
  *
  */
- class       OgreRenderer: public IRenderer
+ class       OgreRenderer
  {
 
  public:
@@ -212,6 +214,7 @@ struct        Elem
     void setFrameSize(double size[2]);
 
     bool  getShutDown();
+    Ogre::SceneManager*  getScene();
 
 private:
     VirtualOculus               *rift;
@@ -229,6 +232,9 @@ private:
     Ogre::TexturePtr            tex[2];
 
     std::map<std::string, Elem> entities;
+
+    bool alive;
+    bool ShutDown;
 };
 
 #endif //_R_OGRERENDERER_HPP_
