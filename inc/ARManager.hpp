@@ -42,8 +42,8 @@ private:
 	boost::mutex				m_marker;
 	boost::thread				arThread;
 	cv::Mat						frame;
-	std::map<int, AssetInfo>	markerList;
-	std::list<AssetInfo>		markerFound;
+    std::map<int, int>	markerList; //TODO : modify this useless
+    std::list<ARma::Pattern>		markerFound;
 	std::vector<cv::Mat>		patternLibrary;
 	std::vector<ARma::Pattern>	detectedPattern;
 	bool						frameChange;
@@ -63,8 +63,8 @@ public:
 	void						stop();
 	bool						setFrame(cv::Mat p_frame);
 	cv::Mat						getFrame() const;
-	void						setMarkerList(std::map<int, AssetInfo> &markers);
-	std::list<AssetInfo>		getMarkers();
+    void						setMarkerList(std::map<int, int> &markers);
+    std::list<ARma::Pattern>		getMarkers();
 	bool						isChanged();
 	void						clearMarker();
 	void						addMarker(ARma::Pattern info);

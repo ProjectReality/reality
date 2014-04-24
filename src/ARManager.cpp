@@ -40,10 +40,10 @@ void ARManager::init(std::string filename)
 			{
 				if (child->FirstChildElement("pattern") && child->FirstChildElement("asset"))
 				{
-					AssetInfo	tmpAss(child->FirstChildElement("pattern")->GetText(), child->FirstChildElement("asset")->GetText());
-					loadPattern(tmpAss.getPattName().c_str(), patternLibrary, patternCount);
-					tmpAss.setId(patternCount - 1);
-					markerList.insert(std::pair<int, AssetInfo>(patternCount - 1, tmpAss));
+                    //	tmpAss(child->FirstChildElement("pattern")->GetText(), child->FirstChildElement("asset")->GetText());
+                    loadPattern(child->FirstChildElement("pattern")->GetText(), patternLibrary, patternCount);
+                    //tmpAss.setId(patternCount - 1);
+                    markerList.insert(std::pair<int, int>(patternCount - 1, 0));
 				}
 				child = child->NextSiblingElement("object");
 			}
@@ -56,15 +56,15 @@ void ARManager::init(std::string filename)
 	else
 		std::cerr << "ARManager.init() : Cannot load the database File" << std::endl;
 	// Temp printer
-	if (verbose)
-		for (std::map<int, AssetInfo>::iterator it = markerList.begin(); it != markerList.end(); *it++)
-		{
-			std::cout << "Object" << std::endl;
-			std::cout << "Pattern : " << it->second.getPattName() << std::endl;
-			std::cout << "Asset : " << it->second.getAssName() << std::endl;
-			std::cout << "Id : " << it->second.getId() << std::endl;
-			std::cout << "---------------------------" << std::endl;
-		}
+//	if (verbose)
+//        for (std::map<int, int>::iterator it = markerList.begin(); it != markerList.end(); *it++)
+//		{
+//			std::cout << "Object" << std::endl;
+//			std::cout << "Pattern : " << it->second.getPattName() << std::endl;
+//			std::cout << "Asset : " << it->second.getAssName() << std::endl;
+//			std::cout << "Id : " << it->second.getId() << std::endl;
+//			std::cout << "---------------------------" << std::endl;
+//		}
 }
 
 void ARManager::start()
@@ -134,17 +134,11 @@ void ARManager::addMarker(ARma::Pattern info)
 {
 
 	double								patt_trans[3][4];
-	std::map<int, AssetInfo>::iterator	it = this->markerList.find(info.id);
+    std::map<int, int>::iterator	it = this->markerList.find(info.id);
 	if (it != this->markerList.end())
 	{
-		if (verbose) std::cout << "Marker id Found : " << it->second.getId() << std::endl;
-		AssetInfo							ass = it->second;
-
-		ass.setInfo(info);
-		ass.getInfo().rotationMatrix(ass.getInfo().getRotvec(), ass.getInfo().getRotMat());
-		ass.setRot();
-		ass.setPos();
-		this->markerFound.push_back(ass);
+//		if (verbose) std::cout << "Marker id Found : " << it->second.getId() << std::endl;
+        this->markerFound.push_back(info);
 		this->markerChange = true;
 	}
 }
@@ -204,19 +198,19 @@ cv::Mat ARManager::getFrame() const
 	return (this->frame);
 }
 
-void ARManager::setMarkerList(std::map<int, AssetInfo> &markers)
+void ARManager::setMarkerList(std::map<int, int> &markers)
 {
 	this->markerList = markers;
 }
 
-std::list<AssetInfo> ARManager::getMarkers()
+std::list<ARma::Pattern> ARManager::getMarkers()
 {
 	boost::mutex::scoped_lock lock(m_marker);
 	if (this->markerChange)
 	{
 		this->markerChange = false;
 	}
-	std::list<AssetInfo> m(this->markerFound.begin(), this->markerFound.end());
+    std::list<ARma::Pattern> m(this->markerFound.begin(), this->markerFound.end());
 	return (m);
 }
 
@@ -232,6 +226,6 @@ ARManager::~ARManager() {}
 void ARManager::draw(cv::Mat& frame)
 {
 	boost::mutex::scoped_lock lock(this->m_marker);
-	for (std::list<AssetInfo>::iterator it = markerFound.begin(); it != markerFound.end(); it++)
-		it->getInfo().draw(frame, cameraMatrix, distortions);
+    for (std::list<ARma::Pattern>::iterator it = markerFound.begin(); it != markerFound.end(); it++)
+        it->draw(frame, cameraMatrix, distortions);
 }

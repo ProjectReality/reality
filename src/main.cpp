@@ -57,15 +57,16 @@ int   main()
             ar.setFrame(frame[0]);
             if (ar.isChanged())
             {
-                std::list<AssetInfo>    markerFound = ar.getMarkers();
-				AssetInfo pat = markerFound.front();
-				std::cout << "_____________________________________________________________________" << std::endl;
+                std::list<ARma::Pattern>    markerFound = ar.getMarkers();
+                ARma::Pattern pat = markerFound.front();
+                //std::cout << "_____________________________________________________________________" << std::endl;
 				//pat.getInfo().showPattern();
 				//std::cout << "_________________-----------------------------_______________________" << std::endl;
 				//std::cout << "Rows = " << frame->rows << " Cols = " << frame->cols << std::endl;
-				std::cout << pat << std::endl; 
-                objects["Test"]->setRotation(pat.pitch, pat.roll, pat.yaw);
-                objects["Test"]->setPosition(pat.x, pat.y, pat.z);
+                //std::cout << pat << std::endl;
+                objects["Test"]->updateData(pat);
+                //objects["Test"]->setRotation(pat.pitch, pat.roll, pat.yaw);
+                //objects["Test"]->setPosition(pat.x, pat.y, pat.z);
             }
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
