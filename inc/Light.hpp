@@ -22,6 +22,8 @@
 #include    <boost/date_time/time_zone_base.hpp>
 
 
+#include    "Entity.hpp"
+
 /**
  * @brief Class for light and shadow stuff in Ogre
  * @details Handle all the lights in Ogre, shadow settings, and
@@ -29,7 +31,7 @@
  */
 
 
-class Light
+class Light : public Entity
 {
 public:
     Light(Ogre::SceneManager* scene);

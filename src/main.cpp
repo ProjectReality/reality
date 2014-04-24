@@ -1,19 +1,12 @@
-<<<<<<< HEAD
-#include	<cmath>
-=======
 #include <cmath>
 #include <map>
->>>>>>> origin/master
 
 #include	"OgreRenderer.hpp"
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
-<<<<<<< HEAD
 #include    "Light.hpp"
-=======
 #include    "Object.hpp"
->>>>>>> origin/master
 
 int   main()
 {

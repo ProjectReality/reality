@@ -2,7 +2,7 @@
 
 #include "Light.hpp"
 
-Light::Light(Ogre::SceneManager* scene)
+Light::Light(Ogre::SceneManager* scene) : Entity(_name)
 {
     this->scene = scene;
 
