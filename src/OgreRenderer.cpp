@@ -31,6 +31,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
     // Scene init
     scene = ogre->createSceneManager("OctreeSceneManager");
 
+
     Light *l = new Light(scene);
     l->createSun("vayalight", Ogre::Vector3(500,100,600));
 
@@ -173,70 +174,6 @@ void OgreRenderer::init_background_camera()
     }
 }
 
-void    OgreRenderer::createEntity(std::string _name, std::string _mesh)
-{
-    if ((_name.length() < 1))
-        std::cerr << "Error: createEntity: invalid name" << std::endl;
-    else if (entities[_name].name != _name)
-    {
-        entities[_name].name = _name;
-        if ((_mesh == "") || (&_mesh == NULL))
-            entities[_name].ent = scene->createEntity(_name, "Cube.mesh");
-        else
-            entities[_name].ent = scene->createEntity(_name, _mesh);
-        entities[_name].node = scene->getRootSceneNode()->createChildSceneNode();
-        entities[_name].node->attachObject(entities[_name].ent);
-    }
-    else
-        std::cerr << "Error: createEntity: An entity already exists with this name" << std::endl;
-}
-
-void OgreRenderer::setPosEntity(std::string _name, float x, float y, float z)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    entities[_name].node->setPosition(Ogre::Vector3(x, y, z));
-}
-
-void    OgreRenderer::moveEntity(std::string _name, float x, float y, float z)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    entities[_name].node->translate(Ogre::Vector3(x, y, z));
-}
-
-void OgreRenderer::setRotationEntity(std::string _name, float yaw, float pitch, float roll)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
-    Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
-    Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
-    entities[_name].node->setOrientation(y*p*r);
-}
-
-void    OgreRenderer::rotateEntity(std::string _name, float yaw, float pitch, float roll)
-{
-    if (entities.find(_name) == entities.end())
-    {
-        std::cerr << "Error: " << BOOST_CURRENT_FUNCTION << ": No Entity exist with this name: " << _name << std::endl;
-        return;
-    }
-    Ogre::Quaternion y(Ogre::Degree(yaw), Ogre::Vector3::UNIT_Y);
-    Ogre::Quaternion p(Ogre::Degree(pitch), Ogre::Vector3::UNIT_X);
-    Ogre::Quaternion r(Ogre::Degree(roll), Ogre::Vector3::UNIT_Z);
-    entities[_name].node->rotate(y*p*r);
-}
-
 // Functions related to assets loading
 void    OgreRenderer::loadMesh(std::string _name, std::string _file)
 {
@@ -306,6 +243,11 @@ void OgreRenderer::setFrameSize(double size[2])
 {
     cam_frame_size[0] = size[0];
     cam_frame_size[1] = size[1];
+}
+
+Ogre::SceneManager* OgreRenderer::getScene()
+{
+    return scene;
 }
 
 bool OgreRenderer::getShutDown()
