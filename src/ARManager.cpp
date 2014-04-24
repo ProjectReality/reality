@@ -40,9 +40,7 @@ void ARManager::init(std::string filename)
 			{
 				if (child->FirstChildElement("pattern") && child->FirstChildElement("asset"))
 				{
-                    //	tmpAss(child->FirstChildElement("pattern")->GetText(), child->FirstChildElement("asset")->GetText());
                     loadPattern(child->FirstChildElement("pattern")->GetText(), patternLibrary, patternCount);
-                    //tmpAss.setId(patternCount - 1);
                     markerList.insert(std::pair<int, int>(patternCount - 1, 0));
 				}
 				child = child->NextSiblingElement("object");
@@ -137,7 +135,7 @@ void ARManager::addMarker(ARma::Pattern info)
     std::map<int, int>::iterator	it = this->markerList.find(info.id);
 	if (it != this->markerList.end())
 	{
-//		if (verbose) std::cout << "Marker id Found : " << it->second.getId() << std::endl;
+    if (verbose) std::cout << "Marker id Found : " << info.id << std::endl;
         this->markerFound.push_back(info);
 		this->markerChange = true;
 	}

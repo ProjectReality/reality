@@ -23,7 +23,6 @@ int   main()
     float test = rift->getDistordScale();
     int xwindow = rift->getResolution()[0];
     int ywindow = rift->getResolution()[1];
-    //StereoEyeParams* eyes = rift->getEyesParams();
 
     camera.OpenCamera();
 
@@ -33,9 +32,7 @@ int   main()
     render = new OgreRenderer(video_size, rift);
 
     // Scene creation
-    //render->createEntity("Test", "EarthGlobe.mesh");
     objects["Test"] = new Object("Test", "EarthGlobe.mesh", render->getScene());
-    //render->createEntity("Test2", "WoodenChair.mesh");
 
     // Free grab & get to get rid of the first frame
     camera.GrabFrames();
@@ -57,22 +54,11 @@ int   main()
             ar.setFrame(frame[0]);
             if (ar.isChanged())
             {
-                std::list<ARma::Pattern>    markerFound = ar.getMarkers();
-                ARma::Pattern pat = markerFound.front();
-                //std::cout << "_____________________________________________________________________" << std::endl;
-				//pat.getInfo().showPattern();
-				//std::cout << "_________________-----------------------------_______________________" << std::endl;
-				//std::cout << "Rows = " << frame->rows << " Cols = " << frame->cols << std::endl;
-                //std::cout << pat << std::endl;
-                objects["Test"]->updateData(pat);
-                //objects["Test"]->setRotation(pat.pitch, pat.roll, pat.yaw);
-                //objects["Test"]->setPosition(pat.x, pat.y, pat.z);
+                objects["Test"]->updateData(ar.getMarkers().front());
             }
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
 		}
-		//render->setRotationEntity("Test", 0, 0, 0);
-		//render->setPosEntity("Test", 1, 1, -200);
         render->render();
     }
     ar.stop();
