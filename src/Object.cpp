@@ -22,7 +22,7 @@ void Object::updateData(ARma::Pattern info)
     float p_z = -info.transVec.at<float>(2);
 
     this->setPosition(p_x, p_y, p_z);
-    this->setRotation(p_yaw, p_pitch, p_roll);
+    this->setRotation(p_pitch, p_roll, p_yaw);
 }
 int Object::getPatt_id() const
 {
