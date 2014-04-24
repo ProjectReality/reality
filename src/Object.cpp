@@ -1,5 +1,14 @@
 #include "Object.hpp"
 
+
+Object::Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene) : Entity(_name)
+{
+    this->setEnt(scene->createEntity(_name, _mesh));
+    this->setNode(scene->getRootSceneNode()->createChildSceneNode());
+    this->getNode()->attachObject(this->getEnt());
+    this->update();
+}
+
 void Object::updateData(ARma::Pattern info)
 {
     info.rotationMatrix(info.getRotvec(), info.getRotMat());

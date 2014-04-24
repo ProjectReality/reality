@@ -1,17 +1,13 @@
 #include "Entity.hpp"
 
 
-Entity::Entity(std::string _name, std::string _mesh, Ogre::SceneManager* scene)
+Entity::Entity(std::string _name)
 {
     if ((_name.length() < 1)) {
         std::cerr << "Error: createEntity: invalid name" << std::endl;
         return;
     }
     this->name = _name;
-    this->ent  = scene->createEntity(_name, _mesh);
-    this->node = scene->getRootSceneNode()->createChildSceneNode();
-    this->node->attachObject(ent);
-    this->update();
 }
 
 Entity::~Entity()
@@ -134,10 +130,21 @@ void Entity::setRoll(double value)
 {
     roll = value;
 }
+Ogre::Entity *Entity::getEnt() const
+{
+    return ent;
+}
 
+void Entity::setEnt(Ogre::Entity *value)
+{
+    ent = value;
+}
 
-
-
-
-
-
+Ogre::SceneNode *Entity::getNode() const
+{
+    return node;
+}
+void Entity::setNode(Ogre::SceneNode *value)
+{
+    node = value;
+}

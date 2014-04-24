@@ -8,6 +8,7 @@ class Object : public Entity
 {
 public:
     using Entity::Entity;
+    Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene);
     void updateData(ARma::Pattern info);
 
 
