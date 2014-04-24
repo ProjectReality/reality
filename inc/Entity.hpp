@@ -42,6 +42,15 @@ public:
     double getRoll() const;
     void setRoll(double value);
 
+    Ogre::Entity *getEnt() const;
+    void setEnt(Ogre::Entity *value);
+
+    Ogre::SceneNode *getNode() const;
+    void setNode(Ogre::SceneNode *value);
+
+    Ogre::SceneManager *getScene() const;
+    void setScene(Ogre::SceneManager *value);
+
 private:
     std::string         name;
     Ogre::SceneManager* scene;

@@ -2,7 +2,7 @@
 
 #include "Light.hpp"
 
-Light::Light(Ogre::SceneManager* scene) : Entity(_name)
+Light::Light(std::string _name, Ogre::SceneManager* scene) : Entity(_name)
 {
     this->scene = scene;
 
@@ -17,9 +17,9 @@ Light::~Light()
 
 }
 
-void   Light::createSun(std::string name, Ogre::Vector3 pos)
+void   Light::createSun(Ogre::Vector3 pos)
 {
-    Ogre::Light* sunLight = scene->createLight(name);
+    Ogre::Light* sunLight = scene->createLight(this->getName());
     sunLight->setPosition(pos);
     sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
     sunLight->setDiffuseColour(.35, .35, 0.38);

@@ -130,6 +130,25 @@ void Entity::setRoll(double value)
 {
     roll = value;
 }
+Ogre::Entity *Entity::getEnt() const
+{
+    return ent;
+}
+
+void Entity::setEnt(Ogre::Entity *value)
+{
+    ent = value;
+}
+
+Ogre::SceneNode *Entity::getNode() const
+{
+    return node;
+}
+void Entity::setNode(Ogre::SceneNode *value)
+{
+    node = value;
+}
+
 
 
 

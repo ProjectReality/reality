@@ -3,9 +3,9 @@
 
 Object::Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene) : Entity(_name)
 {
-    this->ent  = scene->createEntity(_name, _mesh);
-    this->node = scene->getRootSceneNode()->createChildSceneNode();
-    this->node->attachObject(ent);
+    this->setEnt(scene->createEntity(_name, _mesh));
+    this->setNode(scene->getRootSceneNode()->createChildSceneNode());
+    this->getNode()->attachObject(this->getEnt());
     this->update();
 }
 

@@ -137,8 +137,6 @@
     bool  getShutDown();
     Ogre::SceneManager*  getScene();
 
-    Ogre::SceneManager* getScene();
-
 private:
     VirtualOculus               *rift;
     double                      cam_frame_size[2];

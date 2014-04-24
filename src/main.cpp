@@ -38,8 +38,8 @@ int   main()
     // Free grab & get to get rid of the first frame
     camera.GrabFrames();
 
-    Light *l = new Light(render->getScene());
-    l->getPositionSun(1997,8,7,11,0);
+    //Light *l = new Light(render->getScene());
+    //l->getPositionSun(1997,8,7,11,0);
     // AR init
 	ar.init();
 	ar.start();
