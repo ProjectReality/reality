@@ -21,7 +21,6 @@
 #endif // _WIN32
 
 #include	"TinyXML/tinyxml.h"
-#include	"AssetInfo.hpp"
 #include	"ARma/patterndetector.h"
 
 #pragma once
