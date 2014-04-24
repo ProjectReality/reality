@@ -17,19 +17,23 @@ Light::~Light()
 
 }
 
-void   Light::createSun(Ogre::Vector3 pos)
+void   Light::createSun()
 {
     Ogre::Light* sunLight = scene->createLight(this->getName());
-    sunLight->setPosition(pos);
+    //sunLight->setPosition(pos);
     sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
     sunLight->setDiffuseColour(.35, .35, 0.38);
     sunLight->setSpecularColour(.9, .9, 1);
 
-    Ogre::Vector3 dir(-1, -1, 0.5);
-    dir.normalise();
-    sunLight->setDirection(dir);
+    //Ogre::Vector3 dir(-1, -1, -1);
+    //dir.normalise();
+    //sunLight->setDirection(dir);
     sunLight->setCastShadows(true);
     Lights.push_back(sunLight);
+
+    this->setNode(scene->getRootSceneNode()->createChildSceneNode());
+    this->getNode()->attachObject(sunLight);
+    this->update();
 }
 
 void Light::remove(Ogre::Light *l)

@@ -33,7 +33,8 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 
     Light *l = new Light("vayalight", scene);
-    l->createSun(Ogre::Vector3(500,100,600));
+    l->createSun();
+    l->setPosition(600,600,600);
 
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
 

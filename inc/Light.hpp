@@ -36,7 +36,7 @@ class Light : public Entity
 public:
     Light(std::string _name, Ogre::SceneManager* scene);
     ~Light();
-    void    createSun(Ogre::Vector3 pos);
+    void    createSun();
     void    getTime();
     int     getUTC(int localhour, int timezone);
     double  getPositionSun(int year, int month, int day, int hour, int min);
