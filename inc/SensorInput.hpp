@@ -70,8 +70,6 @@ protected:
 	OIS::Keyboard *keyboard;
 	OIS::Mouse *mouse;
 	std::vector<OIS::JoyStick*> joystick_list;
-	OIS::JoyStick *main_joystick();
-	OIS::JoyStick *getJoystick(int idx);
 	Ogre::SceneManager *sceneManager;
 	Ogre::RenderWindow *window;
 	Ogre::SceneNode *cameraNode;
@@ -93,7 +91,7 @@ public:
 		return joystick_list[0];
 	}
 
-	OIS::JoyStick *getJoystick(int idx)
+	OIS::JoyStick *getJoystick(unsigned int idx)
 	{
 		if (idx < joystick_list.size()) {
 			return joystick_list[idx];

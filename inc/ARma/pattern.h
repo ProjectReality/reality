@@ -15,7 +15,7 @@ class Pattern
 		vector<Point2f> vertices;
 		int id;
 		int orientation;//{0,1,2,3}
-		float size; //in milimeters
+		double size; //in milimeters
 		double confidence;//min: -1, max: 1
 		Mat rotVec, transVec, rotMat;
 
@@ -29,7 +29,7 @@ class Pattern
 
 
 		//solves the exterior orientation problem between patten and camera
-		void getExtrinsics(int patternSize, const Mat& cameraMatrix, const Mat& distortions);
+		void getExtrinsics(double patternSize, const Mat& cameraMatrix, const Mat& distortions);
 
 		//augments image with 3D cubes. It;s too simple augmentation jsut for checking
 		void draw(Mat& frame, const Mat& camMatrix, const Mat& distMatrix);

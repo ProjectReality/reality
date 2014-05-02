@@ -1,3 +1,5 @@
+#define NOMINMAX
+
 #include <iostream>
 #include <fstream>
 #include "SensorInput.hpp"
@@ -13,7 +15,7 @@
 using namespace OVR;
 using namespace std;
 
-SensorInput::SensorInput(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::SceneNode *parent = 0) :sensorFusion(0),
+SensorInput::SensorInput(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::SceneNode *parent) :sensorFusion(0),
 stereoConfig(0),
 hmd(0),
 deviceManager(0),
