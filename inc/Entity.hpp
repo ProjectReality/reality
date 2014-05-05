@@ -5,7 +5,7 @@
 #include <Ogre.h>
 
 class Entity
-{   
+{
 public:
     Entity(std::string _name);
     ~Entity();

@@ -30,7 +30,7 @@ VirtualOculus* VirtualOculus::Init()
 
 int* VirtualOculus::getResolution()
 {
-    int res[2];
+    static int res[2];
 
     res[0] = 800;
     res[1] = 600;
@@ -44,12 +44,12 @@ void VirtualOculus::setDistordScale()
 
 float VirtualOculus::getDistordScale()
 {
-    return 1.7;
+    return 1.7f;
 }
 
 StereoEyeParams* VirtualOculus::getEyesParams()
 {
-    StereoEyeParams Eyes[2];
+    static StereoEyeParams Eyes[2];
     //TODO
 
     return Eyes;

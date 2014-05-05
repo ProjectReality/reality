@@ -150,9 +150,3 @@ void Entity::setNode(Ogre::SceneNode *value)
 }
 
 
-
-
-
-
-
-

@@ -14,16 +14,16 @@ void Object::updateData(ARma::Pattern info)
 {
     info.rotationMatrix(info.getRotvec(), info.getRotMat());
 
-    float p_yaw = -info.rotVec.at<float>(2) * 180 / 3.14;
-    float p_pitch = -info.rotVec.at<float>(1) * 180 / 3.14;
-    float p_roll = info.rotVec.at<float>(0) * 180 / 3.14;
+    float p_yaw = -info.rotVec.at<float>(2) * 180 / 3.14f;
+    float p_pitch = -info.rotVec.at<float>(1) * 180 / 3.14f;
+    float p_roll = info.rotVec.at<float>(0) * 180 / 3.14f;
 
     float p_x = info.transVec.at<float>(0) * 4;
     float p_y = -info.transVec.at<float>(1) * 9;
     float p_z = -info.transVec.at<float>(2);
 
     this->setPosition(p_x, p_y, p_z);
-    this->setRotation(p_yaw, p_pitch, p_roll);
+    this->setRotation(p_pitch, p_roll, p_yaw);
 }
 int Object::getPatt_id() const
 {
