@@ -6,6 +6,7 @@ Object::Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene) 
     this->setEnt(scene->createEntity(_name, _mesh));
     this->setNode(scene->getRootSceneNode()->createChildSceneNode());
     this->getNode()->attachObject(this->getEnt());
+    this->getEnt()->setCastShadows(true);
     this->update();
 }
 

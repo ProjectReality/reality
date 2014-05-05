@@ -42,7 +42,6 @@ public:
     double  getPositionSun(int year, int month, int day, int hour, int min);
     void    remove(Ogre::Light *l);
     void    remove(std::string name);
-    void    move();
 private:
     double  meanLong(double x);
 private:

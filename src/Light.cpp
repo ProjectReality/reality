@@ -6,10 +6,13 @@ Light::Light(std::string _name, Ogre::SceneManager* scene) : Entity(_name)
 {
     this->scene = scene;
 
+    //scene->setAmbientLight(Ogre::ColourValue(0, 0, 0));
+    scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+
     //scene->setAmbientLight(Ogre::ColourValue(.6, .6, .6));
-    scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-    scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
-    scene->setShadowFarDistance(700);
+//    scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+//    scene->setShadowColour(Ogre::ColourValue(0.6, 0.6, 0.6));
+//    scene->setShadowFarDistance(700);
 }
 
 Light::~Light()
@@ -20,15 +23,11 @@ Light::~Light()
 void   Light::createSun()
 {
     Ogre::Light* sunLight = scene->createLight(this->getName());
-    //sunLight->setPosition(pos);
-    sunLight->setType(Ogre::Light::LT_DIRECTIONAL);
-    sunLight->setDiffuseColour(.35, .35, 0.38);
-    sunLight->setSpecularColour(.9, .9, 1);
+    sunLight->setType(Ogre::Light::LT_POINT);
+    sunLight->setDiffuseColour(1.0, 1.0, 1.0);
+    sunLight->setSpecularColour(1.0, 1.0, 1.0);
+    sunLight->setAttenuation(3250, 1.0, 0.0014, 0.00000);
 
-    //Ogre::Vector3 dir(-1, -1, -1);
-    //dir.normalise();
-    //sunLight->setDirection(dir);
-    sunLight->setCastShadows(true);
     Lights.push_back(sunLight);
 
     this->setNode(scene->getRootSceneNode()->createChildSceneNode());
