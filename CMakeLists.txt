@@ -87,13 +87,24 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
+set(HEADER_ARMA inc/ARma/cameraparams.h inc/ARma/pattern.h inc/ARma/patterndetector.h)
+set(HEADER_TXML inc/TinyXML/tinystr.h inc/TinyXML/tinyxml.h)
+set(HEADER_REALITY "inc/*.hpp")
+
+add_library(ARma src/ARma/patterndetector.cpp src/ARma/pattern.cpp ${HEADER_ARMA})
+add_library(TinyXML src/TinyXML/tinystr.cpp 
+					src/TinyXML/tinyxml.cpp 
+					src/TinyXML/tinyxmlerror.cpp 
+					src/TinyXML/tinyxmlparser.cpp ${HEADER_TXML})
+
 file(GLOB ProjectReality_src
-  "inc/*.hpp"
-  "inc/*/*.h"
   "src/*.cpp"
-  "src/*/*.cpp"
+  ${HEADER_REALITY}
+  ${HEADER_ARMA}
+  ${HEADER_TXML}
   )
 
+  
 include_directories(
   ${OIS_INCLUDE_DIRS}
   ${OGRE_INCLUDE_DIRS}
@@ -104,6 +115,7 @@ include_directories(
   ./inc)
 
 add_executable(ProjectReality WIN32 ${ProjectReality_src})
+target_link_libraries(ProjectReality ARma TinyXML)
 
 set_target_properties(ProjectReality PROPERTIES DEBUG_POSTFIX _d)
 

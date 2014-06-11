@@ -130,8 +130,6 @@ void ARManager::clearMarker()
 
 void ARManager::addMarker(ARma::Pattern info)
 {
-
-	double								patt_trans[3][4];
     std::map<int, int>::iterator	it = this->markerList.find(info.id);
 	if (it != this->markerList.end())
 	{

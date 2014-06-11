@@ -17,7 +17,7 @@ namespace ARma
 	confThreshold = param4;//bound for accepted similarities between detected patterns and loaded patterns
 	normSize = param5;// the size of normalized ROI
 	normROI = Mat(normSize,normSize,CV_8UC1);//normalized ROI
-
+	
 	//Masks for exterior(black) and interior area inside the pattern
 	patMask = Mat::ones(normSize,normSize,CV_8UC1);
 	Mat submat = patMask(cv::Range(normSize/4,3*normSize/4), cv::Range(normSize/4, 3*normSize/4));
@@ -30,9 +30,9 @@ namespace ARma
 
 	//corner of normalized area
 	norm2DPts[0] = Point2f(0,0);
-	norm2DPts[1] = Point2f(normSize-1,0);
-	norm2DPts[2] = Point2f(normSize-1,normSize-1);
-	norm2DPts[3] = Point2f(0,normSize-1);
+	norm2DPts[1] = Point2f((float)normSize - 1, 0);
+	norm2DPts[2] = Point2f((float)normSize - 1, (float)normSize - 1);
+	norm2DPts[3] = Point2f(0,(float)normSize-1);
 
 }
 

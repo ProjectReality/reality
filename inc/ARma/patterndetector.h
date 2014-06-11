@@ -16,7 +16,7 @@ class PatternDetector
 {
 public:
 
-    //constructor
+	//constructor
 	PatternDetector(const double param1, const double param2, const int param3, const  double param4, const int param5, const int thresh_mode);
 
 	//distractor
@@ -32,7 +32,8 @@ void detect(const Mat &frame, const Mat& cameraMatrix, const Mat& distortions, v
 
 private:
 
-	int mode, normSize, block_size;
+	int normSize;
+	int mode, block_size;
 	double confThreshold, thresh1, thresh2;
 	struct patInfo{
 		int index;

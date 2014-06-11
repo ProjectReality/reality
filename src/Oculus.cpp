@@ -13,7 +13,7 @@ Oculus::~Oculus()
 
 int* Oculus::getResolution()
 {
-    int res[2];
+    static int res[2];
 
     res[0] = getHMDInfo().HResolution;
     res[1] = getHMDInfo().VResolution;
@@ -35,7 +35,7 @@ float Oculus::getDistordScale()
 
 StereoEyeParams* Oculus::getEyesParams()
 {
-    StereoEyeParams Eyes[2];
+    static StereoEyeParams Eyes[2];
 
     Eyes[0] = getStereo().GetEyeRenderParams(StereoEye_Left);
     Eyes[1] = getStereo().GetEyeRenderParams(StereoEye_Right);
