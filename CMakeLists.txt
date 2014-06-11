@@ -131,6 +131,18 @@ endif(WIN32)
 target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} )
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
+INCLUDE( cmake/FindLibRocket.cmake )
+IF(ROCKET_FOUND)
+    MESSAGE(STATUS "Looking for Rocket - found")
+    target_link_libraries(ProjectReality ${ROCKET_LIBRARY})
+ELSE(ROCKET_FOUND)
+    MESSAGE(STATUS "Looking for Rocket - not found")
+ENDIF(ROCKET_FOUND)
+
+find_library(LIBROCKET_LIBRARY ProjectReality RocketCore RocketCore_d)
+target_link_libraries(ProjectReality ${LIBROCKET_LIBRARIES})
+
+
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
 

@@ -1,5 +1,6 @@
 #include <cmath>
 #include <map>
+#include <Rocket/Core.h>
 
 #include	"OgreRenderer.hpp"
 #include	"StereoCamera.hpp"
@@ -19,6 +20,8 @@ int   main()
 
     VirtualOculus *rift = new VirtualOculus();
     rift = rift->Init();
+
+    //Rocket::Core::Initialise();
 
     //ugly test
     float test = rift->getDistordScale();
