@@ -7,6 +7,7 @@
 #include	"ARManager.hpp"
 #include    "Light.hpp"
 #include    "Object.hpp"
+#include    "Overlay.hpp"
 
 int   main()
 {
@@ -31,6 +32,8 @@ int   main()
     video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
     render = new OgreRenderer(video_size, rift);
+
+    //Overlay *hud = new Overlay();
 
     // Scene creation
     objects["Test"] = new Object("Test", "EarthGlobe.mesh", render->getScene());
