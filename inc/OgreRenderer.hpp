@@ -47,6 +47,13 @@
     void init_all();
 
     /**
+    * @brief
+    * @details
+    * s
+    */
+    void init_rocket();
+
+    /**
     * @brief Init the two cameras
     * @details Add two camera to the scene, on for each eye with
     * settings value from the Oculus Rift SDK
@@ -135,6 +142,15 @@
     bool  getShutDown();
     Ogre::SceneManager*  getScene();
 
+
+
+    void createFrameListener();
+    /// Called from Ogre before a queue group is rendered.
+    virtual void renderQueueStarted(uint8 queueGroupId, const Ogre::String& invocation, bool& skipThisInvocation);
+    /// Called from Ogre after a queue group is rendered.
+    virtual void renderQueueEnded(uint8 queueGroupId, const Ogre::String& invocation, bool& repeatThisInvocation);
+    void ConfigureRenderSystem();
+    void BuildProjectionMatrix(Ogre::Matrix4& matrix);
 private:
     VirtualOculus               *rift;
     double                      cam_frame_size[2];
@@ -149,6 +165,11 @@ private:
     Ogre::MaterialPtr           mats[2];
     Ogre::Rectangle2D*          rects[2];
     Ogre::TexturePtr            tex[2];
+
+    Rocket::Core::Context* context;
+
+    SystemInterfaceOgre3D* ogre_system;
+    RenderInterfaceOgre3D* ogre_renderer;
 
     bool alive;
     bool ShutDown;

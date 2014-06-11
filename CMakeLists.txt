@@ -99,6 +99,8 @@ add_library(TinyXML src/TinyXML/tinystr.cpp
 
 file(GLOB ProjectReality_src
   "src/*.cpp"
+  "src/libRocketOgre/*.cpp"
+  "src/libRocketOgre/*.hpp"
   ${HEADER_REALITY}
   ${HEADER_ARMA}
   ${HEADER_TXML}
@@ -112,6 +114,7 @@ include_directories(
   ${OGRE_Overlay_INCLUDE_DIRS}
   ${OCULUS_SDK_INCLUDE_DIRS}
   ${OPENCV_INCLUDE_DIR}
+  "./inc/libRocketOgre"
   ./inc)
 
 add_executable(ProjectReality WIN32 ${ProjectReality_src})
