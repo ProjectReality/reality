@@ -28,7 +28,6 @@
 #include "RocketFrameListener.h"
 #include <Rocket/Core/Context.h>
 #include <Rocket/Debugger.h>
-#include "RocketApplication.h"
 
 RocketFrameListener::RocketFrameListener(Ogre::RenderWindow* window, Ogre::Camera* camera, Rocket::Core::Context* _context) : ExampleFrameListener(window, camera, true, true)
 {
@@ -287,15 +286,15 @@ int RocketFrameListener::GetKeyModifierState()
 
 #elif OGRE_PLATFORM == OGRE_PLATFORM_LINUX
 
-	XKeyboardState keyboard_state;
-	XGetKeyboardControl(DISPLAY!, &keyboard_state);
+//    XKeyboardState keyboard_state;
+//	XGetKeyboardControl(DISPLAY!, &keyboard_state);
 
-	if (keyboard_state.led_mask & (1 << 0))
-		modifier_state |= Rocket::Core::Input::KM_CAPSLOCK;
-	if (keyboard_state.led_mask & (1 << 1))
-		modifier_state |= Rocket::Core::Input::KM_NUMLOCK;
-	if (keyboard_state.led_mask & (1 << 2))
-		modifier_state |= Rocket::Core::Input::KM_SCROLLLOCK;
+//	if (keyboard_state.led_mask & (1 << 0))
+//		modifier_state |= Rocket::Core::Input::KM_CAPSLOCK;
+//	if (keyboard_state.led_mask & (1 << 1))
+//		modifier_state |= Rocket::Core::Input::KM_NUMLOCK;
+//	if (keyboard_state.led_mask & (1 << 2))
+//		modifier_state |= Rocket::Core::Input::KM_SCROLLLOCK;
 
 #endif
 

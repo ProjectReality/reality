@@ -30,12 +30,13 @@
 #include  "RenderInterfaceOgre3D.h"
 #include  "RocketFrameListener.h"
 
+
  /**
  * @brief 3D Engine
  * @details Class manage everything in the 3D Engine
  *
  */
- class       OgreRenderer
+ class       OgreRenderer : public Ogre::RenderQueueListener
  {
 
  public:
@@ -156,6 +157,9 @@
     void BuildProjectionMatrix(Ogre::Matrix4& matrix);
     void startUI();
     void startRealityRender();
+
+
+
 private:
     VirtualOculus               *rift;
     double                      cam_frame_size[2];
@@ -178,7 +182,7 @@ private:
 
     SystemInterfaceOgre3D* ogre_system;
     RenderInterfaceOgre3D* ogre_renderer;
-    RocketFrameListener*  mFrameListener;
+     RocketFrameListener*  mFrameListener;
 
     bool alive;
     bool ShutDown;

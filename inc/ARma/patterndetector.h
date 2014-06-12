@@ -28,7 +28,7 @@ enum THRES_MODE {
 	}; 
 
 //detect patterns in the input frame
-void detect(const Mat &frame, const Mat& cameraMatrix, const Mat& distortions, vector<Mat>& library, vector<Pattern>& foundPatterns);
+void detect(const Mat &frame, const Mat& cameraMatrix, const Mat& distortions, std::vector<Mat>& library, std::vector<Pattern>& foundPatterns);
 
 private:
 
@@ -45,7 +45,7 @@ private:
 
 
 	void convertAndBinarize(const Mat& src, Mat& dst1, Mat& dst2, int thresh_mode = 1);
-	void normalizePattern(const Mat& src, const Point2f roiPoints[], Rect& rec, Mat& dst);
+    void normalizePattern(const Mat& src, const Point2f roiPoints[], cv::Rect& rec, Mat& dst);
 	int identifyPattern(const Mat& src, std::vector<cv::Mat>& loadedPatterns, patInfo& out);
 
 };

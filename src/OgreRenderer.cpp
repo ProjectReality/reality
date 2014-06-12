@@ -235,9 +235,9 @@ void OgreRenderer::BuildProjectionMatrix(Ogre::Matrix4& projection_matrix)
     projection_matrix = Ogre::Matrix4::ZERO;
 
     // Set up matrices.
-    projection_matrix[0][0] = 2.0f / mWindow->getWidth();
+    projection_matrix[0][0] = 2.0f / window->getWidth();
     projection_matrix[0][3]= -1.0000000f;
-    projection_matrix[1][1]= -2.0f / mWindow->getHeight();
+    projection_matrix[1][1]= -2.0f / window->getHeight();
     projection_matrix[1][3]= 1.0000000f;
     projection_matrix[2][2]= -2.0f / (z_far - z_near);
     projection_matrix[3][3]= 1.0000000f;

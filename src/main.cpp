@@ -22,9 +22,6 @@ int   main()
     VirtualOculus *rift = new VirtualOculus();
     rift = rift->Init();
 
-    RocketApplication application;
-    application.go();
-
     //ugly test
     float test = rift->getDistordScale();
     int xwindow = rift->getResolution()[0];

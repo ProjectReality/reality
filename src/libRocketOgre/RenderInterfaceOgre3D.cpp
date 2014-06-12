@@ -26,7 +26,7 @@
  */
 
 #include "RenderInterfaceOgre3D.h"
-#include <Ogre/Ogre.h>
+#include <Ogre.h>
 
 struct RocketOgre3DVertex
 {
@@ -234,14 +234,16 @@ bool RenderInterfaceOgre3D::GenerateTexture(Rocket::Core::TextureHandle& texture
 {
 	static int texture_id = 1;
 
-	Ogre::TexturePtr ogre_texture = Ogre::TextureManager::getSingleton().loadRawData(Rocket::Core::String(16, "%d", texture_id++).CString(),
-																					 "Rocket",
-																					 Ogre::DataStreamPtr(new Ogre::MemoryDataStream((void*) source, source_dimensions.x * source_dimensions.y * sizeof(unsigned int))),
-																					 source_dimensions.x,
-																					 source_dimensions.y,
-																					 Ogre::PF_A8B8G8R8,
-																					 Ogre::TEX_TYPE_2D,
-																					 0);
+    Ogre::DataStreamPtr dataStream( new Ogre::MemoryDataStream((void*) source, source_dimensions.x * source_dimensions.y * sizeof(unsigned int)) );
+
+    Ogre::TexturePtr ogre_texture = Ogre::TextureManager::getSingleton().loadRawData(Rocket::Core::String(16, "%d", texture_id++).CString(),
+                                                                    "Rocket",
+                                                                    dataStream,
+                                                                    source_dimensions.x,
+                                                                    source_dimensions.y,
+                                                                    Ogre::PF_A8B8G8R8,
+                                                                    Ogre::TEX_TYPE_2D,
+                                                                    0);
 
 	if (ogre_texture.isNull())
 		return false;
