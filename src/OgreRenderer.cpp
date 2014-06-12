@@ -33,52 +33,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 	window = ogre->initialise(true, "Rendering Window"); //must init windows before load rsrc
 
-	// Scene init
-	scene = ogre->createSceneManager("OctreeSceneManager");
 
-	Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
-
-	scene->setAmbientLight(Ogre::ColourValue(.6f, .6f, .6f));
-	scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-	scene->setShadowColour(Ogre::ColourValue(0.6f, 0.6f, 0.6f));
-	scene->setShadowFarDistance(700);
-
-	// Ressource init
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/images", "FileSystem", "Assets");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mat", "FileSystem", "Assets");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mesh", "FileSystem", "Assets");
-
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-	Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Assets");
-
-
-
-	Ogre::MaterialPtr matLeft = Ogre::MaterialManager::getSingleton().getByName("Ogre/Compositor/Oculus");
-	Ogre::MaterialPtr matRight = matLeft->clone("Ogre/Compositor/Oculus/Right");
-	Ogre::GpuProgramParametersSharedPtr pParamsLeft = matLeft->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
-	Ogre::GpuProgramParametersSharedPtr pParamsRight = matRight->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
-
-	Ogre::Vector4 hmdwarp = Ogre::Vector4(
-		rift->getStereo().GetDistortionK(0),
-		rift->getStereo().GetDistortionK(1),
-		rift->getStereo().GetDistortionK(2),
-		rift->getStereo().GetDistortionK(3));
-
-	// param used in the oculus cg program files
-	pParamsLeft->setNamedConstant("HmdWarpParam", hmdwarp);
-	pParamsRight->setNamedConstant("HmdWarpParam", hmdwarp);
-	pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
-	pParamsRight->setNamedConstant("LensCentre", 0.5f - (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
-
-	Ogre::CompositorPtr comp = Ogre::CompositorManager::getSingleton().getByName("OculusRight");
-	comp->getTechnique(0)->getOutputTargetPass()->getPass(0)->setMaterialName("Ogre/Compositor/Oculus/Right");
-
-
-	init_all();
-
-	alive = true; // Ogre is now running
-	ShutDown = false;
 }
 
 OgreRenderer::~OgreRenderer()
@@ -86,9 +41,64 @@ OgreRenderer::~OgreRenderer()
 	delete ogre; // Apparently handle deletes for most ogre-related things.
 }
 
+void OgreRenderer::startUI()
+{
+        init_rocket();
+
+}
+
+void OgreRenderer::startRealityRender()
+{
+    // Scene init
+    scene = ogre->createSceneManager("OctreeSceneManager");
+
+    Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
+
+    scene->setAmbientLight(Ogre::ColourValue(.6f, .6f, .6f));
+    scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+    scene->setShadowColour(Ogre::ColourValue(0.6f, 0.6f, 0.6f));
+    scene->setShadowFarDistance(700);
+
+    // Ressource init
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/images", "FileSystem", "Assets");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mat", "FileSystem", "Assets");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mesh", "FileSystem", "Assets");
+
+    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Assets");
+
+
+
+    Ogre::MaterialPtr matLeft = Ogre::MaterialManager::getSingleton().getByName("Ogre/Compositor/Oculus");
+    Ogre::MaterialPtr matRight = matLeft->clone("Ogre/Compositor/Oculus/Right");
+    Ogre::GpuProgramParametersSharedPtr pParamsLeft = matLeft->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+    Ogre::GpuProgramParametersSharedPtr pParamsRight = matRight->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+
+    Ogre::Vector4 hmdwarp = Ogre::Vector4(
+        rift->getStereo().GetDistortionK(0),
+        rift->getStereo().GetDistortionK(1),
+        rift->getStereo().GetDistortionK(2),
+        rift->getStereo().GetDistortionK(3));
+
+    // param used in the oculus cg program files
+    pParamsLeft->setNamedConstant("HmdWarpParam", hmdwarp);
+    pParamsRight->setNamedConstant("HmdWarpParam", hmdwarp);
+    pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
+    pParamsRight->setNamedConstant("LensCentre", 0.5f - (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
+
+    Ogre::CompositorPtr comp = Ogre::CompositorManager::getSingleton().getByName("OculusRight");
+    comp->getTechnique(0)->getOutputTargetPass()->getPass(0)->setMaterialName("Ogre/Compositor/Oculus/Right");
+
+
+    init_all();
+
+    alive = true; // Ogre is now running
+    ShutDown = false;
+}
+
 void OgreRenderer::init_all()
 {
-    init_rocket();
 	init_cameras();
 	init_viewports();
 	init_compositor();
@@ -97,6 +107,8 @@ void OgreRenderer::init_all()
 
 void OgreRenderer::init_rocket()
 {
+    sceneUI = ogre->createSceneManager("RocketScene");
+    cameraUI = sceneUI->createCamera("camui");
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Rocket");
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/", "FileSystem", "Rocket");
 
@@ -132,20 +144,20 @@ void OgreRenderer::init_rocket()
     }
 
     // Add the application as a listener to Ogre's render queue so we can render during the overlay.
-    scene->addRenderQueueListener(this);
+    sceneUI->addRenderQueueListener(this);
 }
 
 void OgreRenderer::createFrameListener()
 {
     // Create the RocketFrameListener.
-    mFrameListener = new RocketFrameListener(mWindow, mCamera, context);
-    mRoot->addFrameListener(mFrameListener);
+    mFrameListener = new RocketFrameListener(window, cameraUI, context);
+    ogre->addFrameListener(mFrameListener);
 
     // Show the frame stats overlay.
     mFrameListener->showDebugOverlay(true);
 }
 
-void OgreRenderer::renderQueueStarted(uint8 queueGroupId, const Ogre::String& invocation, bool& ROCKET_UNUSED(skipThisInvocation))
+void OgreRenderer::renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& ROCKET_UNUSED(skipThisInvocation))
 {
     if (queueGroupId == Ogre::RENDER_QUEUE_OVERLAY && Ogre::Root::getSingleton().getRenderSystem()->_getViewport()->getOverlaysEnabled())
     {
@@ -157,7 +169,7 @@ void OgreRenderer::renderQueueStarted(uint8 queueGroupId, const Ogre::String& in
 }
 
 // Called from Ogre after a queue group is rendered.
-void OgreRenderer::renderQueueEnded(uint8 ROCKET_UNUSED(queueGroupId), const Ogre::String& ROCKET_UNUSED(invocation), bool& ROCKET_UNUSED(repeatThisInvocation))
+void OgreRenderer::renderQueueEnded(Ogre::uint8 ROCKET_UNUSED(queueGroupId), const Ogre::String& ROCKET_UNUSED(invocation), bool& ROCKET_UNUSED(repeatThisInvocation))
 {
 }
 

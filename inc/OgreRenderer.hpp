@@ -26,6 +26,9 @@
 
 #include  "Oculus.hpp"
 #include  "Object.hpp"
+#include  "SystemInterfaceOgre3D.h"
+#include  "RenderInterfaceOgre3D.h"
+#include  "RocketFrameListener.h"
 
  /**
  * @brief 3D Engine
@@ -146,20 +149,25 @@
 
     void createFrameListener();
     /// Called from Ogre before a queue group is rendered.
-    virtual void renderQueueStarted(uint8 queueGroupId, const Ogre::String& invocation, bool& skipThisInvocation);
+    virtual void renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& skipThisInvocation);
     /// Called from Ogre after a queue group is rendered.
-    virtual void renderQueueEnded(uint8 queueGroupId, const Ogre::String& invocation, bool& repeatThisInvocation);
+    virtual void renderQueueEnded(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& repeatThisInvocation);
     void ConfigureRenderSystem();
     void BuildProjectionMatrix(Ogre::Matrix4& matrix);
+    void startUI();
+    void startRealityRender();
 private:
     VirtualOculus               *rift;
     double                      cam_frame_size[2];
 
     Ogre::Root*                 ogre;
     Ogre::SceneManager*         scene;
+    Ogre::SceneManager*         sceneUI;
     Ogre::RenderWindow*         window;
 
     Ogre::Viewport*             viewports[2];
+    Ogre::Viewport*             viewportUI;
+    Ogre::Camera*               cameraUI;
     Ogre::Camera*               cameras[2];
     Ogre::CompositorInstance    *compos[2];
     Ogre::MaterialPtr           mats[2];
@@ -170,6 +178,7 @@ private:
 
     SystemInterfaceOgre3D* ogre_system;
     RenderInterfaceOgre3D* ogre_renderer;
+    RocketFrameListener*  mFrameListener;
 
     bool alive;
     bool ShutDown;

@@ -3,7 +3,6 @@
 #include <Rocket/Core.h>
 
 
-#include    "RocketApplication.h"
 #include	"OgreRenderer.hpp"
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
@@ -26,17 +25,22 @@ int   main()
     RocketApplication application;
     application.go();
 
-//    //ugly test
-//    float test = rift->getDistordScale();
-//    int xwindow = rift->getResolution()[0];
-//    int ywindow = rift->getResolution()[1];
+    //ugly test
+    float test = rift->getDistordScale();
+    int xwindow = rift->getResolution()[0];
+    int ywindow = rift->getResolution()[1];
 
-//    camera.OpenCamera();
+    camera.OpenCamera();
 
-//    video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
-//    video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
+    video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
+    video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
-//    render = new OgreRenderer(video_size, rift);
+    render = new OgreRenderer(video_size, rift);
+    render->startUI();
+    while(render->isAlive())
+    {
+        render->render();
+    }
 
 //    //Overlay *hud = new Overlay();
 
