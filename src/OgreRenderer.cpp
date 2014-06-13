@@ -44,7 +44,7 @@ OgreRenderer::~OgreRenderer()
 void OgreRenderer::startUI()
 {
         init_rocket();
-
+        ogre->startRendering();
 }
 
 void OgreRenderer::startRealityRender()
@@ -107,7 +107,7 @@ void OgreRenderer::init_all()
 
 void OgreRenderer::init_rocket()
 {
-    sceneUI = ogre->createSceneManager("RocketScene");
+    sceneUI = ogre->createSceneManager("OctreeSceneManager");
     cameraUI = sceneUI->createCamera("camui");
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Rocket");
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/", "FileSystem", "Rocket");
@@ -145,6 +145,7 @@ void OgreRenderer::init_rocket()
 
     // Add the application as a listener to Ogre's render queue so we can render during the overlay.
     sceneUI->addRenderQueueListener(this);
+    std::cout << "Finish init rocket" << std::endl;
 }
 
 void OgreRenderer::createFrameListener()
@@ -162,7 +163,7 @@ void OgreRenderer::renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::Stri
     if (queueGroupId == Ogre::RENDER_QUEUE_OVERLAY && Ogre::Root::getSingleton().getRenderSystem()->_getViewport()->getOverlaysEnabled())
     {
         context->Update();
-
+        std::cout << "Q start" << std::endl;
         ConfigureRenderSystem();
         context->Render();
     }

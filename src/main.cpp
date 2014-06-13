@@ -33,11 +33,9 @@ int   main()
     video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
     render = new OgreRenderer(video_size, rift);
+    //render->startRealityRender();
     render->startUI();
-    while(render->isAlive())
-    {
-        render->render();
-    }
+
 
 //    //Overlay *hud = new Overlay();
 
@@ -48,8 +46,8 @@ int   main()
 //    camera.GrabFrames();
 
 //    // AR init
-//	ar.init();
-//	ar.start();
+//    ar.init();
+//    ar.start();
 
 //    // Render loop
 //    while(render->isAlive())
@@ -68,11 +66,11 @@ int   main()
 //            }
 //            render->loadCam(frame[0], frame[1]);
 //            boost::thread new_pic(&StereoCamera::camWorker, camera);
-//		}
+//        }
 //        render->render();
 //    }
 //    ar.stop();
- //   delete render;
+//    delete render;
     return 0;
 }
 
