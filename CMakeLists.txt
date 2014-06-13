@@ -135,16 +135,7 @@ target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_O
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
 INCLUDE( cmake/FindLibRocket.cmake )
-IF(ROCKET_FOUND)
-    MESSAGE(STATUS "Looking for Rocket - found")
-    target_link_libraries(ProjectReality ${ROCKET_LIBRARY})
-ELSE(ROCKET_FOUND)
-    MESSAGE(STATUS "Looking for Rocket - not found")
-ENDIF(ROCKET_FOUND)
-
-find_library(LIBROCKET_LIBRARY ProjectReality RocketCore RocketCore_d)
-target_link_libraries(ProjectReality ${LIBROCKET_LIBRARIES})
-
+target_link_libraries(ProjectReality ${ROCKET_LIBRARIES})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
