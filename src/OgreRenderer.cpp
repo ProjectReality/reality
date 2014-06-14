@@ -24,7 +24,7 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 	// Ogre init
 	ogre = new Ogre::Root();
-
+    mOverlaySystem = OGRE_NEW OverlaySystem();
 	Ogre::LogManager::getSingleton().getDefaultLog()->setDebugOutputEnabled(false);
 
 
@@ -44,6 +44,7 @@ OgreRenderer::~OgreRenderer()
 void OgreRenderer::startUI()
 {
         init_rocket();
+        createFrameListener();
         ogre->startRendering();
 }
 
@@ -109,8 +110,22 @@ void OgreRenderer::init_rocket()
 {
     sceneUI = ogre->createSceneManager("OctreeSceneManager");
     cameraUI = sceneUI->createCamera("camui");
+    // Position it at 500 in Z direction
+    cameraUI->setPosition(Ogre::Vector3(0,0,500));
+    // Look back along -Z
+    cameraUI->lookAt(Ogre::Vector3(0,0,-300));
+    cameraUI->setNearClipDistance(5);
+
+    try {
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Rocket");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/overlay", "FileSystem", "Rocket");
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/", "FileSystem", "Rocket");
+    ResourceGroupManager::getSingleton().addResourceLocation("assets/OgreCore.zip", "Zip", "Rocket");
+    ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    } catch( Ogre::Exception& e ) {
+        std::cerr << "An exception has occured: " <<
+                e.getFullDescription().c_str() << std::endl;
+          }
 
     // Rocket initialisation.
     ogre_renderer = new RenderInterfaceOgre3D(window->getWidth(), window->getHeight());
@@ -123,6 +138,7 @@ void OgreRenderer::init_rocket()
     Rocket::Controls::Initialise();
 
     // Load the fonts from the path to the sample directory.
+
     Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Roman.otf");
     Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Bold.otf");
     Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Italic.otf");
@@ -145,6 +161,8 @@ void OgreRenderer::init_rocket()
 
     // Add the application as a listener to Ogre's render queue so we can render during the overlay.
     sceneUI->addRenderQueueListener(this);
+    sceneUI->addRenderQueueListener(mOverlaySystem);
+
     std::cout << "Finish init rocket" << std::endl;
 }
 
@@ -152,10 +170,12 @@ void OgreRenderer::createFrameListener()
 {
     // Create the RocketFrameListener.
     mFrameListener = new RocketFrameListener(window, cameraUI, context);
-    ogre->addFrameListener(mFrameListener);
+
 
     // Show the frame stats overlay.
     mFrameListener->showDebugOverlay(true);
+
+    ogre->addFrameListener(mFrameListener);
 }
 
 void OgreRenderer::renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& ROCKET_UNUSED(skipThisInvocation))

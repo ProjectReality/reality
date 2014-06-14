@@ -191,6 +191,7 @@ private:
     Ogre::TexturePtr            tex[2];
 
     Rocket::Core::Context* context;
+    OverlaySystem* mOverlaySystem;
 
     SystemInterfaceOgre3D* ogre_system;
     RenderInterfaceOgre3D* ogre_renderer;

@@ -106,7 +106,7 @@ public:
 		mInputManager(0), mMouse(0), mKeyboard(0), mJoy(0)
 	{
 
-		mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
+        mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
 
 		LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
 		OIS::ParamList pl;
