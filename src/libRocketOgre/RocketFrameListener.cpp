@@ -38,6 +38,45 @@ RocketFrameListener::RocketFrameListener(Ogre::RenderWindow* window, Ogre::Camer
 
 	mMouse->setEventCallback(this);
 	mKeyboard->setEventCallback(this);
+
+
+    mInputManager->destroyInputObject(mMouse);
+    mInputManager->destroyInputObject(mKeyboard);
+    mInputManager->destroyInputObject(mJoy);
+    OIS::InputManager::destroyInputSystem(mInputManager);
+
+    // override OIS construction to avoid grabbing mouse
+    OIS::ParamList pl;
+    size_t windowHnd = 0;
+    std::ostringstream windowHndStr;
+
+    window->getCustomAttribute("WINDOW", &windowHnd);
+    windowHndStr << windowHnd;
+    pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+    #if defined OIS_WIN32_PLATFORM
+    pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
+    pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
+    pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
+    pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
+    #elif defined OIS_LINUX_PLATFORM
+    pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
+    pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
+    pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
+    pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
+    #endif
+
+    mInputManager = OIS::InputManager::createInputSystem( pl );
+
+    //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
+    mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, false ));
+    mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, false ));
+    try {
+        mJoy = static_cast<OIS::JoyStick*>(mInputManager->createInputObject( OIS::OISJoyStick, false ));
+    }
+    catch(...) {
+        mJoy = 0;
+    }
+
 }
 
 RocketFrameListener::~RocketFrameListener()
