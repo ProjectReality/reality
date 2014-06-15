@@ -126,12 +126,11 @@ void OgreRenderer::init_rocket()
 
     try {
         Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Rocket");
-        //Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/libRocket", "FileSystem", "Rocket");
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/libRocket", "FileSystem", "Rocket");
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/overlay", "FileSystem", "Rocket");
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/", "FileSystem", "Rocket");
-        //Ogre::ResourceGroupManager::getSingleton().addResourceLocation("/", "FileSystem", "Rocket");
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets", "FileSystem", "Rocket");
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./", "FileSystem", "Rocket");
         ResourceGroupManager::getSingleton().addResourceLocation("assets/OgreCore.zip", "Zip", "Rocket");
-        ResourceGroupManager::getSingleton().addResourceLocation("assets/libRocket.zip", "Zip", "Rocket");
         ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
     } catch( Ogre::Exception& e ) {
