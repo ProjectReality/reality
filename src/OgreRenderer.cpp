@@ -157,9 +157,9 @@ void OgreRenderer::init_rocket()
     Rocket::Debugger::Initialise(context);
 
      //Load the mouse cursor and release the caller's reference.
-        Rocket::Core::ElementDocument* cursor = context->LoadMouseCursor("assets/libRocket/cursor.rml");
-        if (cursor)
-            cursor->RemoveReference();
+//        Rocket::Core::ElementDocument* cursor = context->LoadMouseCursor("assets/libRocket/cursor.rml");
+//        if (cursor)
+//            cursor->RemoveReference();
 
     //    Rocket::Core::ElementDocument* document = context->LoadDocument("assets/libRocket/demo.rml");
     //    if (document)
