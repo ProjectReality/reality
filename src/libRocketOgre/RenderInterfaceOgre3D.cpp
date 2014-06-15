@@ -213,7 +213,6 @@ bool RenderInterfaceOgre3D::LoadTexture(Rocket::Core::TextureHandle& texture_han
 	Ogre::TexturePtr ogre_texture = texture_manager->getByName(Ogre::String(source.CString()));
 	if (ogre_texture.isNull())
 	{
-        std::cout << "try to load " << Ogre::String(source.CString()) << std::endl;
 		ogre_texture = texture_manager->load(Ogre::String(source.CString()),
 											 "Rocket",
 											 Ogre::TEX_TYPE_2D,

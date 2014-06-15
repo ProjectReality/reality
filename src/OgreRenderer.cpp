@@ -32,8 +32,6 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
         exit(11);
 
     window = ogre->initialise(true, "Rendering Window"); //must init windows before load rsrc
-
-
 }
 
 OgreRenderer::~OgreRenderer()
@@ -182,7 +180,6 @@ void OgreRenderer::createFrameListener()
     // Create the RocketFrameListener.
     mFrameListener = new RocketFrameListener(window, cameraUI, context);
 
-
     // Show the frame stats overlay.
     mFrameListener->showDebugOverlay(true);
 
@@ -194,7 +191,6 @@ void OgreRenderer::renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::Stri
     if (queueGroupId == Ogre::RENDER_QUEUE_OVERLAY && Ogre::Root::getSingleton().getRenderSystem()->_getViewport()->getOverlaysEnabled())
     {
         context->Update();
-        //std::cout << "Q start" << std::endl;
         ConfigureRenderSystem();
         context->Render();
     }
