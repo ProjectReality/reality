@@ -104,15 +104,6 @@ void OgreRenderer::startUI()
     ogre->startRendering();
 }
 
-class MyListener : public Rocket::Core::EventListener
-{
-public:
-    void ProcessEvent(Rocket::Core::Event& event)
-    {
-        printf("Processing event %s", event.GetType().CString());
-    }
-};
-
 void OgreRenderer::init_rocket()
 {
     sceneUI = ogre->createSceneManager("OctreeSceneManager");
@@ -177,16 +168,11 @@ void OgreRenderer::init_rocket()
     //        document->RemoveReference();
     //    }
 
-    MyListener* my_listener = new MyListener();
-
     Rocket::Core::ElementDocument* document = context->LoadDocument("assets/mainUI/mainui.rml");
     if (document)
     {
         document->Show();
         document->RemoveReference();
-
-        Rocket::Core::Element* element = document->GetElementById("dadsdad");
-        element->AddEventListener("click", my_listener, false);
     }
 
     // Add the application as a listener to Ogre's render queue so we can render during the overlay.
