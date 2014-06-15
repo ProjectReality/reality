@@ -2,7 +2,7 @@
 <head>
     <link type="text/rcss" href="mainui.rcss"/>
 </head>
-<body class="window">
+<body id="dadsdad" class="window">
     <div id="title_bar">
         <handle move_target="#document">
             <div id="icon"></div>

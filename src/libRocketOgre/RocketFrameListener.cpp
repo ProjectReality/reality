@@ -34,48 +34,10 @@ RocketFrameListener::RocketFrameListener(Ogre::RenderWindow* window, Ogre::Camer
 	context = _context;
 	running = true;
 
-	BuildKeyMaps();
+    BuildKeyMaps();
 
-	mMouse->setEventCallback(this);
-	mKeyboard->setEventCallback(this);
-
-
-    mInputManager->destroyInputObject(mMouse);
-    mInputManager->destroyInputObject(mKeyboard);
-    mInputManager->destroyInputObject(mJoy);
-    OIS::InputManager::destroyInputSystem(mInputManager);
-
-    // override OIS construction to avoid grabbing mouse
-    OIS::ParamList pl;
-    size_t windowHnd = 0;
-    std::ostringstream windowHndStr;
-
-    window->getCustomAttribute("WINDOW", &windowHnd);
-    windowHndStr << windowHnd;
-    pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
-    #if defined OIS_WIN32_PLATFORM
-    pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
-    pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
-    pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
-    pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
-    #elif defined OIS_LINUX_PLATFORM
-    pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
-    pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
-    pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
-    pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
-    #endif
-
-    mInputManager = OIS::InputManager::createInputSystem( pl );
-
-    //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
-    mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, false ));
-    mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, false ));
-    try {
-        mJoy = static_cast<OIS::JoyStick*>(mInputManager->createInputObject( OIS::OISJoyStick, false ));
-    }
-    catch(...) {
-        mJoy = 0;
-    }
+    mMouse->setEventCallback(this);
+    mKeyboard->setEventCallback(this);
 
 }
 
@@ -101,19 +63,21 @@ bool RocketFrameListener::mouseMoved(const OIS::MouseEvent& e)
 
 bool RocketFrameListener::mousePressed(const OIS::MouseEvent& ROCKET_UNUSED(e), OIS::MouseButtonID id)
 {
+
 	context->ProcessMouseButtonDown((int) id, GetKeyModifierState());
 	return true;
 }
 
 bool RocketFrameListener::mouseReleased(const OIS::MouseEvent& ROCKET_UNUSED(e), OIS::MouseButtonID id)
 {
+
 	context->ProcessMouseButtonUp((int) id, GetKeyModifierState());
 	return true;
 }
 
 bool RocketFrameListener::keyPressed(const OIS::KeyEvent& e)
 {
-	Rocket::Core::Input::KeyIdentifier key_identifier = key_identifiers[e.key];
+    Rocket::Core::Input::KeyIdentifier key_identifier = key_identifiers[e.key];
 
 	// Toggle the debugger on a shift-~ press.
 	if (key_identifier == Rocket::Core::Input::KI_OEM_3 &&
