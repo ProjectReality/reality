@@ -156,18 +156,6 @@ void OgreRenderer::init_rocket()
     context = Rocket::Core::CreateContext("main", Rocket::Core::Vector2i(window->getWidth(), window->getHeight()));
     Rocket::Debugger::Initialise(context);
 
-     //Load the mouse cursor and release the caller's reference.
-//        Rocket::Core::ElementDocument* cursor = context->LoadMouseCursor("assets/libRocket/cursor.rml");
-//        if (cursor)
-//            cursor->RemoveReference();
-
-    //    Rocket::Core::ElementDocument* document = context->LoadDocument("assets/libRocket/demo.rml");
-    //    if (document)
-    //    {
-    //        document->Show();
-    //        document->RemoveReference();
-    //    }
-
     Rocket::Core::ElementDocument* document = context->LoadDocument("assets/mainUI/mainui.rml");
     if (document)
     {

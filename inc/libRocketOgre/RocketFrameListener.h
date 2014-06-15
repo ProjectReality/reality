@@ -14,7 +14,7 @@
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,37 +34,37 @@
 class RocketApplication;
 
 /**
-	@author Peter Curry
+    @author Peter Curry
  */
 
 class RocketFrameListener : public ExampleFrameListener, public OIS::MouseListener, public OIS::KeyListener
 {
-	public:
-		RocketFrameListener(Ogre::RenderWindow* window, Ogre::Camera* camera, Rocket::Core::Context* context);
-		virtual ~RocketFrameListener();
+public:
+    RocketFrameListener(Ogre::RenderWindow* window, Ogre::Camera* camera, Rocket::Core::Context* context);
+    virtual ~RocketFrameListener();
 
-		// FrameListener interface.
-		virtual bool frameStarted(const Ogre::FrameEvent& evt);
+    // FrameListener interface.
+    virtual bool frameStarted(const Ogre::FrameEvent& evt);
 
-		// MouseListener interface.
-		virtual bool mouseMoved(const OIS::MouseEvent& e);
-		virtual bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id);
-		virtual bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id);
+    // MouseListener interface.
+    virtual bool mouseMoved(const OIS::MouseEvent& e);
+    virtual bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id);
+    virtual bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id);
 
-		// KeyListener interface.
-		virtual bool keyPressed(const OIS::KeyEvent& e);
-		virtual bool keyReleased(const OIS::KeyEvent& e);
+    // KeyListener interface.
+    virtual bool keyPressed(const OIS::KeyEvent& e);
+    virtual bool keyReleased(const OIS::KeyEvent& e);
 
-	private:
-		void BuildKeyMaps();
-		int GetKeyModifierState();
+private:
+    void BuildKeyMaps();
+    int GetKeyModifierState();
 
-		typedef std::map< OIS::KeyCode, Rocket::Core::Input::KeyIdentifier > KeyIdentifierMap;
+    typedef std::map< OIS::KeyCode, Rocket::Core::Input::KeyIdentifier > KeyIdentifierMap;
 
-		Rocket::Core::Context* context;
-		bool running;
+    Rocket::Core::Context* context;
+    bool running;
 
-		KeyIdentifierMap key_identifiers;
+    KeyIdentifierMap key_identifiers;
 };
 
 #endif
