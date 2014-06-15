@@ -100,7 +100,7 @@ add_library(TinyXML src/TinyXML/tinystr.cpp
 file(GLOB ProjectReality_src
   "src/*.cpp"
   "src/libRocketOgre/*.cpp"
-  "src/libRocketOgre/*.hpp"
+  "inc/libRocketOgre/*.h"
   ${HEADER_REALITY}
   ${HEADER_ARMA}
   ${HEADER_TXML}
