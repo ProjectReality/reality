@@ -170,6 +170,7 @@ class RenderInterfaceOgre3D;
     void ConfigureRenderSystem();
     void BuildProjectionMatrix(Ogre::Matrix4& matrix);
     void startUI();
+    void stopUI();
     void startRealityRender();
 
 
@@ -200,6 +201,7 @@ private:
      RocketFrameListener*  mFrameListener;
 
     bool alive;
+    bool uialive;
     bool ShutDown;
 };
 

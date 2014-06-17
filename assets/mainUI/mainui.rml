@@ -27,6 +27,6 @@
         </select>
         </div>
 
-        <button class="butlaunch">Launch reality</button>
+        <button id="butlaunch" class="butlaunch">Launch reality</button>
     </body>
 </rml>

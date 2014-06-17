@@ -36,8 +36,12 @@ int   main()
 
 
     render->startUI();
+
+    std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
+
     render->startRealityRender();
 
+    std::cout << "Reality launched ! start rendering " << std::endl;
 
     //Overlay *hud = new Overlay();
 

@@ -52,7 +52,7 @@ void OgreRenderer::startRealityRender()
     scene->setShadowFarDistance(700);
 
     // Ressource init
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem", "Assets");
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/images", "FileSystem", "Assets");
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mat", "FileSystem", "Assets");
     Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Model/mesh", "FileSystem", "Assets");
@@ -101,8 +101,40 @@ void OgreRenderer::startUI()
 {
     init_rocket();
     createFrameListener();
-    ogre->startRendering();
+    uialive = true;
+    while(uialive) {
+        Ogre::WindowEventUtilities::messagePump();
+        ogre->renderOneFrame();
+    }
+    std::cout << "out of ui rendering loop" << std::endl;
+    //ogre->startRendering();
 }
+
+void OgreRenderer::stopUI()
+{
+    std::cout << "Sarting to stop ui rendering" << std::endl;
+    uialive = false;
+    sceneUI->getRootSceneNode()->setVisible(false);
+    //ogre->destroySceneManager(sceneUI);
+    window->removeViewport(viewportUI->getZOrder());
+}
+
+class MyListener : public Rocket::Core::EventListener
+{
+public:
+
+    MyListener(OgreRenderer *ctxt) {
+        context = ctxt;
+    }
+
+    void ProcessEvent(Rocket::Core::Event& event)
+    {
+        std::cout << "Processing event " << event.GetType().CString() << std::endl;
+        context->stopUI();
+    }
+
+    OgreRenderer* context;
+};
 
 void OgreRenderer::init_rocket()
 {
@@ -159,6 +191,10 @@ void OgreRenderer::init_rocket()
     Rocket::Core::ElementDocument* document = context->LoadDocument("assets/mainUI/mainui.rml");
     if (document)
     {
+        MyListener* my_listener = new MyListener(this);
+        Rocket::Core::Element* element = document->GetElementById("butlaunch");
+        element->AddEventListener("click", my_listener, false);
+
         document->Show();
         document->RemoveReference();
     }
