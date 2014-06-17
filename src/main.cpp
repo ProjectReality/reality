@@ -33,44 +33,46 @@ int   main()
     video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
 
     render = new OgreRenderer(video_size, rift);
-    //render->startRealityRender();
+
+
     render->startUI();
+    render->startRealityRender();
 
 
-//    //Overlay *hud = new Overlay();
+    //Overlay *hud = new Overlay();
 
-//    // Scene creation
-//    objects["Test"] = new Object("Test", "EarthGlobe.mesh", render->getScene());
+    // Scene creation
+    objects["Test"] = new Object("Test", "EarthGlobe.mesh", render->getScene());
 
-//    // Free grab & get to get rid of the first frame
-//    camera.GrabFrames();
+    // Free grab & get to get rid of the first frame
+    camera.GrabFrames();
 
-//    // AR init
-//    ar.init();
-//    ar.start();
+    // AR init
+    ar.init();
+    ar.start();
 
-//    // Render loop
-//    while(render->isAlive())
-//    {
-//        if (render->getShutDown())
-//            return 0;
+    // Render loop
+    while(render->isAlive())
+    {
+        if (render->getShutDown())
+            return 0;
 
-//        if (camera.FrameAvailable())
-//        {
+        if (camera.FrameAvailable())
+        {
 
-//            frame = camera.GetFrame();
-//            ar.setFrame(frame[0]);
-//            if (ar.isChanged())
-//            {
-//                objects["Test"]->updateData(ar.getMarkers().front());
-//            }
-//            render->loadCam(frame[0], frame[1]);
-//            boost::thread new_pic(&StereoCamera::camWorker, camera);
-//        }
-//        render->render();
-//    }
-//    ar.stop();
-//    delete render;
+            frame = camera.GetFrame();
+            ar.setFrame(frame[0]);
+            if (ar.isChanged())
+            {
+                objects["Test"]->updateData(ar.getMarkers().front());
+            }
+            render->loadCam(frame[0], frame[1]);
+            boost::thread new_pic(&StereoCamera::camWorker, camera);
+        }
+        render->render();
+    }
+    ar.stop();
+    delete render;
     return 0;
 }
 

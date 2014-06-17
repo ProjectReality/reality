@@ -42,6 +42,18 @@ tabset tabs
     display: block;
 }
 
+button {
+    color : white;
+    background : #39A61B;
+    border: 2px solid #48D921;
+    padding: 5px;
+    text-align: center;
+}
+
+select {
+
+}
+
 /*dsdsds*/
 
 body
@@ -55,68 +67,53 @@ body
 
 body.window
 {
-    padding-top: 43px;
-    padding-bottom: 20px;
 
-    min-width: 250px;
-    max-width: 800px;
-
-    min-height: 135px;
-    max-height: 700px;
 }
 
-
+#menutop {
+    height: 25px;
+    width: 800px;
+    background-color: #F0F0F0;
+    border-bottom: 1px solid #808080;
+}
 
 div#title_bar
 {
+    background-color: grey;
     z-index: 1;
 
     position: absolute;
     top: 0px;
     left: 0px;
 
-    text-align: left;
-}
-
-div#title_bar div#icon
-{
-    position: absolute;
-    left: 20px;
-    top: 2px;
-
-    width: 51px;
-    height: 39px;
-
+    text-align: center;
 }
 
 div#title_bar span
 {
-    padding-left: 85px;
-    padding-right: 25px;
-    padding-top: 17px;
-    padding-bottom: 48px;
+    width : 300px;
 
-    font-size: 22;
+    font-size: 21;
     font-weight: bold;
 
     outline-font-effect: outline;
     outline-width: 1px;
     outline-color: black;
-
-    background-color: yellow;
 }
 
 
 
 div#window
 {
+    color:black;
     width: auto;
-    padding: 10px 15px;
-    background-color:red;
+    padding-top: 25px;
+    background-color:white;
 }
 
 div#content
 {
+    color:black;
     z-index: 2;
 
     width: auto;
@@ -125,6 +122,14 @@ div#content
     overflow: hidden auto;
 
     text-align: center;
+    background-color:white;
+}
+
+.butlaunch {
+    margin: 0 auto;
+    width: 750px;
+    position: absolute;
+    bottom: 1px;
 }
 
 
