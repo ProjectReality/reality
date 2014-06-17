@@ -19,10 +19,11 @@
     </head>
     <body template="window">
         <div id="menutop">
-        <label for="patchoose">Pattern</label>
+        <label for="patchoose">Pattern : </label>
         <select id="patchoose" name="patchoose">
-         <option value="qrcode" selected>QR Code</option>
-         <option value="qrcode" selected>Magic</option>
+            <option value="qrcode" selected>Select Patern</option>
+         <option value="qrcode" >QR Code</option>
+         <option value="qrcode" >Magic</option>
         </select>
         </div>
 
