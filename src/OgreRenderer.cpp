@@ -105,6 +105,8 @@ void OgreRenderer::startUI()
     while(uialive) {
         Ogre::WindowEventUtilities::messagePump();
         ogre->renderOneFrame();
+        if (window->isClosed())
+            exit(11);
     }
     std::cout << "out of ui rendering loop" << std::endl;
     //ogre->startRendering();
