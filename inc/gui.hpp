@@ -1,0 +1,7 @@
+
+
+class gui
+{
+public:
+    gui() {}
+};

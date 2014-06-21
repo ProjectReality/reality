@@ -8,7 +8,6 @@
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
 #include    "Object.hpp"
-#include    "Overlay.hpp"
 
 int   main()
 {
@@ -42,8 +41,6 @@ int   main()
     render->startRealityRender();
 
     std::cout << "Reality launched ! start rendering " << std::endl;
-
-    //Overlay *hud = new Overlay();
 
     // Scene creation
     objects["Test"] = new Object("Test", "EarthGlobe.mesh", render->getScene());

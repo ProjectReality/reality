@@ -31,20 +31,6 @@
 #include  "RocketFrameListener.h"
 
 
-
-
-namespace Rocket {
-namespace Core {
-
-class Context;
-
-}
-}
-
-class SystemInterfaceOgre3D;
-class RenderInterfaceOgre3D;
-
-
  /**
  * @brief 3D Engine
  * @details Class manage everything in the 3D Engine
