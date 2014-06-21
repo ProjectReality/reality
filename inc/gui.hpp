@@ -1,7 +1,0 @@
-
-
-class gui
-{
-public:
-    gui() {}
-};

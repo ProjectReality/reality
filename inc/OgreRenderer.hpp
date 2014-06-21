@@ -2,6 +2,9 @@
 #define _R_OGRERENDERER_HPP_
 
 #include  <string>
+#include  <iostream>
+#include  <boost/current_function.hpp>
+
 
 #include  <OgreRoot.h>
 #include  <OgreCompositorInstance.h>
@@ -24,19 +27,24 @@
 
 #include  <opencv2/opencv.hpp>
 
+#include <Rocket/Core.h>
+#include <Rocket/Controls.h>
+#include <Rocket/Debugger.h>
+
 #include  "Oculus.hpp"
 #include  "Object.hpp"
 #include  "SystemInterfaceOgre3D.h"
-#include  "RenderInterfaceOgre3D.h"
 #include  "RocketFrameListener.h"
+#include  "Gui.hpp"
 
+class Gui; // forward declaration I <3 CPP
 
  /**
  * @brief 3D Engine
  * @details Class manage everything in the 3D Engine
  *
  */
- class       OgreRenderer : public Ogre::RenderQueueListener
+ class       OgreRenderer
  {
 
  public:
@@ -49,13 +57,6 @@
     * @details Init everything for Ogre
     */
     void init_all();
-
-    /**
-    * @brief
-    * @details
-    * s
-    */
-    void init_rocket();
 
     /**
     * @brief Init the two cameras
@@ -146,20 +147,11 @@
     bool  getShutDown();
     Ogre::SceneManager*  getScene();
     Ogre::Root*          getRoot();
+    Ogre::RenderWindow*  getWindow();
 
-
-    void createFrameListener();
-    /// Called from Ogre before a queue group is rendered.
-    virtual void renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& skipThisInvocation);
-    /// Called from Ogre after a queue group is rendered.
-    virtual void renderQueueEnded(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& repeatThisInvocation);
-    void ConfigureRenderSystem();
-    void BuildProjectionMatrix(Ogre::Matrix4& matrix);
     void startUI();
     void stopUI();
     void startRealityRender();
-
-
 
 private:
     VirtualOculus               *rift;
@@ -167,12 +159,9 @@ private:
 
     Ogre::Root*                 ogre;
     Ogre::SceneManager*         scene;
-    Ogre::SceneManager*         sceneUI;
     Ogre::RenderWindow*         window;
 
     Ogre::Viewport*             viewports[2];
-    Ogre::Viewport*             viewportUI;
-    Ogre::Camera*               cameraUI;
     Ogre::Camera*               cameras[2];
     Ogre::CompositorInstance    *compos[2];
     Ogre::MaterialPtr           mats[2];
@@ -180,14 +169,10 @@ private:
     Ogre::TexturePtr            tex[2];
 
     Rocket::Core::Context* context;
-    OverlaySystem* mOverlaySystem;
 
-    SystemInterfaceOgre3D* ogre_system;
-    RenderInterfaceOgre3D* ogre_renderer;
-     RocketFrameListener*  mFrameListener;
+    Gui* ui;
 
     bool alive;
-    bool uialive;
     bool ShutDown;
 };
 

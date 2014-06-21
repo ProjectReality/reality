@@ -1,13 +1,4 @@
-#include    <iostream>
-#include    <boost/current_function.hpp>
-
 #include "OgreRenderer.hpp"
-#include <Rocket/Core.h>
-#include <Rocket/Controls.h>
-#include <Rocket/Debugger.h>
-#include "RenderInterfaceOgre3D.h"
-#include "RocketFrameListener.h"
-#include "SystemInterfaceOgre3D.h"
 
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
@@ -24,7 +15,8 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
     // Ogre init
     ogre = new Ogre::Root();
-    mOverlaySystem = OGRE_NEW OverlaySystem();
+    ui = new Gui(this);
+
     Ogre::LogManager::getSingleton().getDefaultLog()->setDebugOutputEnabled(false);
 
 
@@ -37,6 +29,14 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 OgreRenderer::~OgreRenderer()
 {
     delete ogre; // Apparently handle deletes for most ogre-related things.
+}
+
+void OgreRenderer::startUI() {
+    ui->start();
+}
+
+void OgreRenderer::stopUI() {
+    ui->stop();
 }
 
 void OgreRenderer::startRealityRender()
@@ -95,219 +95,6 @@ void OgreRenderer::init_all()
     init_viewports();
     init_compositor();
     init_background_camera();
-}
-
-void OgreRenderer::startUI()
-{
-    init_rocket();
-    createFrameListener();
-    uialive = true;
-    while(uialive) {
-        Ogre::WindowEventUtilities::messagePump();
-        ogre->renderOneFrame();
-        if (window->isClosed())
-            exit(11);
-    }
-    std::cout << "out of ui rendering loop" << std::endl;
-    //ogre->startRendering();
-}
-
-void OgreRenderer::stopUI()
-{
-    std::cout << "Sarting to stop ui rendering" << std::endl;
-    uialive = false;
-    sceneUI->getRootSceneNode()->setVisible(false);
-    //ogre->destroySceneManager(sceneUI);
-    window->removeViewport(viewportUI->getZOrder());
-}
-
-class MyListener : public Rocket::Core::EventListener
-{
-public:
-
-    MyListener(OgreRenderer *ctxt) {
-        context = ctxt;
-    }
-
-    void ProcessEvent(Rocket::Core::Event& event)
-    {
-        string classname = event.GetCurrentElement()->GetClassNames().CString();
-        std::cout << "Processing event of " << classname << std::endl;
-        if (classname == "butlaunch" ) context->stopUI();
-        else if (classname == "butsetogre" ) {
-            context->getRoot()->showConfigDialog();
-        }
-
-    }
-
-    OgreRenderer* context;
-};
-
-void OgreRenderer::init_rocket()
-{
-    sceneUI = ogre->createSceneManager("OctreeSceneManager");
-    cameraUI = sceneUI->createCamera("camui");
-    // Position it at 500 in Z direction
-    cameraUI->setPosition(Ogre::Vector3(0,0,500));
-    // Look back along -Z
-    cameraUI->lookAt(Ogre::Vector3(0,0,-300));
-    cameraUI->setNearClipDistance(5);
-
-    // Create one viewport, entire window
-    viewportUI = window->addViewport(cameraUI);
-    viewportUI->setBackgroundColour(ColourValue(0,0,0));
-
-    // Alter the camera aspect ratio to match the viewport
-    cameraUI->setAspectRatio(
-                Real(viewportUI->getActualWidth()) / Real(viewportUI->getActualHeight()));
-
-    try {
-        Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Rocket");
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/libRocket", "FileSystem", "Rocket");
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/overlay", "FileSystem", "Rocket");
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets", "FileSystem", "Rocket");
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./", "FileSystem", "Rocket");
-        ResourceGroupManager::getSingleton().addResourceLocation("assets/OgreCore.zip", "Zip", "Rocket");
-        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
-    } catch( Ogre::Exception& e ) {
-        std::cerr << "An exception has occured: " <<
-                     e.getFullDescription().c_str() << std::endl;
-    }
-
-    // Rocket initialisation.
-    ogre_renderer = new RenderInterfaceOgre3D(window->getWidth(), window->getHeight());
-    Rocket::Core::SetRenderInterface(ogre_renderer);
-
-    ogre_system = new SystemInterfaceOgre3D();
-    Rocket::Core::SetSystemInterface(ogre_system);
-
-    Rocket::Core::Initialise();
-    Rocket::Controls::Initialise();
-
-    // Load the fonts from the path to the sample directory.
-
-    Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Roman.otf");
-    Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Bold.otf");
-    Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Italic.otf");
-    Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-BoldItalic.otf");
-
-    context = Rocket::Core::CreateContext("main", Rocket::Core::Vector2i(window->getWidth(), window->getHeight()));
-    Rocket::Debugger::Initialise(context);
-
-    Rocket::Core::ElementDocument* document = context->LoadDocument("assets/mainUI/mainui.rml");
-    if (document)
-    {
-        MyListener* my_listener = new MyListener(this);
-        Rocket::Core::Element* element2 = document->GetElementById("butlaunch");
-        Rocket::Core::Element* element = document->GetElementById("butsetogre");
-        element->AddEventListener("click", my_listener, false);
-        element2->AddEventListener("click", my_listener, false);
-        document->Show();
-        document->RemoveReference();
-    }
-
-    // Add the application as a listener to Ogre's render queue so we can render during the overlay.
-    sceneUI->addRenderQueueListener(this);
-    sceneUI->addRenderQueueListener(mOverlaySystem);
-
-    std::cout << "Finish init rocket" << std::endl;
-}
-
-void OgreRenderer::createFrameListener()
-{
-    // Create the RocketFrameListener.
-    mFrameListener = new RocketFrameListener(window, cameraUI, context);
-
-    // Show the frame stats overlay.
-    mFrameListener->showDebugOverlay(true);
-
-    ogre->addFrameListener(mFrameListener);
-}
-
-void OgreRenderer::renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& ROCKET_UNUSED(skipThisInvocation))
-{
-    if (queueGroupId == Ogre::RENDER_QUEUE_OVERLAY && Ogre::Root::getSingleton().getRenderSystem()->_getViewport()->getOverlaysEnabled())
-    {
-        context->Update();
-        ConfigureRenderSystem();
-        context->Render();
-    }
-}
-
-// Called from Ogre after a queue group is rendered.
-void OgreRenderer::renderQueueEnded(Ogre::uint8 ROCKET_UNUSED(queueGroupId), const Ogre::String& ROCKET_UNUSED(invocation), bool& ROCKET_UNUSED(repeatThisInvocation))
-{
-}
-
-// Configures Ogre's rendering system for rendering Rocket.
-void OgreRenderer::ConfigureRenderSystem()
-{
-    Ogre::RenderSystem* render_system = Ogre::Root::getSingleton().getRenderSystem();
-
-    // Set up the projection and view matrices.
-    Ogre::Matrix4 projection_matrix;
-    BuildProjectionMatrix(projection_matrix);
-    render_system->_setProjectionMatrix(projection_matrix);
-    render_system->_setViewMatrix(Ogre::Matrix4::IDENTITY);
-
-    // Disable lighting, as all of Rocket's geometry is unlit.
-    render_system->setLightingEnabled(false);
-    // Disable depth-buffering; all of the geometry is already depth-sorted.
-    render_system->_setDepthBufferParams(false, false);
-    // Rocket generates anti-clockwise geometry, so enable clockwise-culling.
-    render_system->_setCullingMode(Ogre::CULL_CLOCKWISE);
-    // Disable fogging.
-    render_system->_setFog(Ogre::FOG_NONE);
-    // Enable writing to all four channels.
-    render_system->_setColourBufferWriteEnabled(true, true, true, true);
-    // Unbind any vertex or fragment programs bound previously by the application.
-    render_system->unbindGpuProgram(Ogre::GPT_FRAGMENT_PROGRAM);
-    render_system->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);
-
-    // Set texture settings to clamp along both axes.
-    Ogre::TextureUnitState::UVWAddressingMode addressing_mode;
-    addressing_mode.u = Ogre::TextureUnitState::TAM_CLAMP;
-    addressing_mode.v = Ogre::TextureUnitState::TAM_CLAMP;
-    addressing_mode.w = Ogre::TextureUnitState::TAM_CLAMP;
-    render_system->_setTextureAddressingMode(0, addressing_mode);
-
-    // Set the texture coordinates for unit 0 to be read from unit 0.
-    render_system->_setTextureCoordSet(0, 0);
-    // Disable texture coordinate calculation.
-    render_system->_setTextureCoordCalculation(0, Ogre::TEXCALC_NONE);
-    // Enable linear filtering; images should be rendering 1 texel == 1 pixel, so point filtering could be used
-    // except in the case of scaling tiled decorators.
-    render_system->_setTextureUnitFiltering(0, Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT);
-    // Disable texture coordinate transforms.
-    render_system->_setTextureMatrix(0, Ogre::Matrix4::IDENTITY);
-    // Reject pixels with an alpha of 0.
-    render_system->_setAlphaRejectSettings(Ogre::CMPF_GREATER, 0, false);
-    // Disable all texture units but the first.
-    render_system->_disableTextureUnitsFrom(1);
-
-    // Enable simple alpha blending.
-    render_system->_setSceneBlending(Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
-
-    // Disable depth bias.
-    render_system->_setDepthBias(0, 0);
-}
-
-// Builds an OpenGL-style orthographic projection matrix.
-void OgreRenderer::BuildProjectionMatrix(Ogre::Matrix4& projection_matrix)
-{
-    float z_near = -1;
-    float z_far = 1;
-
-    projection_matrix = Ogre::Matrix4::ZERO;
-
-    // Set up matrices.
-    projection_matrix[0][0] = 2.0f / window->getWidth();
-    projection_matrix[0][3]= -1.0000000f;
-    projection_matrix[1][1]= -2.0f / window->getHeight();
-    projection_matrix[1][3]= 1.0000000f;
-    projection_matrix[2][2]= -2.0f / (z_far - z_near);
-    projection_matrix[3][3]= 1.0000000f;
 }
 
 void OgreRenderer::init_cameras()
@@ -475,6 +262,11 @@ Ogre::SceneManager* OgreRenderer::getScene()
 Ogre::Root* OgreRenderer::getRoot()
 {
     return ogre;
+}
+
+Ogre::RenderWindow* OgreRenderer::getWindow()
+{
+    return window;
 }
 
 bool OgreRenderer::getShutDown()
