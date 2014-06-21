@@ -1,7 +1,7 @@
 #include    <iostream>
 #include    <boost/current_function.hpp>
 
-#include    "OgreRenderer.hpp"
+#include "OgreRenderer.hpp"
 #include <Rocket/Core.h>
 #include <Rocket/Controls.h>
 #include <Rocket/Debugger.h>
@@ -134,7 +134,9 @@ public:
         string classname = event.GetCurrentElement()->GetClassNames().CString();
         std::cout << "Processing event of " << classname << std::endl;
         if (classname == "butlaunch" ) context->stopUI();
-        else if (classname == "butsetogre" ) context->getRoot()->showConfigDialog();
+        else if (classname == "butsetogre" ) {
+            context->getRoot()->showConfigDialog();
+        }
 
     }
 
