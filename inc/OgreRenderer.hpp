@@ -159,7 +159,7 @@ class RenderInterfaceOgre3D;
 
     bool  getShutDown();
     Ogre::SceneManager*  getScene();
-
+    Ogre::Root*          getRoot();
 
 
     void createFrameListener();

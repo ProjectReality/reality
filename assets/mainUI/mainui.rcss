@@ -74,6 +74,7 @@ body.window
 }
 
 #menutop {
+    margin-bottom: 15px;
     height: 25px;
     width: 800px;
     background-color: #F0F0F0;
@@ -133,6 +134,11 @@ div#content
     width: 750px;
     position: absolute;
     bottom: 1px;
+}
+
+.butogre {
+    width: 300px;
+    float: right;
 }
 
 

@@ -131,8 +131,11 @@ public:
 
     void ProcessEvent(Rocket::Core::Event& event)
     {
-        std::cout << "Processing event " << event.GetType().CString() << std::endl;
-        context->stopUI();
+        string classname = event.GetCurrentElement()->GetClassNames().CString();
+        std::cout << "Processing event of " << classname << std::endl;
+        if (classname == "butlaunch" ) context->stopUI();
+        else if (classname == "butsetogre" ) context->getRoot()->showConfigDialog();
+
     }
 
     OgreRenderer* context;
@@ -194,9 +197,10 @@ void OgreRenderer::init_rocket()
     if (document)
     {
         MyListener* my_listener = new MyListener(this);
-        Rocket::Core::Element* element = document->GetElementById("butlaunch");
+        Rocket::Core::Element* element2 = document->GetElementById("butlaunch");
+        Rocket::Core::Element* element = document->GetElementById("butsetogre");
         element->AddEventListener("click", my_listener, false);
-
+        element2->AddEventListener("click", my_listener, false);
         document->Show();
         document->RemoveReference();
     }
@@ -464,6 +468,11 @@ void OgreRenderer::setFrameSize(double size[2])
 Ogre::SceneManager* OgreRenderer::getScene()
 {
     return scene;
+}
+
+Ogre::Root* OgreRenderer::getRoot()
+{
+    return ogre;
 }
 
 bool OgreRenderer::getShutDown()
