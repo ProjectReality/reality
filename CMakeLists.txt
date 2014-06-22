@@ -55,7 +55,6 @@ find_package(OIS REQUIRED)
 if(NOT OIS_FOUND)
   message(SEND_ERROR "Failed to find OIS.")
 endif()
-
 # Find Boost
 if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   if (WIN32 OR APPLE)
@@ -128,7 +127,7 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} )
+target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_DATE_TIME_LIBRARY_RELEASE})
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -190,17 +189,6 @@ if(WIN32)
     DESTINATION .
     CONFIGURATIONS Debug)
 
-  # as of sdk 1.7.2 we need to copy the boost dll's as well
-  # because they're not linked statically (it worked with 1.7.1 though)
-  install(FILES ${Boost_DATE_TIME_LIBRARY_RELEASE}
-    ${Boost_THREAD_LIBRARY_RELEASE}
-    DESTINATION .
-    CONFIGURATIONS Release RelWithDebInfo)
-
-  install(FILES ${Boost_DATE_TIME_LIBRARY_DEBUG}
-    ${Boost_THREAD_LIBRARY_DEBUG}
-    DESTINATION .
-    CONFIGURATIONS Debug)
 endif(WIN32)
 
 if(UNIX)
