@@ -4,12 +4,11 @@
 		<pattern>76</pattern>
 		<asset>BeerBarrel.mesh</asset>
 		<scale>0.00015</scale>
-		<yaw>90</yaw>
 	</object>
 	<object>
 		<pattern>181</pattern>
 		<asset>BeerBarrel.mesh</asset>
-		<scale>0.0002</scale>
+		<scale>0.00015</scale>
 		<pitch>90</pitch>
 	</object>
 	<object>
@@ -18,5 +17,131 @@
 		<scale>0.00015</scale>
 		<pitch>90</pitch>
 		<avisible/>
+	</object>
+	<object>
+		<pattern>1005</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>64</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>125</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>175</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>177</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>233</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>299</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>341</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>428</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>461</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>477</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>684</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>717</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>760</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>791</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>838</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>882</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>908</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>977</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>982</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
+	</object>
+	<object>
+		<pattern>985</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<roll>90</roll>
 	</object>
 </db>
