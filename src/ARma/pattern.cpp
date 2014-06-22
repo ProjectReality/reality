@@ -19,7 +19,12 @@ namespace ARma {
 	//convert rotation vector to rotation matrix (if you want to proceed with other libraries)
 	void Pattern::rotationMatrix(const Mat& rotation_vector, Mat& rotation_matrix)
 	{
-		Rodrigues(rotation_vector, rotation_matrix);
+		try {
+			if (!rotation_vector.empty())
+				Rodrigues(rotation_vector, rotation_matrix); 
+		}
+		catch (...)
+		{}
 	}
 
 	void Pattern::showPattern()
@@ -136,6 +141,22 @@ namespace ARma {
 
 		model2ImagePts.clear();
 
+	}
+
+
+	void Pattern::calcPoint(const Mat& camMatrix, const Mat& distMatrix)
+	{
+		Mat modelPts = (Mat_<float>(8, 3) << 0, 0, 0, size, 0, 0, size, size, 0, 0, size, 0,
+			0, 0, -size, size, 0, -size, size, size, -size, 0, size, -size);
+
+		std::vector<cv::Point2f> model2ImagePts;
+		/* project model 3D points to the image. Points through the transformation matrix
+		(defined by rotVec and transVec) "are transfered" from the pattern CS to the
+		camera CS, and then, points are projected using camera parameters
+		(camera matrix, distortion matrix) from the camera 3D CS to its image plane
+		*/
+		cv::projectPoints(modelPts, rotVec, transVec, camMatrix, distMatrix, model2ImagePts);
+		this->pointImage = model2ImagePts;
 	}
 
 }

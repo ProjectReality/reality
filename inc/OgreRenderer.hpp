@@ -135,7 +135,8 @@
     void setFrameSize(double size[2]);
 
     bool  getShutDown();
-    Ogre::SceneManager*  getScene();
+	Ogre::SceneManager*  getScene();
+	Ogre::Camera*               cameras[2];
 
 private:
     VirtualOculus               *rift;
@@ -146,7 +147,6 @@ private:
     Ogre::RenderWindow*         window;
 
     Ogre::Viewport*             viewports[2];
-    Ogre::Camera*               cameras[2];
     Ogre::CompositorInstance    *compos[2];
     Ogre::MaterialPtr           mats[2];
     Ogre::Rectangle2D*          rects[2];

@@ -1,6 +1,8 @@
+
 #include <cmath>
 #include <map>
 
+<<<<<<< HEAD
 #include	"OgreRenderer.hpp"
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
@@ -75,7 +77,15 @@ int   main()
     }
     ar.stop();
     delete render;
+=======
+#include	"Core.hpp"
+
+int   main()
+{
+	Core core;
+
+	core.init();
+	core.start();
+>>>>>>> remotes/origin/Test_aruco
     return 0;
 }
-
-

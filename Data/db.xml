@@ -1,15 +1,22 @@
 <?xml version="1.0" standalone=no>
 <db>
 	<object>
-		<pattern>Data/patterns/hiro.png</pattern>
-		<asset>Data/assets/pear.mesh</asset>
+		<pattern>76</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.00015</scale>
+		<yaw>90</yaw>
 	</object>
 	<object>
-		<pattern>Data/patterns/1.jpg</pattern>
-		<asset>Data/assets/object.mesh</asset>
+		<pattern>181</pattern>
+		<asset>BeerBarrel.mesh</asset>
+		<scale>0.0002</scale>
+		<pitch>90</pitch>
 	</object>
 	<object>
-		<pattern>Data/patterns/spider.png</pattern>
-		<asset>Data/assets/plop.mesh</asset>
+		<pattern>618</pattern>
+		<asset>WoodenChair.mesh</asset>
+		<scale>0.00015</scale>
+		<pitch>90</pitch>
+		<avisible/>
 	</object>
 </db>

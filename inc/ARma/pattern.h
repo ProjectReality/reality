@@ -18,6 +18,7 @@ class Pattern
 		double size; //in milimeters
 		double confidence;//min: -1, max: 1
 		Mat rotVec, transVec, rotMat;
+		std::vector<cv::Point2f> pointImage;
 
 		Pattern(double param1=80);
 
@@ -39,6 +40,8 @@ class Pattern
 		
 		//prints the properties of the patten and its transformation matrix
 		void showPattern(void);
+
+		void calcPoint(const Mat& camMatrix, const Mat& distMatrix);
 
 };
 

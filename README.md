@@ -11,7 +11,7 @@
 * Boost 1.55 ([All](https://bitbucket.org/realityproject/reality/downloads/boost_1_55.zip))  <[http://www.boost.org/](http://www.boost.org/)>
 * Cmake  <[http://www.cmake.org](http://www.cmake.org)>
 * Oculus SDK 0.2.5c ([Windows](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_win_0.2.5c.zip)) ([Linux](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_linux_0.2.5c.tar.gz))  <[https://developer.oculusvr.com/](https://developer.oculusvr.com/?action=dl)>
-* ARToolKit <[http://www.hitl.washington.edu/artoolkit/](http://www.hitl.washington.edu/artoolkit/download/)>
+* Aruco <[http://sourceforge.net/projects/aruco/files/)>
 
 # Windows
 
@@ -29,6 +29,7 @@ OCULUS_SDK_ROOT_DIR=C:\Users\vayan\Libs\OculusSDK
 OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
 OPENCV_DIR=C:\Users\vayan\Libs\opencv\build
 OPENCV_ROOT=C:\Users\vayan\Libs\opencv\build
+ARUCO_ROOT=C:\Users\vayan\Libs\aruco\build
 ```
 
 Maybe you don't need every env but I don't remember which one work :)

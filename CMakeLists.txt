@@ -51,6 +51,7 @@ find_package(OpenCV REQUIRED)
 find_package(OGRE REQUIRED)
 find_package(OculusSDK REQUIRED)
 find_package(OIS REQUIRED)
+find_package(Aruco REQUIRED)
 
 if(NOT OIS_FOUND)
   message(SEND_ERROR "Failed to find OIS.")
@@ -111,6 +112,7 @@ include_directories(
   ${OGRE_Overlay_INCLUDE_DIRS}
   ${OCULUS_SDK_INCLUDE_DIRS}
   ${OPENCV_INCLUDE_DIR}
+  ${ARUCO_INCLUDE_DIR}
   ./inc)
 
 add_executable(ProjectReality WIN32 ${ProjectReality_src})
@@ -127,7 +129,11 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
+<<<<<<< HEAD
 target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_DATE_TIME_LIBRARY_RELEASE})
+=======
+target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${ARUCO_LIB})
+>>>>>>> remotes/origin/Test_aruco
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -180,6 +186,14 @@ if(WIN32)
     ${OGRE_PLUGIN_DIR_REL}/OIS.dll
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo)
+	
+  install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
+    DESTINATION .
+    CONFIGURATIONS Release RelWithDebInfo)
+	
+  install(FILES ${ARUCO_ROOT}/bin/Debug/aruco125.dll
+    DESTINATION .
+    CONFIGURATIONS Debug)
 
   install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
