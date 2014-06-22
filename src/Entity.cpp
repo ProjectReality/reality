@@ -148,3 +148,5 @@ void Entity::setNode(Ogre::SceneNode *value)
 {
     node = value;
 }
+
+

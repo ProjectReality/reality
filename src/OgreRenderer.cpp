@@ -2,6 +2,7 @@
 #include    <boost/current_function.hpp>
 
 #include    "OgreRenderer.hpp"
+#include    "Light.hpp"
 
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
@@ -30,12 +31,9 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 	// Scene init
 	scene = ogre->createSceneManager("OctreeSceneManager");
 
-	Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
 
-	scene->setAmbientLight(Ogre::ColourValue(.6f, .6f, .6f));
-	scene->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-	scene->setShadowColour(Ogre::ColourValue(0.6f, 0.6f, 0.6f));
-	scene->setShadowFarDistance(700);
+    Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Assets");
+
 
 	// Ressource init
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/Oculus", "FileSystem");
@@ -108,6 +106,7 @@ void OgreRenderer::init_cameras()
 
 void OgreRenderer::init_viewports()
 {
+
 	Ogre::ColourValue g_defaultViewportColour(0,0,0);
 
 	if (cameras == NULL)
@@ -249,6 +248,7 @@ Ogre::SceneManager* OgreRenderer::getScene()
 {
 	return scene;
 }
+
 
 bool OgreRenderer::getShutDown()
 {

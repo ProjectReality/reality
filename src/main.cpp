@@ -5,6 +5,7 @@
 #include	"StereoCamera.hpp"
 #include	"Oculus.hpp"
 #include	"ARManager.hpp"
+#include    "Light.hpp"
 #include    "Object.hpp"
 #include    "Overlay.hpp"
 
@@ -36,6 +37,12 @@ int   main()
 
     // Scene creation
     objects["Test"] = new Object("Test", "EarthGlobe.mesh", render->getScene());
+    objects["Test"]->setPosition(0,0,0);
+
+
+    Light *l = new Light("vayalight", render->getScene());
+    l->createSun();
+    l->setPosition(10,150, 200);
 
     // Free grab & get to get rid of the first frame
     camera.GrabFrames();
@@ -43,6 +50,7 @@ int   main()
     // AR init
 	ar.init();
 	ar.start();
+
 
     // Render loop
     while(render->isAlive())
@@ -57,11 +65,12 @@ int   main()
             ar.setFrame(frame[0]);
             if (ar.isChanged())
             {
-                objects["Test"]->updateData(ar.getMarkers().front());
+                //objects["Test"]->updateData(ar.getMarkers().front());
             }
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
 		}
+        l->move(0,0,1);
         render->render();
     }
     ar.stop();

@@ -72,6 +72,7 @@
      */
     void init_background_camera();
 
+
     /**
      * @brief [brief description]
      * @details [long description]
@@ -79,6 +80,7 @@
      * @param _name [description]
      * @param _file [description]
      */
+
     void        loadMesh(std::string _name, std::string _file);
 
     /**
