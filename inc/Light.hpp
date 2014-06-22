@@ -40,13 +40,12 @@ public:
     void    getTime();
     int     getUTC(int localhour, int timezone);
     double  getPositionSun(int year, int month, int day, int hour, int min);
-    void    remove(Ogre::Light *l);
-    void    remove(std::string name);
+    void    remove();
 private:
     double  meanLong(double x);
 private:
     Ogre::SceneManager* scene;
-    std::list<Ogre::Light*> Lights;
+    Ogre::Light* OLight;
 };
 
 #endif
