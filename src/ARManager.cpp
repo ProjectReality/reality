@@ -71,13 +71,8 @@ void ARManager::clearMarker()
 
 void ARManager::addMarker(std::vector<aruco::Marker> markers)
 {
-<<<<<<< HEAD
-    std::map<int, int>::iterator	it = this->markerList.find(info.id);
-	if (it != this->markerList.end())
-=======
 	boost::mutex::scoped_lock lock(m_marker);
 	for each(aruco::Marker m in markers)
->>>>>>> remotes/origin/Test_aruco
 	{
 		this->markerFound.insert(std::pair<int, aruco::Marker>(m.id, m));
 		this->markerChange = true;

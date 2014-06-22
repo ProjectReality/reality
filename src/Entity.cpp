@@ -191,9 +191,6 @@ void Entity::setNode(Ogre::SceneNode *value)
     node = value;
 }
 
-<<<<<<< HEAD
-
-=======
 void Entity::visible(bool h)
 {
 	ishide = !h;
@@ -245,4 +242,3 @@ void Entity::setBaseYaw(double value)
 {
 	base_yaw = value;
 }
->>>>>>> remotes/origin/Test_aruco

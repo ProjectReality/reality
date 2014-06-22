@@ -87,11 +87,9 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
-set(HEADER_ARMA inc/ARma/cameraparams.h inc/ARma/pattern.h inc/ARma/patterndetector.h)
 set(HEADER_TXML inc/TinyXML/tinystr.h inc/TinyXML/tinyxml.h)
 set(HEADER_REALITY "inc/*.hpp")
 
-add_library(ARma src/ARma/patterndetector.cpp src/ARma/pattern.cpp ${HEADER_ARMA})
 add_library(TinyXML src/TinyXML/tinystr.cpp 
 					src/TinyXML/tinyxml.cpp 
 					src/TinyXML/tinyxmlerror.cpp 
@@ -116,7 +114,7 @@ include_directories(
   ./inc)
 
 add_executable(ProjectReality WIN32 ${ProjectReality_src})
-target_link_libraries(ProjectReality ARma TinyXML)
+target_link_libraries(ProjectReality TinyXML)
 
 set_target_properties(ProjectReality PROPERTIES DEBUG_POSTFIX _d)
 
@@ -129,11 +127,14 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-<<<<<<< HEAD
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_DATE_TIME_LIBRARY_RELEASE})
-=======
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${ARUCO_LIB})
->>>>>>> remotes/origin/Test_aruco
+target_link_libraries(ProjectReality	${OGRE_LIBRARIES} 
+										${OIS_LIBRARIES} 
+										${OGRE_Overlay_LIBRARIES} 
+										${OCULUS_SDK_LIBRARIES} 
+										${Boost_SYSTEM_LIBRARY} 
+										${Boost_THREAD_LIBRARY} 
+										${Boost_DATE_TIME_LIBRARY_RELEASE}
+										${ARUCO_LIB})
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

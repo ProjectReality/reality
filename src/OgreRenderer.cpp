@@ -2,11 +2,8 @@
 #include    <boost/current_function.hpp>
 
 #include    "OgreRenderer.hpp"
-<<<<<<< HEAD
 #include    "Light.hpp"
-=======
 #include    "aruco.h"
->>>>>>> remotes/origin/Test_aruco
 
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
@@ -92,22 +89,6 @@ void OgreRenderer::init_all()
 
 void OgreRenderer::init_cameras()
 {
-<<<<<<< HEAD
-	for (size_t i = 0; i < 2; i++)
-	{
-		Ogre::Matrix4 proj = Ogre::Matrix4::IDENTITY;
-		proj.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * i - 1), 0, 0));
-
-		cameras[i] = scene->createCamera(i == 0 ? "Left" : "Right");
-		cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
-		cameras[i]->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
-		cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 500);
-		cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
-		cameras[i]->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
-		cameras[i]->lookAt(Ogre::Vector3(0, 0, -300));
-		cameras[i]->setCustomProjectionMatrix(true, proj * cameras[i]->getProjectionMatrix());
-	}
-=======
 	aruco::CameraParameters camParams;
 	camParams.readFromXMLFile("Data/camera.yml");
 
@@ -131,7 +112,6 @@ void OgreRenderer::init_cameras()
 		cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
 		cameras[i]->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians())); 
     }
->>>>>>> remotes/origin/Test_aruco
 }
 
 void OgreRenderer::init_viewports()

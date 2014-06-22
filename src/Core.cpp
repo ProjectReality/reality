@@ -1,4 +1,5 @@
 #include	"Core.hpp"
+#include	"Light.hpp"
 #include	"aruco.h"
 
 Core::Core()
@@ -30,6 +31,8 @@ void Core::init()
 void Core::start()
 {
 	ar.start();
+	Light	sun("sun", render->getScene());
+	sun.createSun();
 	while (render->isAlive())
 	{
 		if (render->getShutDown())
@@ -41,6 +44,10 @@ void Core::start()
 			frame = camera.GetFrame();
 			ar.setFrame(frame[0]);
 			std::map<int, aruco::Marker> mFound = ar.getMarkers();
+			for each(std::pair<int, Object*> p in objects)
+			{
+				objects[p.first]->visible(false);
+			}
 			for each(std::pair<int, aruco::Marker> p in mFound)
 			{
 				if (objects.find(p.first) != objects.end())
@@ -79,17 +86,14 @@ void Core::buildObjectsList(std::string filename)
 					if (child->FirstChildElement("yaw"))
 					{
 						(objects[id])->setBaseYaw(Utils::c_to_d(child->FirstChildElement("yaw")->GetText()));
-						(objects[id])->rotate(Ogre::Vector3(0, 0, 1), Ogre::Radian(Ogre::Degree((0))));
 					}
 					if (child->FirstChildElement("pitch"))
 					{
 						(objects[id])->setBasePitch(Utils::c_to_d(child->FirstChildElement("pitch")->GetText()));
-						(objects[id])->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree((objects[id])->getBasePitch())));
 					}
 					if (child->FirstChildElement("roll"))
 					{
 						(objects[id])->setBaseRoll(Utils::c_to_d(child->FirstChildElement("roll")->GetText()));
-						(objects[id])->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(Ogre::Degree((objects[id])->getBaseRoll())));
 					}
 					if (child->FirstChildElement("scale"))
 					{
