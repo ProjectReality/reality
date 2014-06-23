@@ -17,7 +17,7 @@ Light::Light(std::string _name, Ogre::SceneManager* scene) : Entity(_name)
 
 Light::~Light()
 {
-
+    remove();
 }
 
 void   Light::createSun()
@@ -28,29 +28,16 @@ void   Light::createSun()
     sunLight->setSpecularColour(1.0, 1.0, 1.0);
     sunLight->setAttenuation(3250, 1.0, 0.0014, 0.00000);
 
-    Lights.push_back(sunLight);
+    OLight = sunLight;
 
     this->setNode(scene->getRootSceneNode()->createChildSceneNode());
     this->getNode()->attachObject(sunLight);
     this->update();
 }
 
-void Light::remove(Ogre::Light *l)
+void Light::remove()
 {
-    scene->destroyLight(l);
-    Lights.remove(l);
-}
-
-void Light::remove(std::string name)
-{
-    for (std::list<Ogre::Light*>::iterator it=Lights.begin(); it!=Lights.end(); ++it)
-    {
-        Ogre::Light *mL = *it;
-        if (mL->getName() == name) {
-            Lights.erase(it);
-            scene->destroyLight(mL);
-        }
-    }
+    scene->destroyLight(OLight);
 }
 
 double Light::meanLong(double x)
