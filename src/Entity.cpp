@@ -15,7 +15,8 @@ Entity::Entity(std::string _name)
 
 Entity::~Entity()
 {
-    this->scene->destroyEntity(this->name);
+    if (this->scene && this->scene->hasEntity(this->name))
+        this->scene->destroyEntity(this->name);
 }
 
 void Entity::setPosition(float x, float y, float z)
