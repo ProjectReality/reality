@@ -3,6 +3,7 @@
 
 #include    "OgreRenderer.hpp"
 #include    "Light.hpp"
+#include    "aruco.h"
 
 OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 {
@@ -88,20 +89,29 @@ void OgreRenderer::init_all()
 
 void OgreRenderer::init_cameras()
 {
-	for (size_t i = 0; i < 2; i++)
+	aruco::CameraParameters camParams;
+	camParams.readFromXMLFile("Data/camera.yml");
+
+    for (size_t i = 0; i < 2; i++)
 	{
-		Ogre::Matrix4 proj = Ogre::Matrix4::IDENTITY;
-		proj.setTrans(Ogre::Vector3(-rift->getStereo().GetProjectionCenterOffset() * (2 * i - 1), 0, 0));
 
 		cameras[i] = scene->createCamera(i == 0 ? "Left" : "Right");
 		cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
-		cameras[i]->setFarClipDistance(10000.0f); //TODO get from class virtuaocu
+		cameras[i]->setFarClipDistance(10.0f);
+		cameras[i]->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
 		cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 500);
+		cameras[i]->lookAt(0, 0, 1);
+		double pMatrix[16];
+		camParams.OgreGetProjectionMatrix(camParams.CamSize, camParams.CamSize, pMatrix, 0.05, 10, false);
+		Ogre::Matrix4 PM(pMatrix[0], pMatrix[1], pMatrix[2], pMatrix[3],
+			pMatrix[4], pMatrix[5], pMatrix[6], pMatrix[7],
+			pMatrix[8], pMatrix[9], pMatrix[10], pMatrix[11],
+			pMatrix[12], pMatrix[13], pMatrix[14], pMatrix[15]);
+		cameras[i]->setCustomProjectionMatrix(true, PM);
+		cameras[i]->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
 		cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
-		cameras[i]->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians()));
-		cameras[i]->lookAt(Ogre::Vector3(0, 0, -300));
-		cameras[i]->setCustomProjectionMatrix(true, proj * cameras[i]->getProjectionMatrix());
-	}
+		cameras[i]->setFOVy(Ogre::Radian(rift->getStereo().GetYFOVRadians())); 
+    }
 }
 
 void OgreRenderer::init_viewports()
