@@ -1,7 +1,6 @@
 #ifndef __OBJECT_HPP
 #define __OBJECT_HPP
 
-#include "ARma/pattern.h"
 #include "Entity.hpp"
 
 

@@ -44,11 +44,11 @@ void Core::start()
 			frame = camera.GetFrame();
 			ar.setFrame(frame[0]);
 			std::map<int, aruco::Marker> mFound = ar.getMarkers();
-			for each(std::pair<int, Object*> p in objects)
+			for (std::pair<int, Object*> p : objects)
 			{
 				objects[p.first]->visible(false);
 			}
-			for each(std::pair<int, aruco::Marker> p in mFound)
+			for (std::pair<int, aruco::Marker> p : mFound)
 			{
 				if (objects.find(p.first) != objects.end())
 				{

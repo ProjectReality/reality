@@ -1,6 +1,4 @@
 #include "ARManager.hpp"
-#include "ARma/patterndetector.h"
-#include "ARma/pattern.h"
 
 
 //---------------------------------------- CONSTRUCTOR --------------------------------------//
@@ -72,7 +70,7 @@ void ARManager::clearMarker()
 void ARManager::addMarker(std::vector<aruco::Marker> markers)
 {
 	boost::mutex::scoped_lock lock(m_marker);
-	for each(aruco::Marker m in markers)
+	for (aruco::Marker m : markers)
 	{
 		this->markerFound.insert(std::pair<int, aruco::Marker>(m.id, m));
 		this->markerChange = true;
@@ -88,7 +86,7 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 
 	if (prev_map.size() > 0)
 	{
-		for each (pair<std::string, ARma::Pattern> pa in prev_map)
+		for (pair<std::string, ARma::Pattern> pa : prev_map)
 		{
 			float p_x = pa.second.transVec.at<float>(0) * 4;
 			float p_y = -pa.second.transVec.at<float>(1) * 9;
@@ -104,7 +102,7 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 			}
 		}
 	}
-	for each (pair<std::string, ARma::Pattern> pa in markerFound)
+	for  (pair<std::string, ARma::Pattern> pa : markerFound)
 	{
 		if (next_map.find(pa.first) == next_map.end())
 			next_map[pa.first] = pa.second;

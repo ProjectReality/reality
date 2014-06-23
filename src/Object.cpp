@@ -18,7 +18,6 @@ void Object::updateData(aruco::Marker info)
 
 	info.OgreGetPoseParameters(position, orientation);
 	this->setPosition(position[0], position[1], position[2]);
-	std::cout << this->getBasePitch() << std::endl;
 	Ogre::Quaternion q(orientation[0], orientation[1], orientation[2], orientation[3]);
 	Ogre::Quaternion y(Ogre::Degree(this->getBaseYaw()), Ogre::Vector3::UNIT_Z);
 	Ogre::Quaternion p(Ogre::Degree(this->getBasePitch()), Ogre::Vector3::UNIT_Y);
