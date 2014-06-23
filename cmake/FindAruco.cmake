@@ -14,6 +14,10 @@ SET(ARUCO_ROOT
   PATH
   "Root directory to search for OculusSDK")
 
+if (EXISTS "/usr/local")
+  set(ARUCO_ROOT "${ARUCO_ROOT}" "/usr/local")
+endif()
+
 # Look for the header file.
 FIND_PATH(ARUCO_INCLUDE_DIR NAMES aruco.h HINTS
   ${ARUCO_ROOT}/include/aruco )
@@ -23,14 +27,25 @@ IF (WIN32)
   SET(CMAKE_DEBUG_POSTFIX d)
 ENDIF()
 
-# Look for the library.
-FIND_LIBRARY(ARUCO_LIBRARY NAMES aruco125 HINTS ${ARUCO_ROOT}
-  ${ARUCO_ROOT}/lib)
 
-# This will find release lib on Linux if no debug is available - on Linux this is no problem and avoids
-# having to compile in debug when not needed
-FIND_LIBRARY(ARUCO_LIBRARY_d NAMES aruco125 HINTS
-  ${ARUCO_ROOT}/lib)
+IF (WIN32)
+  # Look for the library.
+  FIND_LIBRARY(ARUCO_LIBRARY NAMES aruco125 HINTS ${ARUCO_ROOT}
+    ${ARUCO_ROOT}/lib)
+
+  # This will find release lib on Linux if no debug is available - on Linux this is no problem and avoids
+  # having to compile in debug when not needed
+  FIND_LIBRARY(ARUCO_LIBRARY_d NAMES aruco125 HINTS
+    ${ARUCO_ROOT}/lib)
+ENDIF()
+
+IF(UNIX)
+  FIND_LIBRARY(ARUCO_LIBRARY NAMES libaruco.so.1.2.5 HINTS
+    ${ARUCO_ROOT}/lib)
+
+  FIND_LIBRARY(ARUCO_LIBRARY_d NAMES libaruco.so.1.2.5 HINTS
+    ${ARUCO_ROOT}/lib)
+ENDIF()
 
 MARK_AS_ADVANCED(ARUCO_LIBRARY)
 MARK_AS_ADVANCED(ARUCO_LIBRARY_d)
@@ -40,7 +55,7 @@ SET(ARUCO_LIB optimized ${ARUCO_LIBRARY} debug ${ARUCO_LIBRARY_d})
 IF(UNIX)
   SET(ARUCO_LIB ${ARUCO_LIB} X11 Xinerama udev)
 ELSE(UNIX)
-  SET(ARUCO_LIB ${ARUCO_LIB})  
+  SET(ARUCO_LIB ${ARUCO_LIB})
 ENDIF(UNIX)
 
 # handle the QUIETLY and REQUIRED arguments and set ARUCO_FOUND to TRUE if
