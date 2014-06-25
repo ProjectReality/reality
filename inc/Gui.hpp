@@ -7,7 +7,7 @@
 
 class OgreRenderer; // forward declaration I <3 CPP
 
-class Gui : public Ogre::RenderQueueListener
+class Gui : public Ogre::RenderQueueListener, Rocket::Core::EventListener
 {
 public:
     Gui(OgreRenderer* c);
@@ -21,6 +21,7 @@ public:
     void BuildProjectionMatrix(Ogre::Matrix4& matrix);
     void start();
     void stop();
+    void ProcessEvent(Rocket::Core::Event& event);
 
 private:
     OgreRenderer*               OgreContext;

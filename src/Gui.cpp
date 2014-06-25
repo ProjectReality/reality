@@ -1,27 +1,5 @@
 #include "Gui.hpp"
 
-class MyListener : public Rocket::Core::EventListener
-{
-public:
-
-    MyListener(OgreRenderer *ctxt) {
-        context = ctxt;
-    }
-
-    void ProcessEvent(Rocket::Core::Event& event)
-    {
-        string classname = event.GetCurrentElement()->GetClassNames().CString();
-        std::cout << "Processing event of " << classname << std::endl;
-        if (classname == "butlaunch" ) context->stopUI();
-        else if (classname == "butsetogre" ) {
-            context->getRoot()->showConfigDialog();
-        }
-
-    }
-
-    OgreRenderer* context;
-};
-
 Gui::Gui(OgreRenderer *c) {
     OgreContext = c;
 }
@@ -38,6 +16,16 @@ void Gui::stop()
     //ogre->destroySceneManager(sceneUI);
 
     OgreContext->getWindow()->removeViewport(mViewport->getZOrder());
+}
+
+void Gui::ProcessEvent(Rocket::Core::Event& event)
+{
+    string classname = event.GetCurrentElement()->GetClassNames().CString();
+    std::cout << "Processing event of " << classname << std::endl;
+    if (classname == "butlaunch" ) OgreContext->stopUI();
+    else if (classname == "butsetogre" ) {
+        OgreContext->getRoot()->showConfigDialog();
+    }
 }
 
 void Gui::initRocket()
@@ -95,11 +83,10 @@ void Gui::initRocket()
     Rocket::Core::ElementDocument* document = RocketContext->LoadDocument("assets/mainUI/mainui.rml");
     if (document)
     {
-        MyListener* my_listener = new MyListener(OgreContext);
         Rocket::Core::Element* element2 = document->GetElementById("butlaunch");
         Rocket::Core::Element* element = document->GetElementById("butsetogre");
-        element->AddEventListener("click", my_listener, false);
-        element2->AddEventListener("click", my_listener, false);
+        element->AddEventListener("click", this, false);
+        element2->AddEventListener("click", this, false);
         document->Show();
         document->RemoveReference();
     }
