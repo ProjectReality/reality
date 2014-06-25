@@ -1,86 +1,36 @@
 #include "ARManager.hpp"
-#include "ARma/patterndetector.h"
-#include "ARma/pattern.h"
 
 
 //---------------------------------------- CONSTRUCTOR --------------------------------------//
 ARManager::ARManager()
 {
-	this->detector = new ARma::PatternDetector(fixed_thresh, adapt_thresh, adapt_block_size, confidenceThreshold, norm_pattern_size, mode);
-	CvMat* intrinsic = (CvMat*)cvLoad("Data/intrinsic.xml");
-	CvMat* distor = (CvMat*)cvLoad("Data/distortion.xml");
-	this->cameraMatrix = cvarrToMat(intrinsic);
-	this->distortions = cvarrToMat(distor);
-	this->patternCount = 0;
+	this->cameraMatrix.readFromXMLFile("Data/camera.yml");
 
 	this->frameChange = false;
 	this->markerChange = false;
-
-	this->norm_pattern_size = 64;
-	this->fixed_thresh = 50;
-	this->adapt_thresh = 5;
-	this->adapt_block_size = 45;
-	this->confidenceThreshold = 0.40;
-	this->mode = 2;
 }
 
 //---------------------------------------- MAIN FUNCTIONS --------------------------------------//
 
-void ARManager::init(std::string filename)
+void ARManager::addPatternInList(std::string name, int id)
 {
-	if (verbose) std::cout << "ARManager.init() : Try to load database named " << filename.c_str() << std::endl;
-	TiXmlDocument doc(filename.c_str());
-	if (doc.LoadFile())
-	{
-		TiXmlElement* root = doc.FirstChildElement("db");
-		if (root)
-		{
-			TiXmlElement*	child = root->FirstChildElement("object");
-			while (child)
-			{
-				if (child->FirstChildElement("pattern") && child->FirstChildElement("asset"))
-				{
-                    loadPattern(child->FirstChildElement("pattern")->GetText(), patternLibrary, patternCount);
-                    markerList.insert(std::pair<int, int>(patternCount - 1, 0));
-				}
-				child = child->NextSiblingElement("object");
-			}
-		}
-		else
-		{
-			std::cerr << "ARManager.init() : No root node found" << std::endl;
-		}
-	}
-	else
-		std::cerr << "ARManager.init() : Cannot load the database File" << std::endl;
-	// Temp printer
-//	if (verbose)
-//        for (std::map<int, int>::iterator it = markerList.begin(); it != markerList.end(); *it++)
-//		{
-//			std::cout << "Object" << std::endl;
-//			std::cout << "Pattern : " << it->second.getPattName() << std::endl;
-//			std::cout << "Asset : " << it->second.getAssName() << std::endl;
-//			std::cout << "Id : " << it->second.getId() << std::endl;
-//			std::cout << "---------------------------" << std::endl;
-//		}
+	listObjects[id] = name;
 }
 
 void ARManager::start()
 {
-	if (verbose)
-		std::cout << "Lauch the AR thread" << std::endl;
 	this->arThread = boost::thread(&arLoop, this);
 }
 
 void ARManager::stop()
 {
-	if (verbose)
-		std::cout << "AR thread Stop" << std::endl;
 	this->arThread.interrupt();
 }
 
 void ARManager::arLoop(ARManager *ar)
 {
+
+	std::vector<aruco::Marker> markerDetected;
 	while (1)
 	{
 		
@@ -93,27 +43,16 @@ void ARManager::arLoop(ARManager *ar)
 				fr = ar->frame.clone();
 				ar->frameChange = false;
 			}
-			ar->detector->detect(fr, ar->cameraMatrix, ar->distortions, ar->patternLibrary, ar->detectedPattern);
-
-			if (!ar->detectedPattern.empty())
-			{
-				boost::mutex::scoped_lock lock(ar->m_marker);
-				ar->clearMarker();
-				if (verbose) {
-					std::cout << "Number of pattern Found : " << ar->detectedPattern.size() << std::endl;
-				}
-				for (std::vector<ARma::Pattern>::iterator it = ar->detectedPattern.begin(); it != ar->detectedPattern.end(); it++)
-				{
-					ar->addMarker(*it);
-				}
-			}
+			ar->markerDetector.detect(fr, markerDetected, ar->getCamParam(), 0.05);
+			ar->clearMarker();
+			ar->addMarker(markerDetected);
 		}
 #ifdef _WIN32
 		Sleep(10);
 #else
 		usleep(10);
 #endif
-		ar->detectedPattern.clear();
+		markerDetected.clear();
 	}
 }
 
@@ -128,58 +67,49 @@ void ARManager::clearMarker()
 	this->markerFound.clear();
 }
 
-void ARManager::addMarker(ARma::Pattern info)
+void ARManager::addMarker(std::vector<aruco::Marker> markers)
 {
-    std::map<int, int>::iterator	it = this->markerList.find(info.id);
-	if (it != this->markerList.end())
+	boost::mutex::scoped_lock lock(m_marker);
+	for (aruco::Marker m : markers)
 	{
-    if (verbose) std::cout << "Marker id Found : " << info.id << std::endl;
-        this->markerFound.push_back(info);
+		this->markerFound.insert(std::pair<int, aruco::Marker>(m.id, m));
 		this->markerChange = true;
 	}
+	markerFoundCopy = std::map<int, aruco::Marker>(this->markerFound.begin(), this->markerFound.end());
 }
 
-int ARManager::loadPattern(const char* filename, std::vector<cv::Mat>& library, int& patternCount)
+std::map<int, aruco::Marker> ARManager::computeNewMap()
 {
-	Mat img = imread(filename, 0);
+	std::map<int, aruco::Marker> next_map;
+	/*
+	std::map<std::string, ARma::Pattern> prev_map = histo.front();
 
-	if (img.data == NULL || img.cols != img.rows){
-		std::cerr << "Not a square pattern" << std::endl;
-		return -1;
+	if (prev_map.size() > 0)
+	{
+		for (pair<std::string, ARma::Pattern> pa : prev_map)
+		{
+			float p_x = pa.second.transVec.at<float>(0) * 4;
+			float p_y = -pa.second.transVec.at<float>(1) * 9;
+			float p_z = -pa.second.transVec.at<float>(2);
+			if (markerFound.find(pa.first) != markerFound.end())
+			{
+				next_map[pa.first] = markerFound[pa.first];
+			}
+			else
+			{
+				if ((p_x < 600 && p_x > -600) && (p_y < 600 && p_y > -600))
+					next_map[pa.first] = pa.second;
+			}
+		}
 	}
-
-	Mat src(norm_pattern_size, norm_pattern_size, CV_8UC1);
-	Point2f center((norm_pattern_size - 1) / 2.0f, (norm_pattern_size - 1) / 2.0f);
-	Mat rot_mat(2, 3, CV_32F);
-
-	resize(img, src, Size(norm_pattern_size, norm_pattern_size));
-	Mat subImg = src(Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4), Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4));
-	library.push_back(subImg);
-
-	rot_mat = getRotationMatrix2D(center, 90, 1.0);
-
-	for (int i = 1; i<4; i++){
-		Mat dst = Mat(norm_pattern_size, norm_pattern_size, CV_8UC1);
-		rot_mat = getRotationMatrix2D(center, -i * 90, 1.0);
-		warpAffine(src, dst, rot_mat, Size(norm_pattern_size, norm_pattern_size));
-		Mat subImg = dst(Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4), Range(norm_pattern_size / 4, 3 * norm_pattern_size / 4));
-		library.push_back(subImg);
+	for  (pair<std::string, ARma::Pattern> pa : markerFound)
+	{
+		if (next_map.find(pa.first) == next_map.end())
+			next_map[pa.first] = pa.second;
 	}
-
-	patternCount++;
-	return 1;
+	histo.pop_back();*/
+	return (next_map);
 }
-
-void ARManager::cleanVector(std::vector<ARma::Pattern>& p_Pattern)
-{
-
-}
-
-int ARManager::calcDist(std::vector<ARma::Pattern>& p_Pattern)
-{
-	return (0);
-}
-
 //---------------------------------------- GETTER & SETTER --------------------------------------//
 bool ARManager::setFrame(cv::Mat p_frame)
 {
@@ -194,34 +124,28 @@ cv::Mat ARManager::getFrame() const
 	return (this->frame);
 }
 
-void ARManager::setMarkerList(std::map<int, int> &markers)
+void ARManager::setMarkerList(std::map<int, std::string> &markers)
 {
-	this->markerList = markers;
+	this->listObjects = markers;
 }
 
-std::list<ARma::Pattern> ARManager::getMarkers()
+std::map<int, aruco::Marker> ARManager::getMarkers()
 {
 	boost::mutex::scoped_lock lock(m_marker);
 	if (this->markerChange)
 	{
 		this->markerChange = false;
 	}
-    std::list<ARma::Pattern> m(this->markerFound.begin(), this->markerFound.end());
-	return (m);
+	//std::map<int, aruco::Marker> map(this->markerFound.begin(), this->markerFound.end());
+	return (markerFoundCopy);
 }
 
-int ARManager::getCount() const
+aruco::CameraParameters ARManager::getCamParam() const
 {
-	return (patternCount);
+	return (this->cameraMatrix);
 }
 
 //---------------------------------------- DESTRUCTOR --------------------------------------//
 ARManager::~ARManager() {}
 
-//---------------------------------------- Debug Function --------------------------------------//
-void ARManager::draw(cv::Mat& frame)
-{
-	boost::mutex::scoped_lock lock(this->m_marker);
-    for (std::list<ARma::Pattern>::iterator it = markerFound.begin(); it != markerFound.end(); it++)
-        it->draw(frame, cameraMatrix, distortions);
-}
+

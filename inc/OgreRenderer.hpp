@@ -36,6 +36,7 @@
 #include  "SystemInterfaceOgre3D.h"
 #include  "RocketFrameListener.h"
 #include  "Gui.hpp"
+#include  "aruco.h"
 
 class Gui; // forward declaration I <3 CPP
 
@@ -88,6 +89,7 @@ class Gui; // forward declaration I <3 CPP
      */
     void init_background_camera();
 
+
     /**
      * @brief Load a new mesh
      * @details
@@ -95,6 +97,7 @@ class Gui; // forward declaration I <3 CPP
      * @param _name name of the mesh
      * @param _file file name
      */
+
     void        loadMesh(std::string _name, std::string _file);
 
     /**
@@ -155,11 +158,13 @@ class Gui; // forward declaration I <3 CPP
      */
     bool  getShutDown();
 
+
     /**
      * @brief getScene
      * @return
      */
     Ogre::SceneManager*  getScene();
+
 
     /**
      * @brief getRoot
@@ -193,11 +198,11 @@ private:
     Ogre::RenderWindow*         window;
 
     Ogre::Viewport*             viewports[2];
-    Ogre::Camera*               cameras[2];
     Ogre::CompositorInstance    *compos[2];
     Ogre::MaterialPtr           mats[2];
     Ogre::Rectangle2D*          rects[2];
     Ogre::TexturePtr            tex[2];
+    Ogre::Camera*               cameras[2];
 
     Rocket::Core::Context* context;
 
