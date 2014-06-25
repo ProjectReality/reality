@@ -19,9 +19,9 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
     Ogre::LogManager::getSingleton().getDefaultLog()->setDebugOutputEnabled(false);
 
-
-    if (!ogre->showConfigDialog()) //show the config window
-        exit(11);
+    if (!ogre->restoreConfig()){
+        ogre->showConfigDialog();
+    }
 
     window = ogre->initialise(true, "Rendering Window"); //must init windows before load rsrc
 }

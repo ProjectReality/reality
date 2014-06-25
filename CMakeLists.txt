@@ -166,6 +166,10 @@ install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
   CONFIGURATIONS Debug)
 endif(WIN32)
 
+install(FILES ${CMAKE_SOURCE_DIR}/config/ogre.cfg
+  DESTINATION .
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
   DESTINATION ./
   CONFIGURATIONS Release RelWithDebInfo Debug)
