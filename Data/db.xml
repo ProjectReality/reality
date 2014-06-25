@@ -2,8 +2,10 @@
 <db>
 	<object>
 		<pattern>76</pattern>
-		<asset>BeerBarrel.mesh</asset>
-		<scale>0.00015</scale>
+		<asset>Shield.mesh</asset>
+		<scale>0.05</scale>
+		<pitch>90</pitch>
+		<yaw>90</yaw>
 	</object>
 	<object>
 		<pattern>181</pattern>
