@@ -31,14 +31,6 @@ OgreRenderer::~OgreRenderer()
     delete ogre; // Apparently handle deletes for most ogre-related things.
 }
 
-void OgreRenderer::startUI() {
-    ui->start();
-}
-
-void OgreRenderer::stopUI() {
-    ui->stop();
-}
-
 void OgreRenderer::startRealityRender()
 {
     // Scene init
@@ -272,4 +264,9 @@ Ogre::RenderWindow* OgreRenderer::getWindow()
 bool OgreRenderer::getShutDown()
 {
     return ShutDown;
+}
+
+Gui* OgreRenderer::getGui()
+{
+    return ui;
 }

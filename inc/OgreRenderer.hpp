@@ -174,14 +174,10 @@ class Gui; // forward declaration I <3 CPP
     Ogre::RenderWindow*  getWindow();
 
     /**
-     * @brief startUI : Start the Rocket UI
+     * @brief getGui
+     * @return
      */
-    void startUI();
-
-    /**
-     * @brief stopUI : Stop the Rocket UI
-     */
-    void stopUI();
+    Gui* getGui();
 
     /**
      * @brief startRealityRender : Will start the main rendering with two viewport and everything

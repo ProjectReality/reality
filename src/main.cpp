@@ -34,7 +34,7 @@ int   main()
     render = new OgreRenderer(video_size, rift);
 
 
-    render->startUI();
+    render->getGui()->start();
 
     std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
 

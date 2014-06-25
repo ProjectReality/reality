@@ -8,21 +8,11 @@ Gui::~Gui() {
 
 }
 
-void Gui::stop()
-{
-    std::cout << "Sarting to stop ui rendering" << std::endl;
-    uialive = false;
-    mScene->getRootSceneNode()->setVisible(false);
-    //ogre->destroySceneManager(sceneUI);
-
-    OgreContext->getWindow()->removeViewport(mViewport->getZOrder());
-}
-
 void Gui::ProcessEvent(Rocket::Core::Event& event)
 {
     string classname = event.GetCurrentElement()->GetClassNames().CString();
     std::cout << "Processing event of " << classname << std::endl;
-    if (classname == "butlaunch" ) OgreContext->stopUI();
+    if (classname == "butlaunch" ) OgreContext->getGui()->stop();
     else if (classname == "butsetogre" ) {
         OgreContext->getRoot()->showConfigDialog();
     }
@@ -95,6 +85,16 @@ void Gui::initRocket()
     mScene->addRenderQueueListener(mOverlaySystem);
 
     std::cout << "Finish init rocket" << std::endl;
+}
+
+void Gui::stop()
+{
+    std::cout << "Sarting to stop ui rendering" << std::endl;
+    uialive = false;
+    mScene->getRootSceneNode()->setVisible(false);
+    //ogre->destroySceneManager(sceneUI);
+
+    OgreContext->getWindow()->removeViewport(mViewport->getZOrder());
 }
 
 void Gui::start()
