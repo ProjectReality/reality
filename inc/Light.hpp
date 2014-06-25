@@ -35,12 +35,46 @@ namespace Reality {
 class Light : public Entity
 {
 public:
+    /**
+     * @brief Light
+     * @param _name
+     * @param scene
+     */
     Light(std::string _name, Ogre::SceneManager* scene);
     ~Light();
+
+    /**
+     * @brief createSun
+     */
     void    createSun();
+
+    /**
+     * @brief getTime
+     */
     void    getTime();
+
+    /**
+     * @brief getUTC
+     * @param localhour
+     * @param timezone
+     * @return
+     */
     int     getUTC(int localhour, int timezone);
+
+    /**
+     * @brief getPositionSun
+     * @param year
+     * @param month
+     * @param day
+     * @param hour
+     * @param min
+     * @return
+     */
     double  getPositionSun(int year, int month, int day, int hour, int min);
+
+    /**
+     * @brief remove
+     */
     void    remove();
 private:
     double  meanLong(double x);
