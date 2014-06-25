@@ -4,15 +4,38 @@
 #include "ARma/pattern.h"
 #include "Entity.hpp"
 
+/**
+ * @brief The Object class
+ */
 class Object : public Entity
 {
 public:
     using Entity::Entity;
+
+    /**
+     * @brief Object
+     * @param _name
+     * @param _mesh
+     * @param scene
+     */
     Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene);
+
+    /**
+     * @brief updateData
+     * @param info
+     */
     void updateData(ARma::Pattern info);
 
-
+    /**
+     * @brief getPatt_id
+     * @return
+     */
     int getPatt_id() const;
+
+    /**
+     * @brief setPatt_id
+     * @param value
+     */
     void setPatt_id(int value);
 
 private:
