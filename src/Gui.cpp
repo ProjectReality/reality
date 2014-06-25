@@ -71,7 +71,6 @@ void Gui::initRocket()
     Rocket::Controls::Initialise();
 
     // Load the fonts from the path to the sample directory.
-
     Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Roman.otf");
     Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Bold.otf");
     Rocket::Core::FontDatabase::LoadFontFace("assets/Fonts/Delicious-Italic.otf");
@@ -134,12 +133,10 @@ void Gui::renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invoc
     }
 }
 
-// Called from Ogre after a queue group is rendered.
 void Gui::renderQueueEnded(Ogre::uint8 ROCKET_UNUSED(queueGroupId), const Ogre::String& ROCKET_UNUSED(invocation), bool& ROCKET_UNUSED(repeatThisInvocation))
 {
 }
 
-// Configures Ogre's rendering system for rendering Rocket.
 void Gui::ConfigureRenderSystem()
 {
     Ogre::RenderSystem* render_system = Ogre::Root::getSingleton().getRenderSystem();
@@ -192,7 +189,6 @@ void Gui::ConfigureRenderSystem()
     render_system->_setDepthBias(0, 0);
 }
 
-// Builds an OpenGL-style orthographic projection matrix.
 void Gui::BuildProjectionMatrix(Ogre::Matrix4& projection_matrix)
 {
     float z_near = -1;
