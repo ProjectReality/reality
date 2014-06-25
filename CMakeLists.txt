@@ -92,9 +92,9 @@ set(HEADER_TXML inc/TinyXML/tinystr.h inc/TinyXML/tinyxml.h)
 set(HEADER_REALITY "inc/*.hpp")
 
 add_library(ARma src/ARma/patterndetector.cpp src/ARma/pattern.cpp ${HEADER_ARMA})
-add_library(TinyXML src/TinyXML/tinystr.cpp 
-					src/TinyXML/tinyxml.cpp 
-					src/TinyXML/tinyxmlerror.cpp 
+add_library(TinyXML src/TinyXML/tinystr.cpp
+					src/TinyXML/tinyxml.cpp
+					src/TinyXML/tinyxmlerror.cpp
 					src/TinyXML/tinyxmlparser.cpp ${HEADER_TXML})
 
 file(GLOB ProjectReality_src
@@ -106,7 +106,7 @@ file(GLOB ProjectReality_src
   ${HEADER_TXML}
   )
 
-  
+
 include_directories(
   ${OIS_INCLUDE_DIRS}
   ${OGRE_INCLUDE_DIRS}
@@ -159,10 +159,12 @@ install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
   DESTINATION .
   CONFIGURATIONS Release RelWithDebInfo)
 
+if(WIN32)
 install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
   ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
   DESTINATION .
   CONFIGURATIONS Debug)
+endif(WIN32)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
   DESTINATION ./
@@ -214,6 +216,12 @@ if(UNIX)
     RUNTIME DESTINATION .
     CONFIGURATIONS All)
 
+    #fix bug Ogre looking for non debug config file on debug build..
+    install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
+    ${CMAKE_SOURCE_DIR}/config/resources.cfg
+    DESTINATION .
+    CONFIGURATIONS Debug)
+
 
   if(EXISTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}) #where are plugin in ubuntu
     install(FILES
@@ -222,7 +230,6 @@ if(UNIX)
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
-
   elseif(EXISTS /usr/lib/OGRE) #where are plugin in ArchLinux
     install(FILES
       /usr/lib/OGRE/RenderSystem_GL.so.${OGRE_VERSION}
@@ -230,6 +237,7 @@ if(UNIX)
       /usr/lib/OGRE/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
-
+  else()
+    message(SEND_ERROR "Failed to find Ogre Plugins.")
   endif()
 endif(UNIX)
