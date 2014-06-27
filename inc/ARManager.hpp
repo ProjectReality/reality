@@ -45,7 +45,7 @@ private:
 	bool												frameChange; /**< This boolean is used in the tracking routine to know if the frame is a new one. */
 	bool												markerChange; /**< This boolean is used to signified that the actual fram was analized. */
 	aruco::CameraParameters								cameraMatrix; /**< The cameraMatrix is build from a config file used to avoid distortion of each camera. */
-	std::vector<std::map<std::string, aruco::Marker>>	histo; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
+	std::vector<std::map<int, aruco::Marker>>			histo; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
 
 public:
 	std::map<int, aruco::Marker>						markerFoundCopy;
@@ -143,12 +143,13 @@ public:
 	void							cleanVector(std::vector<aruco::Marker>& p_Pattern);
 
 	/**
-	* @brief This function compute the fitness of the new position of the markers.
-	* @param p_Pattern The new vector of marker found in the actual frame.
+	* @brief This function compute the new position of the markers.
+	* @param nMarker The new marker found in the actual frame.
+	* @param pMarker The previous position of the same marker.
 	* @see computeNewMap()
-	* @return The distance between the detected markers and the previous one.
+	* @return The computed marker from the two parameters.
 	**/
-	int								calcDist(std::vector<aruco::Marker>& p_Pattern);
+	aruco::Marker					computeMarker(aruco::Marker nMarker, aruco::Marker pMarker);
 
 	/**
 	* @brief This function compute the new list of marker detected.

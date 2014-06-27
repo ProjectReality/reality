@@ -4,20 +4,21 @@
 		<pattern>76</pattern>
 		<asset>Shield.mesh</asset>
 		<scale>0.05</scale>
-		<pitch>90</pitch>
+		<pitch>-90</pitch>
 		<yaw>90</yaw>
 	</object>
 	<object>
 		<pattern>181</pattern>
-		<asset>BeerBarrel.mesh</asset>
+		<asset>epitech.mesh</asset>
 		<scale>0.00015</scale>
 		<pitch>90</pitch>
 	</object>
 	<object>
 		<pattern>618</pattern>
-		<asset>WoodenChair.mesh</asset>
-		<scale>0.00015</scale>
-		<pitch>90</pitch>
+		<asset>epitech.mesh</asset>
+		<scale>0.02</scale>
+		<yaw>90</yaw>
+		<roll>90</roll>
 		<avisible/>
 	</object>
 	<object>
@@ -30,7 +31,6 @@
 		<pattern>64</pattern>
 		<asset>BeerBarrel.mesh</asset>
 		<scale>0.00015</scale>
-		<roll>90</roll>
 	</object>
 	<object>
 		<pattern>125</pattern>

@@ -78,36 +78,71 @@ void ARManager::addMarker(std::vector<aruco::Marker> markers)
 	markerFoundCopy = std::map<int, aruco::Marker>(this->markerFound.begin(), this->markerFound.end());
 }
 
+aruco::Marker ARManager::computeMarker(aruco::Marker nMarker, aruco::Marker pMarker)
+{
+	/*double pposition[3], porientation[4], nposition[3], norientation[4];
+
+	nMarker.OgreGetPoseParameters(nposition, norientation);
+	pMarker.OgreGetPoseParameters(pposition, porientation);
+
+	if (nposition[0] - pposition[0] > 0.05 || nposition[0] - pposition[0] < -0.05 ||
+		nposition[1] - pposition[1] > 0.05 || nposition[1] - pposition[1] < -0.05 ||
+		nposition[2] - pposition[2] > 0.05 || nposition[2] - pposition[2] < -0.05)
+	{
+		return (pMarker);
+	}
+	else if (norientation[0] - porientation[0] > 0.1 || norientation[0] - porientation[0] < -0.1 ||
+		norientation[1] - porientation[1] > 0.1 || norientation[1] - porientation[1] < -0.1 ||
+		norientation[2] - porientation[2] > 0.1 || norientation[2] - porientation[2] < -0.1 ||
+		norientation[3] - porientation[3] > 0.1 || norientation[3] - porientation[3] < -0.1)
+	{
+		return (pMarker);
+	}*/
+	return (nMarker);
+}
+
 std::map<int, aruco::Marker> ARManager::computeNewMap()
 {
 	std::map<int, aruco::Marker> next_map;
-	/*
-	std::map<std::string, ARma::Pattern> prev_map = histo.front();
+	if (!histo.empty())
+	{
+		std::map<int, aruco::Marker> prev_map = histo.front();
 
-	if (prev_map.size() > 0)
-	{
-		for (pair<std::string, ARma::Pattern> pa : prev_map)
+		if (prev_map.size() > 0)
 		{
-			float p_x = pa.second.transVec.at<float>(0) * 4;
-			float p_y = -pa.second.transVec.at<float>(1) * 9;
-			float p_z = -pa.second.transVec.at<float>(2);
-			if (markerFound.find(pa.first) != markerFound.end())
+			for (std::pair<int, aruco::Marker> p : markerFoundCopy)
 			{
-				next_map[pa.first] = markerFound[pa.first];
+				if (prev_map.find(p.first) != prev_map.end())
+				{
+					next_map[p.first] = computeMarker(p.second, prev_map.find(p.first)->second);
+					prev_map.erase(prev_map.find(p.first));
+				}
+				else
+					next_map[p.first] = p.second;
 			}
-			else
+			for (std::pair<int, aruco::Marker> p : prev_map)
 			{
-				if ((p_x < 600 && p_x > -600) && (p_y < 600 && p_y > -600))
-					next_map[pa.first] = pa.second;
+				double position[3], orientation[4];
+				p.second.OgreGetPoseParameters(position, orientation);
+				if ((position[0] > -0.08 && position[0] < 0.08) ||
+					(position[1] > -0.08 && position[1] < 0.08))
+					next_map[p.first] = p.second;
 			}
+			histo.insert(histo.begin(), next_map);
 		}
+		else
+		{
+			next_map = markerFoundCopy;
+			histo.insert(histo.begin(), markerFoundCopy);
+		}
+		if (histo.size() > 5)
+			histo.pop_back();
 	}
-	for  (pair<std::string, ARma::Pattern> pa : markerFound)
+	else
 	{
-		if (next_map.find(pa.first) == next_map.end())
-			next_map[pa.first] = pa.second;
+		next_map = markerFoundCopy;
+		histo.insert(histo.begin(), markerFoundCopy);
 	}
-	histo.pop_back();*/
 	return (next_map);
 }
 //---------------------------------------- GETTER & SETTER --------------------------------------//
@@ -136,8 +171,7 @@ std::map<int, aruco::Marker> ARManager::getMarkers()
 	{
 		this->markerChange = false;
 	}
-	//std::map<int, aruco::Marker> map(this->markerFound.begin(), this->markerFound.end());
-	return (markerFoundCopy);
+	return (computeNewMap());
 }
 
 aruco::CameraParameters ARManager::getCamParam() const
