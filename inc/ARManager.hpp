@@ -45,7 +45,9 @@ private:
 	bool												frameChange; /**< This boolean is used in the tracking routine to know if the frame is a new one. */
 	bool												markerChange; /**< This boolean is used to signified that the actual fram was analized. */
 	aruco::CameraParameters								cameraMatrix; /**< The cameraMatrix is build from a config file used to avoid distortion of each camera. */
-	std::vector<std::map<int, aruco::Marker>>			histo; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
+	std::vector<std::map<int, aruco::Marker>>			detectedHisto; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
+	std::vector<std::map<int, aruco::Marker>>			computedHisto; /**< This vector is an historic of a range of previous computed map of Marker used to get a better tracking */
+	std::map<int, std::vector<float>>					alphaVector; /**< This vector is the prevision vector of the nex position */
 
 public:
 	std::map<int, aruco::Marker>						markerFoundCopy;
@@ -149,7 +151,7 @@ public:
 	* @see computeNewMap()
 	* @return The computed marker from the two parameters.
 	**/
-	aruco::Marker					computeMarker(aruco::Marker nMarker, aruco::Marker pMarker);
+	aruco::Marker					computeMarker(std::pair<int, aruco::Marker> pMarker);
 
 	/**
 	* @brief This function compute the new list of marker detected.
@@ -168,6 +170,14 @@ public:
 	* @return The distortion parameter of the camera
 	**/
 	aruco::CameraParameters			getCamParam() const;
+
+	/**
+	* @brief This function is used to know if a pattern in the previous vector of detected pattern and not detected at this step must be add in the new vector
+	* @param pMarker The previous position of the marker which is not found this time.
+	* @see computeNewMap
+	* @return True if the marker must be in the new vactor of detected pattern
+	**/
+	bool		isInThePrevious(aruco::Marker pMarker);
 
 private:
 	/**

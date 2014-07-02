@@ -73,40 +73,87 @@ void ARManager::addMarker(std::vector<aruco::Marker> markers)
 	for (aruco::Marker m : markers)
 	{
 		this->markerFound.insert(std::pair<int, aruco::Marker>(m.id, m));
+		if (this->alphaVector.find(m.id) == alphaVector.end())
+			this->alphaVector.insert(std::pair<int, std::vector<float>>(m.id, { 0, 0, 0, 0, 0, 0, 0 }));
 		this->markerChange = true;
 	}
 	markerFoundCopy = std::map<int, aruco::Marker>(this->markerFound.begin(), this->markerFound.end());
+	this->detectedHisto.insert(detectedHisto.begin(), markerFoundCopy);
 }
 
-aruco::Marker ARManager::computeMarker(aruco::Marker nMarker, aruco::Marker pMarker)
+aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 {
-	/*double pposition[3], porientation[4], nposition[3], norientation[4];
+	bool	allFound = false;
 
-	nMarker.OgreGetPoseParameters(nposition, norientation);
-	pMarker.OgreGetPoseParameters(pposition, porientation);
-
-	if (nposition[0] - pposition[0] > 0.05 || nposition[0] - pposition[0] < -0.05 ||
-		nposition[1] - pposition[1] > 0.05 || nposition[1] - pposition[1] < -0.05 ||
-		nposition[2] - pposition[2] > 0.05 || nposition[2] - pposition[2] < -0.05)
+	if (this->computedHisto.size() > 3)
 	{
-		return (pMarker);
+		aruco::Marker t3Marker, t2Marker, t1Marker;
+		std::map<int, aruco::Marker> t3Map = this->computedHisto.at(2);
+		std::map<int, aruco::Marker> t2Map = this->computedHisto.at(1);
+		std::map<int, aruco::Marker> t1Map = this->computedHisto.at(0);
+		if (t3Map.find(pMarker.first) != t3Map.end())
+		{
+			t3Marker = t3Map.find(pMarker.first)->second;
+			if (t2Map.find(pMarker.first) != t2Map.end())
+			{
+				t2Marker = t2Map.find(pMarker.first)->second;
+				if (t1Map.find(pMarker.first) != t1Map.end())
+				{
+					t1Marker = t1Map.find(pMarker.first)->second;
+					allFound = true;
+				}
+			}
+		}
+		if (allFound)
+		{
+			if (this->alphaVector.find(pMarker.first) != this->alphaVector.end())
+			{
+				aruco::Marker newMarker;
+				newMarker.id = pMarker.first;
+				std::vector<float> alpha = this->alphaVector.find(pMarker.first)->second;
+				alpha.at(0) = (t1Marker.Rvec.at<float>(0) - t2Marker.Rvec.at<float>(0) + t1Marker.Rvec.at<float>(0) - t3Marker.Rvec.at<float>(0)) / 2;
+				alpha.at(1) = (t1Marker.Rvec.at<float>(1) - t2Marker.Rvec.at<float>(1) + t1Marker.Rvec.at<float>(1) - t3Marker.Rvec.at<float>(1)) / 2;
+				alpha.at(2) = (t1Marker.Rvec.at<float>(2) - t2Marker.Rvec.at<float>(2) + t1Marker.Rvec.at<float>(2) - t3Marker.Rvec.at<float>(2)) / 2;
+				alpha.at(3) = (t1Marker.Tvec.at<float>(0) - t2Marker.Tvec.at<float>(0) + t1Marker.Tvec.at<float>(0) - t3Marker.Tvec.at<float>(0)) / 2;
+				alpha.at(4) = (t1Marker.Tvec.at<float>(1) - t2Marker.Tvec.at<float>(1) + t1Marker.Tvec.at<float>(1) - t3Marker.Tvec.at<float>(1)) / 2;
+				alpha.at(5) = (t1Marker.Tvec.at<float>(2) - t2Marker.Tvec.at<float>(2) + t1Marker.Tvec.at<float>(2) - t3Marker.Tvec.at<float>(2)) / 2;
+
+				newMarker.Tvec.at<float>(0) = t1Marker.Tvec.at<float>(0) + alpha.at(3);
+				newMarker.Tvec.at<float>(1) = t1Marker.Tvec.at<float>(1) + alpha.at(4);
+				newMarker.Tvec.at<float>(2) = t1Marker.Tvec.at<float>(2) + alpha.at(5);
+				newMarker.Rvec.at<float>(0) = t1Marker.Rvec.at<float>(0) + (alpha.at(0) / 2);
+				newMarker.Rvec.at<float>(1) = t1Marker.Rvec.at<float>(1) + (alpha.at(1) / 2);
+				newMarker.Rvec.at<float>(2) = t1Marker.Rvec.at<float>(2) + (alpha.at(2) / 2);
+				return (newMarker);
+			}
+		}
 	}
-	else if (norientation[0] - porientation[0] > 0.1 || norientation[0] - porientation[0] < -0.1 ||
-		norientation[1] - porientation[1] > 0.1 || norientation[1] - porientation[1] < -0.1 ||
-		norientation[2] - porientation[2] > 0.1 || norientation[2] - porientation[2] < -0.1 ||
-		norientation[3] - porientation[3] > 0.1 || norientation[3] - porientation[3] < -0.1)
+	return (pMarker.second);
+}
+
+bool		ARManager::isInThePrevious(aruco::Marker pMarker)
+{
+	if (this->alphaVector.find(pMarker.id) != this->alphaVector.end())
 	{
-		return (pMarker);
-	}*/
-	return (nMarker);
+		if (this->alphaVector.find(pMarker.id)->second.at(6) < 5)
+		{
+			this->alphaVector.find(pMarker.id)->second.at(6)++;
+			return true;
+		}
+		else
+		{
+			this->alphaVector.find(pMarker.id)->second.at(6) = 0;
+		}
+	}
+	return (false);
 }
 
 std::map<int, aruco::Marker> ARManager::computeNewMap()
 {
 	std::map<int, aruco::Marker> next_map;
-	if (!histo.empty())
+	if (!computedHisto.empty())
 	{
-		std::map<int, aruco::Marker> prev_map = histo.front();
+		std::map<int, aruco::Marker> prev_map = computedHisto.front();
 
 		if (prev_map.size() > 0)
 		{
@@ -114,34 +161,37 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 			{
 				if (prev_map.find(p.first) != prev_map.end())
 				{
-					next_map[p.first] = computeMarker(p.second, prev_map.find(p.first)->second);
-					prev_map.erase(prev_map.find(p.first));
+					if (this->alphaVector.find(p.first) != this->alphaVector.end())
+					{
+						this->alphaVector.find(p.first)->second.at(6) = 0;
+					}
+					next_map[p.first] = p.second;
+					prev_map.erase(p.first);
 				}
 				else
 					next_map[p.first] = p.second;
 			}
 			for (std::pair<int, aruco::Marker> p : prev_map)
 			{
-				double position[3], orientation[4];
-				p.second.OgreGetPoseParameters(position, orientation);
-				if ((position[0] > -0.08 && position[0] < 0.08) ||
-					(position[1] > -0.08 && position[1] < 0.08))
-					next_map[p.first] = p.second;
+				if (isInThePrevious(p.second))
+				{
+					next_map[p.first] = computeMarker(p);
+				}
 			}
-			histo.insert(histo.begin(), next_map);
+			computedHisto.insert(computedHisto.begin(), next_map);
 		}
 		else
 		{
 			next_map = markerFoundCopy;
-			histo.insert(histo.begin(), markerFoundCopy);
+			computedHisto.insert(computedHisto.begin(), markerFoundCopy);
 		}
-		if (histo.size() > 5)
-			histo.pop_back();
+		if (computedHisto.size() > 5)
+			computedHisto.pop_back();
 	}
 	else
 	{
 		next_map = markerFoundCopy;
-		histo.insert(histo.begin(), markerFoundCopy);
+		computedHisto.insert(computedHisto.begin(), markerFoundCopy);
 	}
 	return (next_map);
 }
