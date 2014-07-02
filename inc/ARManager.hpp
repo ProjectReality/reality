@@ -10,6 +10,7 @@
 #include	<map>
 #include	<string>
 #include	<iostream>
+#include	<boost/math/special_functions/round.hpp>
 
 #include	<boost/thread.hpp>
 

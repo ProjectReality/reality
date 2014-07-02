@@ -165,11 +165,16 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 					{
 						this->alphaVector.find(p.first)->second.at(6) = 0;
 					}
+					p.second.Rvec.at<float>(0) = boost::math::round(p.second.Rvec.at<float>(0) * 100) / 100;
+					p.second.Rvec.at<float>(1) = boost::math::round(p.second.Rvec.at<float>(1) * 100) / 100;
+					p.second.Rvec.at<float>(2) = boost::math::round(p.second.Rvec.at<float>(2) * 100) / 100;
 					next_map[p.first] = p.second;
 					prev_map.erase(p.first);
 				}
 				else
+				{
 					next_map[p.first] = p.second;
+				}
 			}
 			for (std::pair<int, aruco::Marker> p : prev_map)
 			{
