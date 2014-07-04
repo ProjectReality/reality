@@ -1,0 +1,63 @@
+<rml>
+  <head>
+    <title>Demo</title>
+    <link type="text/template" href="window.rml" />
+    <style>
+      body
+      {
+      width: 800px;
+      height: 600px;
+
+      margin: auto;
+      }
+
+      div#content
+      {
+      text-align: left;
+      }
+    </style>
+  </head>
+  <body template="window">
+
+    <tabset>
+      <tab> Project </tab>
+      <panel>
+
+	<div>
+	  Algorithm:
+	  <!-- <div>Algo:  -->
+
+	  <!-- <select name="graphics"> -->
+	  <!-- <option value="bad">Bad</option> -->
+	  <!-- <option value="ok">OK</option> -->
+	  <!-- <option value="good" selected>good</option> -->
+	  <!-- </select> -->
+	  <!-- </div> -->
+	  <div>QR Code Detection <input class="button" type="radio" name="Algo" id="algQR" value="QR" checked="checked"/></div>
+	  <div>Pattern Detection <input type="radio" name="Algo" id="algPat" value="Pat" /></div>
+	</div>
+	<div>
+	  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut gravida lorem. Ut turpis felis, pulvinar a semper sed, adipiscing id dolor. Pellentesque auctor nisi id magna consequat sagittis. Curabitur dapibus enim sit amet elit pharetra tincidunt feugiat nisl imperdiet. Ut convallis libero in urna ultrices accumsan. Donec sed odio eros. Donec viverra mi quis quam pulvinar at malesuada arcu rhoncus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In rutrum accumsan ultricies. Mauris vitae nisi at sem facilisis semper ac in est.
+	</div>
+
+
+      </panel>
+      
+      <tab> Graphics </tab>
+      <panel>
+	<input type="text" />
+        <!-- <div id="menutop"> -->
+        <!--   <label for="patchoose">Pattern : </label> -->
+        <!--   <select id="patchoose" name="patchoose"> -->
+        <!--     <option value="qrcode" selected>Select Patern</option> -->
+        <!--     <option value="qrcode" >QR Code</option> -->
+        <!--     <option value="qrcode" >Magic</option> -->
+        <!--   </select> -->
+        <!-- </div> -->
+        <button id="butsetogre" class="buttone">Ogre Settings</button>
+      </panel>
+    </tabset>
+
+    <button id="butlaunch" class="butlaunch">Launch reality</button>    
+  </body>
+</rml>

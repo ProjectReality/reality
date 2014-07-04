@@ -1,3 +1,6 @@
+#ifndef __SENSOR_INPUT
+#define __SENSOR_INPUT
+
 #pragma once
 
 #include "OgreQuaternion.h"
@@ -99,3 +102,5 @@ public:
 		return nullptr;
 	}
 };
+
+#endif

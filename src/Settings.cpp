@@ -54,3 +54,34 @@ void	Settings::setRender(OgreRenderer *_render)
 {
   render = _render;
 }
+
+
+void		Settings::setString(std::string param, std::string val)
+{
+  strings[param] = val;
+}
+
+std::string	Settings::getString(std::string param)
+{
+  return strings[param];
+}
+ 
+void		Settings::setValue(std::string param, int val)
+{
+  values[param] = val;
+}
+ 
+int		Settings::getValue(std::string param)
+{
+  return values[param];
+}
+ 
+void		Settings::setFlag(std::string param, bool val)
+{
+  flags[param] = val;
+}
+ 
+bool		Settings::getFlag(std::string param)
+{
+  return flags[param];
+}

@@ -51,11 +51,11 @@ find_package(OpenCV REQUIRED)
 find_package(OGRE REQUIRED)
 find_package(OculusSDK REQUIRED)
 find_package(OIS REQUIRED)
+find_package(Aruco REQUIRED)
 
 if(NOT OIS_FOUND)
   message(SEND_ERROR "Failed to find OIS.")
 endif()
-
 # Find Boost
 if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   if (WIN32 OR APPLE)
@@ -87,24 +87,25 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
-set(HEADER_ARMA inc/ARma/cameraparams.h inc/ARma/pattern.h inc/ARma/patterndetector.h)
 set(HEADER_TXML inc/TinyXML/tinystr.h inc/TinyXML/tinyxml.h)
 set(HEADER_REALITY "inc/*.hpp")
 
-add_library(ARma src/ARma/patterndetector.cpp src/ARma/pattern.cpp ${HEADER_ARMA})
-add_library(TinyXML src/TinyXML/tinystr.cpp 
-					src/TinyXML/tinyxml.cpp 
-					src/TinyXML/tinyxmlerror.cpp 
+
+add_library(TinyXML src/TinyXML/tinystr.cpp
+					src/TinyXML/tinyxml.cpp
+					src/TinyXML/tinyxmlerror.cpp
 					src/TinyXML/tinyxmlparser.cpp ${HEADER_TXML})
 
 file(GLOB ProjectReality_src
   "src/*.cpp"
+  "src/libRocketOgre/*.cpp"
+  "inc/libRocketOgre/*.h"
   ${HEADER_REALITY}
   ${HEADER_ARMA}
   ${HEADER_TXML}
   )
 
-  
+
 include_directories(
   ${OIS_INCLUDE_DIRS}
   ${OGRE_INCLUDE_DIRS}
@@ -112,10 +113,12 @@ include_directories(
   ${OGRE_Overlay_INCLUDE_DIRS}
   ${OCULUS_SDK_INCLUDE_DIRS}
   ${OPENCV_INCLUDE_DIR}
+  "./inc/libRocketOgre"
+  ${ARUCO_INCLUDE_DIR}
   ./inc)
 
 add_executable(ProjectReality WIN32 ${ProjectReality_src})
-target_link_libraries(ProjectReality ARma TinyXML)
+target_link_libraries(ProjectReality TinyXML)
 
 set_target_properties(ProjectReality PROPERTIES DEBUG_POSTFIX _d)
 
@@ -128,8 +131,20 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} ${OCULUS_SDK_LIBRARIES} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+target_link_libraries(ProjectReality	${OGRE_LIBRARIES}
+										${OIS_LIBRARIES}
+										${OGRE_Overlay_LIBRARIES}
+										${OCULUS_SDK_LIBRARIES}
+										${Boost_SYSTEM_LIBRARY}
+										${Boost_THREAD_LIBRARY}
+										${Boost_PROGRAM_OPTIONS_LIBRARY}
+										${Boost_DATE_TIME_LIBRARY_RELEASE}
+										${ARUCO_LIB})
+
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
+
+INCLUDE( cmake/FindLibRocket.cmake )
+target_link_libraries(ProjectReality ${ROCKET_LIBRARIES})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
@@ -153,10 +168,16 @@ install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
   DESTINATION .
   CONFIGURATIONS Release RelWithDebInfo)
 
+if(WIN32)
 install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
   ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
   DESTINATION .
   CONFIGURATIONS Debug)
+endif(WIN32)
+
+install(FILES ${CMAKE_SOURCE_DIR}/config/ogre.cfg
+  DESTINATION .
+  CONFIGURATIONS Release RelWithDebInfo Debug)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
   DESTINATION ./
@@ -182,6 +203,14 @@ if(WIN32)
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo)
 
+  install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
+    DESTINATION .
+    CONFIGURATIONS Release RelWithDebInfo)
+
+  install(FILES ${ARUCO_ROOT}/bin/Debug/aruco125.dll
+    DESTINATION .
+    CONFIGURATIONS Debug)
+
   install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
@@ -190,17 +219,6 @@ if(WIN32)
     DESTINATION .
     CONFIGURATIONS Debug)
 
-  # as of sdk 1.7.2 we need to copy the boost dll's as well
-  # because they're not linked statically (it worked with 1.7.1 though)
-  install(FILES ${Boost_DATE_TIME_LIBRARY_RELEASE}
-    ${Boost_THREAD_LIBRARY_RELEASE}
-    DESTINATION .
-    CONFIGURATIONS Release RelWithDebInfo)
-
-  install(FILES ${Boost_DATE_TIME_LIBRARY_DEBUG}
-    ${Boost_THREAD_LIBRARY_DEBUG}
-    DESTINATION .
-    CONFIGURATIONS Debug)
 endif(WIN32)
 
 if(UNIX)
@@ -209,6 +227,12 @@ if(UNIX)
     CONFIGURATIONS All)
 
 
+  #unix need normal plugin file in debug
+  install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
+    ${CMAKE_SOURCE_DIR}/config/resources.cfg
+    DESTINATION .
+    CONFIGURATIONS Debug)
+
   if(EXISTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}) #where are plugin in ubuntu
     install(FILES
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/RenderSystem_GL.so.${OGRE_VERSION}
@@ -216,7 +240,6 @@ if(UNIX)
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
-
   elseif(EXISTS /usr/lib/OGRE) #where are plugin in ArchLinux
     install(FILES
       /usr/lib/OGRE/RenderSystem_GL.so.${OGRE_VERSION}
@@ -224,6 +247,7 @@ if(UNIX)
       /usr/lib/OGRE/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
-
+  else()
+    message(SEND_ERROR "Failed to find Ogre Plugins.")
   endif()
 endif(UNIX)
