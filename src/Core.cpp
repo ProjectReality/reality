@@ -78,6 +78,15 @@ void Core::buildObjectsList(std::string filename)
 				if (child->FirstChildElement("pattern") && child->FirstChildElement("asset"))
 				{
 					int id = Utils::c_to_i(child->FirstChildElement("pattern")->GetText());
+					if (id > 1023)
+					{
+						if (!child->FirstChildElement("board"))
+						{
+							std::cerr << "Core.cpp : Identifiant associé à une Board sans nom de board." << std::endl;
+							exit(-1);
+						}
+						ar.addBoard(id, child->FirstChildElement("board")->GetText());
+					}
 					objects[id] = new Object(child->FirstChildElement("pattern")->GetText(), child->FirstChildElement("asset")->GetText(), render->getScene());
 					if (child->FirstChildElement("avisible"))
 						(objects[id])->setAVisible(true);

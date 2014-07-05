@@ -8,6 +8,7 @@ ARManager::ARManager()
 
 	this->frameChange = false;
 	this->markerChange = false;
+	this->markerDetector.setDesiredSpeed(2);
 }
 
 //---------------------------------------- MAIN FUNCTIONS --------------------------------------//
@@ -44,6 +45,8 @@ void ARManager::arLoop(ARManager *ar)
 				ar->frameChange = false;
 			}
 			ar->markerDetector.detect(fr, markerDetected, ar->getCamParam(), 0.05);
+			for (int i = 0; i < ar->boards.size(); i++)
+				ar->boards.at(i).likelihood = ar->boardDetector.detect(markerDetected, ar->boards.at(i).boardConf, ar->boards.at(i).board, ar->getCamParam(), 0.05);
 			ar->clearMarker();
 			ar->addMarker(markerDetected);
 		}
@@ -75,8 +78,27 @@ void ARManager::addMarker(std::vector<aruco::Marker> markers)
 		this->markerFound.insert(std::pair<int, aruco::Marker>(m.id, m));
 		if (this->alphaVector.find(m.id) == alphaVector.end())
 			this->alphaVector.insert(std::pair<int, std::vector<float>>(m.id, { 0, 0, 0, 0, 0, 0, 0 }));
-		this->markerChange = true;
 	}
+	for (t_board t_b : this->boards)
+	{
+		std::cout << "likelihood : " << t_b.likelihood << std::endl;
+		if (t_b.likelihood > 0.2)
+		{
+			aruco::Marker m;
+			m.id = t_b.id;
+			m.Tvec.at<float>(0) = t_b.board.Tvec.at<float>(0);
+			m.Tvec.at<float>(1) = t_b.board.Tvec.at<float>(1);
+			m.Tvec.at<float>(2) = t_b.board.Tvec.at<float>(2);
+			m.Rvec.at<float>(0) = t_b.board.Rvec.at<float>(0);
+			m.Rvec.at<float>(1) = t_b.board.Rvec.at<float>(1);
+			m.Rvec.at<float>(2) = t_b.board.Rvec.at<float>(2);
+			this->markerFound.insert(std::pair<int, aruco::Marker>(m.id, m));
+			if (this->alphaVector.find(m.id) == alphaVector.end())
+				this->alphaVector.insert(std::pair<int, std::vector<float>>(m.id, { 0, 0, 0, 0, 0, 0, 0 }));
+		}
+		t_b.likelihood = 0.0;
+	}
+	this->markerChange = true;
 	markerFoundCopy = std::map<int, aruco::Marker>(this->markerFound.begin(), this->markerFound.end());
 	this->detectedHisto.insert(detectedHisto.begin(), markerFoundCopy);
 }
@@ -154,7 +176,6 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 	if (!computedHisto.empty())
 	{
 		std::map<int, aruco::Marker> prev_map = computedHisto.front();
-
 		if (prev_map.size() > 0)
 		{
 			for (std::pair<int, aruco::Marker> p : markerFoundCopy)
@@ -165,9 +186,9 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 					{
 						this->alphaVector.find(p.first)->second.at(6) = 0;
 					}
-					p.second.Rvec.at<float>(0) = boost::math::round(p.second.Rvec.at<float>(0) * 100) / 100;
-					p.second.Rvec.at<float>(1) = boost::math::round(p.second.Rvec.at<float>(1) * 100) / 100;
-					p.second.Rvec.at<float>(2) = boost::math::round(p.second.Rvec.at<float>(2) * 100) / 100;
+					p.second.Rvec.at<float>(0) = boost::math::round(p.second.Rvec.at<float>(0) * 10) / 10;
+					p.second.Rvec.at<float>(1) = boost::math::round(p.second.Rvec.at<float>(1) * 10) / 10;
+					p.second.Rvec.at<float>(2) = boost::math::round(p.second.Rvec.at<float>(2) * 10) / 10;
 					next_map[p.first] = p.second;
 					prev_map.erase(p.first);
 				}
@@ -200,6 +221,17 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 	}
 	return (next_map);
 }
+
+void		ARManager::addBoard(int id, const char* boardName)
+{
+	t_board tmp;
+
+	tmp.id = id;
+	tmp.boardConf.readFromFile(boardName);
+	tmp.likelihood = 0.0;
+	boards.push_back(tmp);
+}
+
 //---------------------------------------- GETTER & SETTER --------------------------------------//
 bool ARManager::setFrame(cv::Mat p_frame)
 {

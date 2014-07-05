@@ -37,22 +37,33 @@
 class ARManager
 {
 private:
-	boost::mutex										m_marker; /**< This is a Boost mutex used to protect the tracking when it is building the list of detected marker. */
-	boost::thread										arThread; /**< This thread is used to create a detector routine. */
-	aruco::MarkerDetector								markerDetector; /**< This is the detector provide by ARUCO used to track any marker. */
-	cv::Mat												frame; /**< The frame is the captured frame copied from the camera. */
-	std::map<int, std::string>							listObjects; /**< This is a list of mesh name linked to their Marker Id. */
-	std::map<int, aruco::Marker>						markerFound; /**< The map markerFound is a map of all found marker in one cycle of the tracking routine. */
-	bool												frameChange; /**< This boolean is used in the tracking routine to know if the frame is a new one. */
-	bool												markerChange; /**< This boolean is used to signified that the actual fram was analized. */
-	aruco::CameraParameters								cameraMatrix; /**< The cameraMatrix is build from a config file used to avoid distortion of each camera. */
-	std::vector<std::map<int, aruco::Marker>>			detectedHisto; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
-	std::vector<std::map<int, aruco::Marker>>			computedHisto; /**< This vector is an historic of a range of previous computed map of Marker used to get a better tracking */
-	std::map<int, std::vector<float>>					alphaVector; /**< This vector is the prevision vector of the nex position */
+	typedef struct	s_board
+	{
+		int							id;
+		aruco::BoardConfiguration	boardConf;
+		aruco::Board				board;
+		float						likelihood;
+	}				t_board;
+
+private:
+	boost::mutex									m_marker; /**< This is a Boost mutex used to protect the tracking when it is building the list of detected marker. */
+	boost::thread									arThread; /**< This thread is used to create a detector routine. */
+	aruco::MarkerDetector							markerDetector; /**< This is the detector provide by ARUCO used to track any marker. */
+	aruco::BoardDetector							boardDetector; 
+	cv::Mat											frame; /**< The frame is the captured frame copied from the camera. */
+	std::map<int, std::string>						listObjects; /**< This is a list of mesh name linked to their Marker Id. */
+	std::map<int, aruco::Marker>					markerFound; /**< The map markerFound is a map of all found marker in one cycle of the tracking routine. */
+	std::vector<t_board>							boards;
+	bool											frameChange; /**< This boolean is used in the tracking routine to know if the frame is a new one. */
+	bool											markerChange; /**< This boolean is used to signified that the actual fram was analized. */
+	aruco::CameraParameters							cameraMatrix; /**< The cameraMatrix is build from a config file used to avoid distortion of each camera. */
+	std::vector<std::map<int, aruco::Marker>>		detectedHisto; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
+	std::vector<std::map<int, aruco::Marker>>		computedHisto; /**< This vector is an historic of a range of previous computed map of Marker used to get a better tracking */
+	std::map<int, std::vector<float>>				alphaVector; /**< This vector is the prevision vector of the nex position */
 
 public:
-	std::map<int, aruco::Marker>						markerFoundCopy;
-	static const bool			verbose = true; /**< This boolean is used to activate or desactivate the debug in the tracking methods */
+	std::map<int, aruco::Marker>					markerFoundCopy;
+	static const bool								verbose = true; /**< This boolean is used to activate or desactivate the debug in the tracking methods */
 
 
 public:
@@ -179,6 +190,13 @@ public:
 	* @return True if the marker must be in the new vactor of detected pattern
 	**/
 	bool		isInThePrevious(aruco::Marker pMarker);
+
+	/**
+	* @brief This function create the parameter for the detection of specific board of patterns
+	* @param id The identifier of the board
+	* @param boardName The file name of the board parameters
+	**/
+	void		addBoard(int id, const char* boardName);
 
 private:
 	/**
