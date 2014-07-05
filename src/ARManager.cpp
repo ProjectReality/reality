@@ -99,7 +99,6 @@ void ARManager::addMarker(std::vector<aruco::Marker> markers)
 	}
 	this->markerChange = true;
 	markerFoundCopy = std::map<int, aruco::Marker>(this->markerFound.begin(), this->markerFound.end());
-	this->detectedHisto.insert(detectedHisto.begin(), markerFoundCopy);
 }
 
 aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
@@ -169,9 +168,50 @@ bool		ARManager::isInThePrevious(aruco::Marker pMarker)
 	return (false);
 }
 
+aruco::Marker	ARManager::isInMotion(aruco::Marker mark)
+{
+	float	sumYaw = 0;
+	float	sumPitch = 0;
+	float	sumRoll = 0;
+	int		iter = 0;
+	for (int i = 0; i < detectedHisto.size() - 1; i++)
+	{
+		for (int j = i + 1; j < detectedHisto.size(); j++)
+		{
+			if (detectedHisto.at(i).find(mark.id) != detectedHisto.at(i).end() && detectedHisto.at(j).find(mark.id) != detectedHisto.at(j).end())
+			{
+				iter++;
+				sumYaw = sumYaw + (detectedHisto.at(i).find(mark.id)->second.Rvec.at<float>(0) - detectedHisto.at(j).find(mark.id)->second.Rvec.at<float>(0));
+				sumPitch = sumPitch + (detectedHisto.at(i).find(mark.id)->second.Rvec.at<float>(1) - detectedHisto.at(j).find(mark.id)->second.Rvec.at<float>(1));
+				sumRoll = sumRoll + (detectedHisto.at(i).find(mark.id)->second.Rvec.at<float>(2) - detectedHisto.at(j).find(mark.id)->second.Rvec.at<float>(2));
+			}
+		}
+	}
+	if (sumYaw < 1 && sumYaw > -1)
+	{
+		// std::cout << "sumYaw : " << sumYaw << std::endl;
+		if (computedHisto.front().find(mark.id) != computedHisto.front().end())
+			mark.Rvec.at<float>(0) = computedHisto.front().find(mark.id)->second.Rvec.at<float>(0);
+	}
+	if (sumPitch < 1 && sumPitch > -1)
+	{
+		// std::cout << "sumPitch : " << sumPitch << std::endl;
+		if (computedHisto.front().find(mark.id) != computedHisto.front().end())
+			mark.Rvec.at<float>(1) = computedHisto.front().find(mark.id)->second.Rvec.at<float>(1);
+	}
+	if (sumRoll < 1 && sumRoll > -1)
+	{
+		// std::cout << "sumRoll : " << sumRoll << std::endl;
+		if (computedHisto.front().find(mark.id) != computedHisto.front().end())
+			mark.Rvec.at<float>(2) = computedHisto.front().find(mark.id)->second.Rvec.at<float>(2);
+	}
+	return (mark);
+}
+
 std::map<int, aruco::Marker> ARManager::computeNewMap()
 {
 	std::map<int, aruco::Marker> next_map;
+
 	if (!computedHisto.empty())
 	{
 		std::map<int, aruco::Marker> prev_map = computedHisto.front();
@@ -185,10 +225,7 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 					{
 						this->alphaVector.find(p.first)->second.at(6) = 0;
 					}
-					p.second.Rvec.at<float>(0) = boost::math::round(p.second.Rvec.at<float>(0) * 100) / 100;
-					p.second.Rvec.at<float>(1) = boost::math::round(p.second.Rvec.at<float>(1) * 100) / 100;
-					p.second.Rvec.at<float>(2) = boost::math::round(p.second.Rvec.at<float>(2) * 100) / 100;
-					next_map[p.first] = p.second;
+					next_map[p.first] = isInMotion(p.second);
 					prev_map.erase(p.first);
 				}
 				else
@@ -210,14 +247,21 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 			next_map = markerFoundCopy;
 			computedHisto.insert(computedHisto.begin(), markerFoundCopy);
 		}
-		if (computedHisto.size() > 5)
+		if (computedHisto.size() > 10)
+		{
 			computedHisto.pop_back();
+		}
 	}
 	else
 	{
 		next_map = markerFoundCopy;
 		computedHisto.insert(computedHisto.begin(), markerFoundCopy);
 	}
+	if (detectedHisto.size() > 10)
+	{
+		detectedHisto.pop_back();
+	}
+	detectedHisto.insert(detectedHisto.begin(), markerFoundCopy);
 	return (next_map);
 }
 

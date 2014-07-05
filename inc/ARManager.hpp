@@ -198,6 +198,13 @@ public:
 	**/
 	void		addBoard(int id, const char* boardName);
 
+	/**
+	* @brief This function compute id this marker is in motion, if it's false send the previous position to avoir flickering
+	* @param mark The actual marker
+	* @return The marker mark if the marker is in motion or else a stable value
+	**/
+	aruco::Marker	isInMotion(aruco::Marker mark);
+
 private:
 	/**
 	* @brief This function is the tracking routine
