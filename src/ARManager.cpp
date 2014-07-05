@@ -81,7 +81,6 @@ void ARManager::addMarker(std::vector<aruco::Marker> markers)
 	}
 	for (t_board t_b : this->boards)
 	{
-		std::cout << "likelihood : " << t_b.likelihood << std::endl;
 		if (t_b.likelihood > 0.2)
 		{
 			aruco::Marker m;
@@ -186,9 +185,9 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 					{
 						this->alphaVector.find(p.first)->second.at(6) = 0;
 					}
-					p.second.Rvec.at<float>(0) = boost::math::round(p.second.Rvec.at<float>(0) * 10) / 10;
-					p.second.Rvec.at<float>(1) = boost::math::round(p.second.Rvec.at<float>(1) * 10) / 10;
-					p.second.Rvec.at<float>(2) = boost::math::round(p.second.Rvec.at<float>(2) * 10) / 10;
+					p.second.Rvec.at<float>(0) = boost::math::round(p.second.Rvec.at<float>(0) * 100) / 100;
+					p.second.Rvec.at<float>(1) = boost::math::round(p.second.Rvec.at<float>(1) * 100) / 100;
+					p.second.Rvec.at<float>(2) = boost::math::round(p.second.Rvec.at<float>(2) * 100) / 100;
 					next_map[p.first] = p.second;
 					prev_map.erase(p.first);
 				}
