@@ -60,6 +60,8 @@ private:
 	std::vector<std::map<int, aruco::Marker>>		detectedHisto; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
 	std::vector<std::map<int, aruco::Marker>>		computedHisto; /**< This vector is an historic of a range of previous computed map of Marker used to get a better tracking */
 	std::map<int, std::vector<float>>				alphaVector; /**< This vector is the prevision vector of the nex position */
+	const float										ANTI_FLICK_ROT = 1;
+	const float										ANTI_FLICK_TRANS = 0.1;
 
 public:
 	std::map<int, aruco::Marker>					markerFoundCopy;

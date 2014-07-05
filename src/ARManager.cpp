@@ -173,6 +173,9 @@ aruco::Marker	ARManager::isInMotion(aruco::Marker mark)
 	float	sumYaw = 0;
 	float	sumPitch = 0;
 	float	sumRoll = 0;
+	float	sumX = 0;
+	float	sumY = 0;
+	float	sumZ = 0;
 	int		iter = 0;
 	for (int i = 0; i < detectedHisto.size() - 1; i++)
 	{
@@ -184,26 +187,57 @@ aruco::Marker	ARManager::isInMotion(aruco::Marker mark)
 				sumYaw = sumYaw + (detectedHisto.at(i).find(mark.id)->second.Rvec.at<float>(0) - detectedHisto.at(j).find(mark.id)->second.Rvec.at<float>(0));
 				sumPitch = sumPitch + (detectedHisto.at(i).find(mark.id)->second.Rvec.at<float>(1) - detectedHisto.at(j).find(mark.id)->second.Rvec.at<float>(1));
 				sumRoll = sumRoll + (detectedHisto.at(i).find(mark.id)->second.Rvec.at<float>(2) - detectedHisto.at(j).find(mark.id)->second.Rvec.at<float>(2));
+				sumX = sumX + (detectedHisto.at(i).find(mark.id)->second.Tvec.at<float>(0) - detectedHisto.at(j).find(mark.id)->second.Tvec.at<float>(0));
+				sumY = sumY + (detectedHisto.at(i).find(mark.id)->second.Tvec.at<float>(1) - detectedHisto.at(j).find(mark.id)->second.Tvec.at<float>(1));
+				sumZ = sumZ + (detectedHisto.at(i).find(mark.id)->second.Tvec.at<float>(2) - detectedHisto.at(j).find(mark.id)->second.Tvec.at<float>(2));
 			}
 		}
 	}
-	if (sumYaw < 1 && sumYaw > -1)
+	aruco::Marker m;
+	bool found = false;
+	if (computedHisto.front().find(mark.id) != computedHisto.front().end()) {
+		m = computedHisto.front().find(mark.id)->second;
+		found = true;
+	}
+	else if (computedHisto.at(1).find(mark.id) != computedHisto.front().end()) {
+		m = computedHisto.at(1).find(mark.id)->second;
+		found = true;
+	}
+	if (sumYaw < ANTI_FLICK_ROT && sumYaw > -ANTI_FLICK_ROT)
 	{
 		// std::cout << "sumYaw : " << sumYaw << std::endl;
-		if (computedHisto.front().find(mark.id) != computedHisto.front().end())
+		if (found)
 			mark.Rvec.at<float>(0) = computedHisto.front().find(mark.id)->second.Rvec.at<float>(0);
 	}
-	if (sumPitch < 1 && sumPitch > -1)
+	if (sumPitch < ANTI_FLICK_ROT && sumPitch > -ANTI_FLICK_ROT)
 	{
 		// std::cout << "sumPitch : " << sumPitch << std::endl;
-		if (computedHisto.front().find(mark.id) != computedHisto.front().end())
+		if (found)
 			mark.Rvec.at<float>(1) = computedHisto.front().find(mark.id)->second.Rvec.at<float>(1);
 	}
-	if (sumRoll < 1 && sumRoll > -1)
+	if (sumRoll < ANTI_FLICK_ROT && sumRoll > -ANTI_FLICK_ROT)
 	{
 		// std::cout << "sumRoll : " << sumRoll << std::endl;
-		if (computedHisto.front().find(mark.id) != computedHisto.front().end())
+		if (found)
 			mark.Rvec.at<float>(2) = computedHisto.front().find(mark.id)->second.Rvec.at<float>(2);
+	}
+	if (sumX < ANTI_FLICK_TRANS && sumX > -ANTI_FLICK_TRANS)
+	{
+		// std::cout << "sumYaw : " << sumYaw << std::endl;
+		if (found)
+			mark.Tvec.at<float>(0) = computedHisto.front().find(mark.id)->second.Tvec.at<float>(0);
+	}
+	if (sumY < ANTI_FLICK_TRANS && sumY > -ANTI_FLICK_TRANS)
+	{
+		// std::cout << "sumPitch : " << sumPitch << std::endl;
+		if (found)
+			mark.Tvec.at<float>(1) = computedHisto.front().find(mark.id)->second.Tvec.at<float>(1);
+	}
+	if (sumZ < ANTI_FLICK_TRANS && sumZ > -ANTI_FLICK_TRANS)
+	{
+		// std::cout << "sumRoll : " << sumRoll << std::endl;
+		if (found)
+			mark.Tvec.at<float>(2) = computedHisto.front().find(mark.id)->second.Tvec.at<float>(2);
 	}
 	return (mark);
 }
@@ -237,7 +271,7 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 			{
 				if (isInThePrevious(p.second))
 				{
-					next_map[p.first] = computeMarker(p);
+					next_map[p.first] = p.second;
 				}
 			}
 			computedHisto.insert(computedHisto.begin(), next_map);
