@@ -64,6 +64,8 @@ private:
 	std::map<int, std::vector<float>>				alphaVector; /**< This vector is the prevision vector of the nex position */
 	const float										ANTI_FLICK_ROT = 1;
 	const float										ANTI_FLICK_TRANS = 0.1; 
+	const int										FRAME_WIDTH = 1024;
+	const int										FRAME_HEIGHT = 768;
 	cv::Point2d										motion;
 	cv::Mat											hann;
 

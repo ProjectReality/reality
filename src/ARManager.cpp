@@ -49,6 +49,24 @@ void ARManager::arLoop(ARManager *ar)
 			for (int i = 0; i < ar->boards.size(); i++)
 				ar->boards.at(i).likelihood = ar->boardDetector.detect(markerDetected, ar->boards.at(i).boardConf, ar->boards.at(i).board, ar->getCamParam(), 0.05);
 			ar->clearMarker();
+
+			if (ar->prev_frame.empty())
+			{
+				cvtColor(fr, ar->prev_frame, CV_RGB2GRAY);
+				createHanningWindow(ar->hann, ar->frame.size(), CV_64F);
+			}
+			if (!ar->prev_frame.empty() && !ar->frame.empty())
+			{
+				// Calcul the motion
+				cv::Mat curr, curr64f, prev64f;
+				cvtColor(fr, curr, CV_RGB2GRAY);
+				ar->prev_frame.convertTo(prev64f, CV_64F);
+				curr.convertTo(curr64f, CV_64F);
+				ar->motion = phaseCorrelate(prev64f, curr64f, ar->hann);
+				ar->prev_frame = curr.clone();
+				// End motion set
+			}
+
 			ar->addMarker(markerDetected);
 		}
 #ifdef _WIN32
@@ -157,10 +175,8 @@ aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 	}
 	else
 	{
-		pMarker.second.Tvec.at<float>(0) = pMarker.second.Tvec.at<float>(0) + (motion.x / 1024);
-		pMarker.second.Tvec.at<float>(1) = pMarker.second.Tvec.at<float>(1) + (motion.y / 1536);
-		std::cout << "Motion X : " << motion.x << "Motion Y : " << motion.y << std::endl;
-		std::cout << "===> Motion : " << motion << std::endl;
+		pMarker.second.Tvec.at<float>(0) = pMarker.second.Tvec.at<float>(0) + (motion.x / (FRAME_WIDTH * 1.5));
+		pMarker.second.Tvec.at<float>(1) = pMarker.second.Tvec.at<float>(1) + (motion.y / (FRAME_HEIGHT * 3));
 		this->alphaVector.find(pMarker.first)->second.at(6) = 0;
 	}
 	return (pMarker.second);
@@ -328,28 +344,7 @@ void		ARManager::addBoard(int id, const char* boardName)
 bool ARManager::setFrame(cv::Mat p_frame)
 {
 	boost::mutex::scoped_lock	lock(this->m_marker);
-	if (!this->frame.empty())
-	{
-		cvtColor(frame, this->prev_frame, CV_RGB2GRAY);
-	}
 	this->frame = p_frame.clone();
-
-	if (this->prev_frame.empty())
-	{
-		cvtColor(frame, this->prev_frame, CV_RGB2GRAY);
-		createHanningWindow(this->hann, this->frame.size(), CV_64F);
-	}
-	if (!this->prev_frame.empty() && !this->frame.empty())
-	{
-		// Calcul the motion
-		cv::Mat curr, curr64f, prev64f;
-		cvtColor(frame, curr, CV_RGB2GRAY);
-		this->prev_frame.convertTo(prev64f, CV_64F);
-		curr.convertTo(curr64f, CV_64F);
-		this->motion = phaseCorrelate(prev64f, curr64f, this->hann);
-		// End motion set
-	}
-
 	this->frameChange = true;
 	return true;
 }
