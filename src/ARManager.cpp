@@ -111,7 +111,7 @@ aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 	std::cout << "Radius : " << radius << std::endl;
 	if (radius < 5)
 	{
-		if (this->computedHisto.size() > 3)
+		/*if (this->computedHisto.size() > 3)
 		{
 			aruco::Marker t3Marker, t2Marker, t1Marker;
 			std::map<int, aruco::Marker> t3Map = this->computedHisto.at(2);
@@ -153,19 +153,15 @@ aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 					return (newMarker);
 				}
 			}
-		}
+		}*/
 	}
 	else
 	{
-		aruco::Marker newMarker;
-		newMarker.id = pMarker.first;
-
-		newMarker.Tvec.at<float>(0) = pMarker.second.Tvec.at<float>(0) + (motion.x / 100);
-		newMarker.Tvec.at<float>(1) = pMarker.second.Tvec.at<float>(1) + (motion.y / 100);
+		pMarker.second.Tvec.at<float>(0) = pMarker.second.Tvec.at<float>(0) + (motion.x / 1024);
+		pMarker.second.Tvec.at<float>(1) = pMarker.second.Tvec.at<float>(1) + (motion.y / 1536);
 		std::cout << "Motion X : " << motion.x << "Motion Y : " << motion.y << std::endl;
 		std::cout << "===> Motion : " << motion << std::endl;
 		this->alphaVector.find(pMarker.first)->second.at(6) = 0;
-		return (newMarker);
 	}
 	return (pMarker.second);
 }
