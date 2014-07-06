@@ -16,6 +16,7 @@
 
 #include	<opencv2/opencv.hpp>
 #include	<opencv2/highgui/highgui.hpp>
+//#include	<opencv2/nonfree/features2d.hpp>
 
 #ifdef _WIN32
 	#include	<Windows.h>
@@ -51,6 +52,7 @@ private:
 	aruco::MarkerDetector							markerDetector; /**< This is the detector provide by ARUCO used to track any marker. */
 	aruco::BoardDetector							boardDetector; 
 	cv::Mat											frame; /**< The frame is the captured frame copied from the camera. */
+	cv::Mat											prev_frame; /**< The frame is the captured frame copied from the camera. */
 	std::map<int, std::string>						listObjects; /**< This is a list of mesh name linked to their Marker Id. */
 	std::map<int, aruco::Marker>					markerFound; /**< The map markerFound is a map of all found marker in one cycle of the tracking routine. */
 	std::vector<t_board>							boards;
@@ -61,7 +63,9 @@ private:
 	std::vector<std::map<int, aruco::Marker>>		computedHisto; /**< This vector is an historic of a range of previous computed map of Marker used to get a better tracking */
 	std::map<int, std::vector<float>>				alphaVector; /**< This vector is the prevision vector of the nex position */
 	const float										ANTI_FLICK_ROT = 1;
-	const float										ANTI_FLICK_TRANS = 0.1;
+	const float										ANTI_FLICK_TRANS = 0.1; 
+	cv::Point2d										motion;
+	cv::Mat											hann;
 
 public:
 	std::map<int, aruco::Marker>					markerFoundCopy;

@@ -5,7 +5,8 @@
 ARManager::ARManager()
 {
 	this->cameraMatrix.readFromXMLFile("Data/camera.yml");
-
+	this->prev_frame.data = NULL;
+	this->frame.data = NULL;
 	this->frameChange = false;
 	this->markerChange = false;
 	this->markerDetector.setDesiredSpeed(2);
@@ -104,49 +105,67 @@ void ARManager::addMarker(std::vector<aruco::Marker> markers)
 aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 {
 	bool	allFound = false;
+	double	radius = 0;
 
-	if (this->computedHisto.size() > 3)
+	radius = cv::sqrt(this->motion.x*this->motion.x + this->motion.y*this->motion.y);
+	std::cout << "Radius : " << radius << std::endl;
+	if (radius < 5)
 	{
-		aruco::Marker t3Marker, t2Marker, t1Marker;
-		std::map<int, aruco::Marker> t3Map = this->computedHisto.at(2);
-		std::map<int, aruco::Marker> t2Map = this->computedHisto.at(1);
-		std::map<int, aruco::Marker> t1Map = this->computedHisto.at(0);
-		if (t3Map.find(pMarker.first) != t3Map.end())
+		if (this->computedHisto.size() > 3)
 		{
-			t3Marker = t3Map.find(pMarker.first)->second;
-			if (t2Map.find(pMarker.first) != t2Map.end())
+			aruco::Marker t3Marker, t2Marker, t1Marker;
+			std::map<int, aruco::Marker> t3Map = this->computedHisto.at(2);
+			std::map<int, aruco::Marker> t2Map = this->computedHisto.at(1);
+			std::map<int, aruco::Marker> t1Map = this->computedHisto.at(0);
+			if (t3Map.find(pMarker.first) != t3Map.end())
 			{
-				t2Marker = t2Map.find(pMarker.first)->second;
-				if (t1Map.find(pMarker.first) != t1Map.end())
+				t3Marker = t3Map.find(pMarker.first)->second;
+				if (t2Map.find(pMarker.first) != t2Map.end())
 				{
-					t1Marker = t1Map.find(pMarker.first)->second;
-					allFound = true;
+					t2Marker = t2Map.find(pMarker.first)->second;
+					if (t1Map.find(pMarker.first) != t1Map.end())
+					{
+						t1Marker = t1Map.find(pMarker.first)->second;
+						allFound = true;
+					}
+				}
+			}
+			if (allFound)
+			{
+				if (this->alphaVector.find(pMarker.first) != this->alphaVector.end())
+				{
+					aruco::Marker newMarker;
+					newMarker.id = pMarker.first;
+					std::vector<float> alpha = this->alphaVector.find(pMarker.first)->second;
+					alpha.at(0) = (t1Marker.Rvec.at<float>(0) - t2Marker.Rvec.at<float>(0) + t1Marker.Rvec.at<float>(0) - t3Marker.Rvec.at<float>(0)) / 2;
+					alpha.at(1) = (t1Marker.Rvec.at<float>(1) - t2Marker.Rvec.at<float>(1) + t1Marker.Rvec.at<float>(1) - t3Marker.Rvec.at<float>(1)) / 2;
+					alpha.at(2) = (t1Marker.Rvec.at<float>(2) - t2Marker.Rvec.at<float>(2) + t1Marker.Rvec.at<float>(2) - t3Marker.Rvec.at<float>(2)) / 2;
+					alpha.at(3) = (t1Marker.Tvec.at<float>(0) - t2Marker.Tvec.at<float>(0) + t1Marker.Tvec.at<float>(0) - t3Marker.Tvec.at<float>(0)) / 2;
+					alpha.at(4) = (t1Marker.Tvec.at<float>(1) - t2Marker.Tvec.at<float>(1) + t1Marker.Tvec.at<float>(1) - t3Marker.Tvec.at<float>(1)) / 2;
+					alpha.at(5) = (t1Marker.Tvec.at<float>(2) - t2Marker.Tvec.at<float>(2) + t1Marker.Tvec.at<float>(2) - t3Marker.Tvec.at<float>(2)) / 2;
+
+					newMarker.Tvec.at<float>(0) = t1Marker.Tvec.at<float>(0) + alpha.at(3);
+					newMarker.Tvec.at<float>(1) = t1Marker.Tvec.at<float>(1) + alpha.at(4);
+					newMarker.Tvec.at<float>(2) = t1Marker.Tvec.at<float>(2) + alpha.at(5);
+					newMarker.Rvec.at<float>(0) = t1Marker.Rvec.at<float>(0) + (alpha.at(0) / 2);
+					newMarker.Rvec.at<float>(1) = t1Marker.Rvec.at<float>(1) + (alpha.at(1) / 2);
+					newMarker.Rvec.at<float>(2) = t1Marker.Rvec.at<float>(2) + (alpha.at(2) / 2);
+					return (newMarker);
 				}
 			}
 		}
-		if (allFound)
-		{
-			if (this->alphaVector.find(pMarker.first) != this->alphaVector.end())
-			{
-				aruco::Marker newMarker;
-				newMarker.id = pMarker.first;
-				std::vector<float> alpha = this->alphaVector.find(pMarker.first)->second;
-				alpha.at(0) = (t1Marker.Rvec.at<float>(0) - t2Marker.Rvec.at<float>(0) + t1Marker.Rvec.at<float>(0) - t3Marker.Rvec.at<float>(0)) / 2;
-				alpha.at(1) = (t1Marker.Rvec.at<float>(1) - t2Marker.Rvec.at<float>(1) + t1Marker.Rvec.at<float>(1) - t3Marker.Rvec.at<float>(1)) / 2;
-				alpha.at(2) = (t1Marker.Rvec.at<float>(2) - t2Marker.Rvec.at<float>(2) + t1Marker.Rvec.at<float>(2) - t3Marker.Rvec.at<float>(2)) / 2;
-				alpha.at(3) = (t1Marker.Tvec.at<float>(0) - t2Marker.Tvec.at<float>(0) + t1Marker.Tvec.at<float>(0) - t3Marker.Tvec.at<float>(0)) / 2;
-				alpha.at(4) = (t1Marker.Tvec.at<float>(1) - t2Marker.Tvec.at<float>(1) + t1Marker.Tvec.at<float>(1) - t3Marker.Tvec.at<float>(1)) / 2;
-				alpha.at(5) = (t1Marker.Tvec.at<float>(2) - t2Marker.Tvec.at<float>(2) + t1Marker.Tvec.at<float>(2) - t3Marker.Tvec.at<float>(2)) / 2;
+	}
+	else
+	{
+		aruco::Marker newMarker;
+		newMarker.id = pMarker.first;
 
-				newMarker.Tvec.at<float>(0) = t1Marker.Tvec.at<float>(0) + alpha.at(3);
-				newMarker.Tvec.at<float>(1) = t1Marker.Tvec.at<float>(1) + alpha.at(4);
-				newMarker.Tvec.at<float>(2) = t1Marker.Tvec.at<float>(2) + alpha.at(5);
-				newMarker.Rvec.at<float>(0) = t1Marker.Rvec.at<float>(0) + (alpha.at(0) / 2);
-				newMarker.Rvec.at<float>(1) = t1Marker.Rvec.at<float>(1) + (alpha.at(1) / 2);
-				newMarker.Rvec.at<float>(2) = t1Marker.Rvec.at<float>(2) + (alpha.at(2) / 2);
-				return (newMarker);
-			}
-		}
+		newMarker.Tvec.at<float>(0) = pMarker.second.Tvec.at<float>(0) + (motion.x / 100);
+		newMarker.Tvec.at<float>(1) = pMarker.second.Tvec.at<float>(1) + (motion.y / 100);
+		std::cout << "Motion X : " << motion.x << "Motion Y : " << motion.y << std::endl;
+		std::cout << "===> Motion : " << motion << std::endl;
+		this->alphaVector.find(pMarker.first)->second.at(6) = 0;
+		return (newMarker);
 	}
 	return (pMarker.second);
 }
@@ -271,7 +290,7 @@ std::map<int, aruco::Marker> ARManager::computeNewMap()
 			{
 				if (isInThePrevious(p.second))
 				{
-					next_map[p.first] = p.second;
+					next_map[p.first] = computeMarker(p);
 				}
 			}
 			computedHisto.insert(computedHisto.begin(), next_map);
@@ -313,7 +332,28 @@ void		ARManager::addBoard(int id, const char* boardName)
 bool ARManager::setFrame(cv::Mat p_frame)
 {
 	boost::mutex::scoped_lock	lock(this->m_marker);
+	if (!this->frame.empty())
+	{
+		cvtColor(frame, this->prev_frame, CV_RGB2GRAY);
+	}
 	this->frame = p_frame.clone();
+
+	if (this->prev_frame.empty())
+	{
+		cvtColor(frame, this->prev_frame, CV_RGB2GRAY);
+		createHanningWindow(this->hann, this->frame.size(), CV_64F);
+	}
+	if (!this->prev_frame.empty() && !this->frame.empty())
+	{
+		// Calcul the motion
+		cv::Mat curr, curr64f, prev64f;
+		cvtColor(frame, curr, CV_RGB2GRAY);
+		this->prev_frame.convertTo(prev64f, CV_64F);
+		curr.convertTo(curr64f, CV_64F);
+		this->motion = phaseCorrelate(prev64f, curr64f, this->hann);
+		// End motion set
+	}
+
 	this->frameChange = true;
 	return true;
 }
