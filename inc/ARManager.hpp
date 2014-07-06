@@ -49,6 +49,7 @@ private:
 private:
 	boost::mutex									m_marker; /**< This is a Boost mutex used to protect the tracking when it is building the list of detected marker. */
 	boost::thread									arThread; /**< This thread is used to create a detector routine. */
+	boost::thread									motionThread;
 	aruco::MarkerDetector							markerDetector; /**< This is the detector provide by ARUCO used to track any marker. */
 	aruco::BoardDetector							boardDetector; 
 	cv::Mat											frame; /**< The frame is the captured frame copied from the camera. */
@@ -57,6 +58,7 @@ private:
 	std::map<int, aruco::Marker>					markerFound; /**< The map markerFound is a map of all found marker in one cycle of the tracking routine. */
 	std::vector<t_board>							boards;
 	bool											frameChange; /**< This boolean is used in the tracking routine to know if the frame is a new one. */
+	bool											motionFrameChange;
 	bool											markerChange; /**< This boolean is used to signified that the actual fram was analized. */
 	aruco::CameraParameters							cameraMatrix; /**< The cameraMatrix is build from a config file used to avoid distortion of each camera. */
 	std::vector<std::map<int, aruco::Marker>>		detectedHisto; /**< This vector is an historic of a range of previous detected map of Marker used to get a better tracking */
@@ -222,6 +224,8 @@ private:
 	* @see stop()
 	**/
 	static void arLoop(ARManager *ar);
+
+	static void motionLoop(ARManager *ar);
 
 };
 

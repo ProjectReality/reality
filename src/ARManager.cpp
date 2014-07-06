@@ -8,6 +8,7 @@ ARManager::ARManager()
 	this->prev_frame.data = NULL;
 	this->frame.data = NULL;
 	this->frameChange = false;
+	this->motionFrameChange = false;
 	this->markerChange = false;
 	this->markerDetector.setDesiredSpeed(2);
 }
@@ -22,6 +23,7 @@ void ARManager::addPatternInList(std::string name, int id)
 void ARManager::start()
 {
 	this->arThread = boost::thread(&arLoop, this);
+	this->motionThread = boost::thread(&motionLoop, this);
 }
 
 void ARManager::stop()
@@ -35,7 +37,6 @@ void ARManager::arLoop(ARManager *ar)
 	std::vector<aruco::Marker> markerDetected;
 	while (1)
 	{
-		
 		if (ar->frameChange)
 		{
 			cv::Mat fr;
@@ -49,7 +50,30 @@ void ARManager::arLoop(ARManager *ar)
 			for (int i = 0; i < ar->boards.size(); i++)
 				ar->boards.at(i).likelihood = ar->boardDetector.detect(markerDetected, ar->boards.at(i).boardConf, ar->boards.at(i).board, ar->getCamParam(), 0.05);
 			ar->clearMarker();
+			ar->addMarker(markerDetected);
+		}
+#ifdef _WIN32
+		Sleep(10);
+#else
+		usleep(10);
+#endif
+		markerDetected.clear();
+	}
+}
 
+void ARManager::motionLoop(ARManager *ar)
+{
+	while (1)
+	{
+		if (ar->motionFrameChange)
+		{
+			cv::Mat fr;
+			if (true)
+			{
+				boost::mutex::scoped_lock lock(ar->m_marker);
+				fr = ar->frame.clone();
+				ar->motionFrameChange = false;
+			}
 			if (ar->prev_frame.empty())
 			{
 				cvtColor(fr, ar->prev_frame, CV_RGB2GRAY);
@@ -66,18 +90,9 @@ void ARManager::arLoop(ARManager *ar)
 				ar->prev_frame = curr.clone();
 				// End motion set
 			}
-
-			ar->addMarker(markerDetected);
 		}
-#ifdef _WIN32
-		Sleep(10);
-#else
-		usleep(10);
-#endif
-		markerDetected.clear();
 	}
 }
-
 bool ARManager::isChanged()
 {
 	return (this->markerChange);
@@ -126,8 +141,7 @@ aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 	double	radius = 0;
 
 	radius = cv::sqrt(this->motion.x*this->motion.x + this->motion.y*this->motion.y);
-	std::cout << "Radius : " << radius << std::endl;
-	if (radius < 5)
+	if (radius < 2)
 	{
 		/*if (this->computedHisto.size() > 3)
 		{
@@ -346,6 +360,7 @@ bool ARManager::setFrame(cv::Mat p_frame)
 	boost::mutex::scoped_lock	lock(this->m_marker);
 	this->frame = p_frame.clone();
 	this->frameChange = true;
+	this->motionFrameChange = true;
 	return true;
 }
 
