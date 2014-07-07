@@ -11,7 +11,8 @@
 * Boost 1.55 ([All](https://bitbucket.org/realityproject/reality/downloads/boost_1_55.zip))  <[http://www.boost.org/](http://www.boost.org/)>
 * Cmake  <[http://www.cmake.org](http://www.cmake.org)>
 * Oculus SDK 0.2.5c ([Windows](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_win_0.2.5c.zip)) ([Linux](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_linux_0.2.5c.tar.gz))  <[https://developer.oculusvr.com/](https://developer.oculusvr.com/?action=dl)>
-* Aruco <[http://sourceforge.net/projects/aruco/files/)>
+* Aruco <[http://sourceforge.net/projects/aruco/files/](Aruco Source Files)>
+* Librocket <[http://librocket.com/](http://librocket.com/)]
 
 # Windows
 
@@ -33,6 +34,15 @@ ARUCO_ROOT=C:\Users\vayan\Libs\aruco\build
 ```
 
 Maybe you don't need every env but I don't remember which one work :)
+
+need freetype on windows : http://gnuwin32.sourceforge.net/packages/freetype.htm 
+
+and add 
+
+`XX:\Program Files (x86)\GnuWin32\include`
+`XX:\Program Files (x86)\GnuWin32\include\freetype2`
+
+to the librocket project include folder
 
 # Linux
 

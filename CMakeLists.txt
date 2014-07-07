@@ -131,13 +131,13 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality	${OGRE_LIBRARIES}
-										${OIS_LIBRARIES}
-										${OGRE_Overlay_LIBRARIES}
-										${OCULUS_SDK_LIBRARIES}
-										${Boost_SYSTEM_LIBRARY}
-										${Boost_THREAD_LIBRARY}
-										${Boost_DATE_TIME_LIBRARY_RELEASE}
+target_link_libraries(ProjectReality	${OGRE_LIBRARIES} 
+										${OIS_LIBRARIES} 
+										${OGRE_Overlay_LIBRARIES} 
+										${OCULUS_SDK_LIBRARIES} 
+										${Boost_SYSTEM_LIBRARY} 
+										${Boost_THREAD_LIBRARY} 
+										${Boost_DATE_TIME_LIBRARY}
 										${ARUCO_LIB})
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
 
@@ -193,6 +193,7 @@ if(WIN32)
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo Debug)
 
+
   install(FILES ${OGRE_PLUGIN_DIR_REL}/OgreMain.dll
     ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
     ${OGRE_PLUGIN_DIR_REL}/Plugin_CgProgramManager.dll
@@ -201,20 +202,43 @@ if(WIN32)
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo)
 
+
+	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
+  ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
+  DESTINATION ./Debug
+  CONFIGURATIONS Debug)
+
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+  DESTINATION ./Debug
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
+  DESTINATION ./Debug
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+	
+
   install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
     DESTINATION .
     CONFIGURATIONS Release RelWithDebInfo)
 
   install(FILES ${ARUCO_ROOT}/bin/Debug/aruco125.dll
-    DESTINATION .
+    DESTINATION ./Debug
     CONFIGURATIONS Debug)
 
   install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
+	${OGRE_PLUGIN_DIR_DBG}/OgreOverlay_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_OctreeSceneManager_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
-    DESTINATION .
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_ml248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgproc248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_flann248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_features2d248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_highgui248d.dll
+    DESTINATION ./Debug
     CONFIGURATIONS Debug)
 
 endif(WIN32)
