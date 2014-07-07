@@ -5,6 +5,7 @@
 ARManager::ARManager()
 {
 	this->cameraMatrix.readFromXMLFile("Data/camera.yml");
+	K = this->cameraMatrix.CameraMatrix;
 	this->prev_frame.data = NULL;
 	this->frame.data = NULL;
 	this->frameChange = false;

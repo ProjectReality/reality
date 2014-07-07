@@ -153,29 +153,29 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	cv::Matx34d					P;
 	std::vector<cv::DMatch>		matches;
 
-	std::cout << "Bug 0" << std::endl;
 	cv::FastFeatureDetector ffd;
 	ffd.detect(prev, imgpts1);
 	ffd.detect(curr, imgpts2);
-	std::cout << imgpts1.size() << std::endl;
-	std::cout << imgpts2.size() << std::endl;
 	matches = this->getOpticalMatches(curr, prev, imgpts1, imgpts2);
-	std::cout << "Bug 1" << std::endl;
 	//Get Fundamental Matrix
 	vector<cv::Point2f> pt1, pt2; // detected features
-	cv::KeyPoint::convert(imgpts1, pt1);
-	cv::KeyPoint::convert(imgpts2, pt2);
-	cv::Mat F = cv::findFundamentalMat(pt2, pt1);
-	std::cout << "Bug 2" << std::endl;
-	// Get Essential Matrix
-	cv::Mat K = this->cameraMatrix.CameraMatrix;
+	for( unsigned int i = 0; i < matches.size(); i++ )
+	{
+		// queryIdx is the "left" image
+		pt1.push_back(imgpts1[matches[i].queryIdx].pt);
+		// trainIdx is the "right" image
+		pt2.push_back(imgpts2[matches[i].trainIdx].pt);
+	}
+	cv::Mat F;
+	if (pt1.size() > 1 && pt2.size() > 1)
+		F = cv::findFundamentalMat(pt2, pt1);
+	else
+		return (0);
 
 	//Essential matrix: compute then extract cameras [R|t]
-	std::cout << K.t() << std::endl;
-	std::cout << "Bug 3" << std::endl; 
+	F.convertTo(F, K.type());
 	cv::Mat_<double> E = K.t() * F * K; //according to HZ (9.12)
 
-	std::cout << "Bug 4" << std::endl;
 	//decompose E to P' , HZ (9.19)
 	cv::SVD svd(E, cv::SVD::MODIFY_A);
 	cv::Mat svd_u = svd.u;
@@ -188,29 +188,29 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	cv::Mat_<double> R = svd_u * cv::Mat(W) * svd_vt; //HZ 9.19
 	cv::Mat_<double> t = svd_u.col(2); //u3
 
-	std::cout << "Bug 5" << std::endl;
 	if (!CheckCoherentRotation(R)) {
-		cout << "resulting rotation is not coherent\n";
+		if (this->verbose)
+		{
+			cout << "resulting rotation is not coherent" std::endl;;
+		}
 		P = 0;
 		return (P);
 	}
 
-	std::cout << "Bug 6" << std::endl;
 	P = cv::Matx34d(R(0, 0), R(0, 1), R(0, 2), t(0),
 		R(1, 0), R(1, 1), R(1, 2), t(1),
 		R(2, 0), R(2, 1), R(2, 2), t(2));
 
-	std::cout << "Bug 7" << std::endl;
 	if (this->verbose)
 	{
-		std::cout << "___________________________________________________________________________________" << std::endl;
+		std::cout << "________________________________________________________________________________" << std::endl;
 		std::cout << "Camera Rotation Matrix : " << std::endl;
 		std::cout << P.row(0).col(0) << " : " << P.row(0).col(1) << " : " << P.row(0).col(2) << std::endl;
 		std::cout << P.row(1).col(0) << " : " << P.row(1).col(1) << " : " << P.row(1).col(2) << std::endl;
 		std::cout << P.row(2).col(0) << " : " << P.row(2).col(1) << " : " << P.row(2).col(2) << std::endl;
 		std::cout << "Camera Translation Vector : " << std::endl;
 		std::cout << P.row(0).col(3) << " : " << P.row(1).col(3) << " : " << P.row(2).col(3) << std::endl;
-		std::cout << "___________________________________________________________________________________" << std::endl;
+		std::cout << "________________________________________________________________________________" << std::endl;
 	}
 
 	return (P);

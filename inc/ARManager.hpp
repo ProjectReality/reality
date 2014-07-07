@@ -70,6 +70,7 @@ private:
 	const int										FRAME_HEIGHT = 768;
 	cv::Point2d										motion;
 	cv::Mat											hann;
+	cv::Mat											K;
 
 public:
 	std::map<int, aruco::Marker>					markerFoundCopy;
