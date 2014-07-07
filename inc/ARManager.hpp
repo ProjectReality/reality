@@ -215,6 +215,10 @@ public:
 	**/
 	aruco::Marker	isInMotion(aruco::Marker mark);
 
+	std::vector<cv::DMatch> getOpticalMatches(cv::Mat curr, cv::Mat prev, std::vector<cv::KeyPoint>& left_keypoints, std::vector<cv::KeyPoint>& right_keypoints);
+	bool					CheckCoherentRotation(cv::Mat_<double>& R);
+	cv::Matx34d				FindCameraMatrices(cv::Mat curr, cv::Mat prev);
+
 private:
 	/**
 	* @brief This function is the tracking routine
@@ -226,7 +230,6 @@ private:
 	static void arLoop(ARManager *ar);
 
 	static void motionLoop(ARManager *ar);
-
 };
 
 #endif
