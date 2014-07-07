@@ -162,13 +162,17 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	matches = this->getOpticalMatches(curr, prev, imgpts1, imgpts2);
 	std::cout << "Bug 1" << std::endl;
 	//Get Fundamental Matrix
-	cv::Mat F = cv::findFundamentalMat(imgpts2, imgpts1);
+	vector<cv::Point2f> pt1, pt2; // detected features
+	cv::KeyPoint::convert(imgpts1, pt1);
+	cv::KeyPoint::convert(imgpts2, pt2);
+	cv::Mat F = cv::findFundamentalMat(pt2, pt1);
 	std::cout << "Bug 2" << std::endl;
 	// Get Essential Matrix
 	cv::Mat K = this->cameraMatrix.CameraMatrix;
 
 	//Essential matrix: compute then extract cameras [R|t]
-	std::cout << "Bug 3" << std::endl;
+	std::cout << K.t() << std::endl;
+	std::cout << "Bug 3" << std::endl; 
 	cv::Mat_<double> E = K.t() * F * K; //according to HZ (9.12)
 
 	std::cout << "Bug 4" << std::endl;
