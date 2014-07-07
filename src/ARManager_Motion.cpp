@@ -191,7 +191,7 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	if (!CheckCoherentRotation(R)) {
 		if (this->verbose)
 		{
-			cout << "resulting rotation is not coherent" std::endl;;
+			cout << "resulting rotation is not coherent" << std::endl;
 		}
 		P = 0;
 		return (P);
@@ -209,9 +209,23 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 		std::cout << P.row(1).col(0) << " : " << P.row(1).col(1) << " : " << P.row(1).col(2) << std::endl;
 		std::cout << P.row(2).col(0) << " : " << P.row(2).col(1) << " : " << P.row(2).col(2) << std::endl;
 		std::cout << "Camera Translation Vector : " << std::endl;
-		std::cout << P.row(0).col(3) << " : " << P.row(1).col(3) << " : " << P.row(2).col(3) << std::endl;
+		std::cout << P.row(0).col(3).val[0] << " : " << P.row(1).col(3).val[0] << " : " << P.row(2).col(3).val[0] << std::endl;
 		std::cout << "________________________________________________________________________________" << std::endl;
 	}
-
+	cv::Mat rotMat(3, 3, CV_32F);
+	rotMat.at<double>(0, 0) = R(0, 0);
+	rotMat.at<double>(0, 1) = R(0, 1);
+	rotMat.at<double>(0, 2) = R(0, 2);
+	rotMat.at<double>(1, 0) = R(1, 0);
+	rotMat.at<double>(1, 1) = R(1, 1);
+	rotMat.at<double>(1, 2) = R(1, 2);
+	rotMat.at<double>(2, 0) = R(2, 0);
+	rotMat.at<double>(2, 1) = R(2, 1);
+	rotMat.at<double>(2, 2) = R(2, 2);
+	aruco::Marker mark;
+	mark.Tvec.at<float>(0) = (float) t(0);
+	mark.Tvec.at<float>(1) = (float) t(1);
+	mark.Tvec.at<float>(2) = (float) t(2);
+	cv::Rodrigues(rotMat, mark.Rvec);
 	return (P);
 }
