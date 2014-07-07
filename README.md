@@ -18,8 +18,15 @@
 
 You can find everything you need in there : [realityproject/reality/downloads](https://bitbucket.org/realityproject/reality/downloads)
 
-## Env setup
+You need to build librocket first : 
 
+get the latest source https://github.com/libRocket/libRocket 
+
+download freetype : https://bitbucket.org/realityproject/reality/downloads/freetype-2.4.10.tar.bz2
+
+then read the README in https://github.com/libRocket/libRocket/tree/master/Build/vc2012 
+
+## Env setup
 
 ```
 #!
@@ -31,18 +38,14 @@ OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
 OPENCV_DIR=C:\Users\vayan\Libs\opencv\build
 OPENCV_ROOT=C:\Users\vayan\Libs\opencv\build
 ARUCO_ROOT=C:\Users\vayan\Libs\aruco\build
+ROCKETDIR=XX:\foo\libRocket\bin
 ```
+
+
 
 Maybe you don't need every env but I don't remember which one work :)
 
-need freetype on windows : http://gnuwin32.sourceforge.net/packages/freetype.htm 
 
-and add 
-
-`XX:\Program Files (x86)\GnuWin32\include`
-`XX:\Program Files (x86)\GnuWin32\include\freetype2`
-
-to the librocket project include folder
 
 # Linux
 

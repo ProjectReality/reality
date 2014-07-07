@@ -32,7 +32,7 @@
 
 namespace Reality {
 
-class Light : public Entity
+class Light : public Reality::Entity
 {
 public:
     /**

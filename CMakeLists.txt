@@ -115,6 +115,7 @@ include_directories(
   ${OPENCV_INCLUDE_DIR}
   "./inc/libRocketOgre"
   ${ARUCO_INCLUDE_DIR}
+  ${ROCKET_INCLUDE_DIR}
   ./inc)
 
 add_executable(ProjectReality WIN32 ${ProjectReality_src})
@@ -231,6 +232,9 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_OctreeSceneManager_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
+	$ENV{ROCKETDIR}/RocketCore_d.dll
+	$ENV{ROCKETDIR}/RocketControls_d.dll
+	$ENV{ROCKETDIR}/RocketDebugger_d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_ml248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core248d.dll

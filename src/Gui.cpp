@@ -10,10 +10,11 @@ Gui::~Gui() {
 
 void Gui::ProcessEvent(Rocket::Core::Event& event)
 {
-    string classname = event.GetCurrentElement()->GetClassNames().CString();
-    std::cout << "Processing event of " << classname << std::endl;
-    if (classname == "butlaunch" ) OgreContext->getGui()->stop();
-    else if (classname == "butsetogre" ) {
+	string classname = event.GetCurrentElement()->GetClassNames().CString();
+ 
+	std::cout << "Processing event of " << classname << std::endl;
+	if (classname == "butlaunch") OgreContext->getGui()->stop();
+	else if (classname == "butsetogre") {
         OgreContext->getRoot()->showConfigDialog();
     }
 }
@@ -30,11 +31,11 @@ void Gui::initRocket()
 
     // Create one viewport, entire window
     mViewport = OgreContext->getWindow()->addViewport(mCamera);
-    mViewport->setBackgroundColour(ColourValue(0,0,0));
+	mViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
     // Alter the camera aspect ratio to match the viewport
     mCamera->setAspectRatio(
-                Real(mViewport->getActualWidth()) / Real(mViewport->getActualHeight()));
+		Ogre::Real(mViewport->getActualWidth()) / Ogre::Real(mViewport->getActualHeight()));
 
     try {
         Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Rocket");
@@ -42,8 +43,8 @@ void Gui::initRocket()
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/overlay", "FileSystem", "Rocket");
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets", "FileSystem", "Rocket");
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./", "FileSystem", "Rocket");
-        ResourceGroupManager::getSingleton().addResourceLocation("assets/OgreCore.zip", "Zip", "Rocket");
-        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+		Ogre::ResourceGroupManager::getSingleton().addResourceLocation("assets/OgreCore.zip", "Zip", "Rocket");
+		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
     } catch( Ogre::Exception& e ) {
         std::cerr << "An exception has occured: " <<
@@ -99,7 +100,7 @@ void Gui::stop()
 
 void Gui::start()
 {
-    mOverlaySystem = OGRE_NEW OverlaySystem();
+	mOverlaySystem = OGRE_NEW Ogre::OverlaySystem();
     initRocket();
     createFrameListener();
     uialive = true;

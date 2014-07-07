@@ -88,7 +88,7 @@ private:
     SystemInterfaceOgre3D*      ogre_system;
     RenderInterfaceOgre3D*      ogre_renderer;
     RocketFrameListener*        mFrameListener;
-    OverlaySystem* mOverlaySystem;
+    Ogre::OverlaySystem* mOverlaySystem;
     bool uialive;
 };
 

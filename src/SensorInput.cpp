@@ -1,16 +1,6 @@
 #define NOMINMAX
 
-#include <iostream>
-#include <fstream>
 #include "SensorInput.hpp"
-#include "OVR.h"
-#include "OIS.h"
-#include "OgreSceneManager.h"
-#include "OgreRenderWindow.h"
-#include "OgreCompositorManager.h"
-#include "OgreCompositorInstance.h"
-#include "OgreCompositionTargetPass.h"
-#include "OgreCompositionPass.h"
 
 using namespace OVR;
 using namespace std;
@@ -138,12 +128,12 @@ bool SensorInput::startUpOIS()
 		keyboard = static_cast<OIS::Keyboard*>(input_mgr->createInputObject(OIS::OISKeyboard, buffered_mode));
 	}
 
-	if (input_mgr->getNumberOfDevices(OIS::OISMouse) > 0) {
+	/*if (input_mgr->getNumberOfDevices(OIS::OISMouse) > 0) {
 		mouse = static_cast<OIS::Mouse*>(input_mgr->createInputObject(OIS::OISMouse, buffered_mode));
 		const OIS::MouseState &info_source = mouse->getMouseState();
 		info_source.width = window->getWidth();
 		info_source.height = window->getHeight();
-	}
+	}*/
 
 	if (input_mgr->getNumberOfDevices(OIS::OISJoyStick) > 0) {
 		joystick_list.resize(input_mgr->getNumberOfDevices(OIS::OISJoyStick));

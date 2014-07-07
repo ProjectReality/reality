@@ -86,7 +86,7 @@ void StereoCamera::TestCamera()
     }
 }
 
-void StereoCamera::FrameWorker(VideoCapture cm, Mat *frame)
+void StereoCamera::FrameWorker(cv::VideoCapture cm, cv::Mat *frame)
 {
 	if (!cm.grab())
     {
@@ -119,7 +119,7 @@ bool StereoCamera::FrameAvailable()
     return frame_available;
 }
 
-Mat* StereoCamera::GetFrame()
+cv::Mat* StereoCamera::GetFrame()
 {
     return frame;
 }

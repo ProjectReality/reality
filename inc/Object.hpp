@@ -10,7 +10,7 @@
 *
 */
 
-class Object : public Entity
+class Object : public Reality::Entity
 {
 public:
     using Entity::Entity;
