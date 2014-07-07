@@ -46,7 +46,14 @@ private:
 		float						likelihood;
 	}				t_board;
 
+	enum detect_algo
+	{
+		ONLY_PATTERN,
+		PATTERN_SIMPLE_MOTION,
+		PATTERN_MATRIX_MOTION
+	};
 private:
+	detect_algo										dAlgo = PATTERN_MATRIX_MOTION;
 	boost::mutex									m_marker; /**< This is a Boost mutex used to protect the tracking when it is building the list of detected marker. */
 	boost::thread									arThread; /**< This thread is used to create a detector routine. */
 	boost::thread									motionThread;
@@ -69,12 +76,13 @@ private:
 	const int										FRAME_WIDTH = 1024;
 	const int										FRAME_HEIGHT = 768;
 	cv::Point2d										motion;
+	aruco::Marker									motionMarker;
 	cv::Mat											hann;
 	cv::Mat											K;
 
 public:
 	std::map<int, aruco::Marker>					markerFoundCopy;
-	static const bool								verbose = true; /**< This boolean is used to activate or desactivate the debug in the tracking methods */
+	static const bool								verbose = false; /**< This boolean is used to activate or desactivate the debug in the tracking methods */
 
 
 public:

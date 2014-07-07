@@ -222,10 +222,9 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	rotMat.at<double>(2, 0) = R(2, 0);
 	rotMat.at<double>(2, 1) = R(2, 1);
 	rotMat.at<double>(2, 2) = R(2, 2);
-	aruco::Marker mark;
-	mark.Tvec.at<float>(0) = (float) t(0);
-	mark.Tvec.at<float>(1) = (float) t(1);
-	mark.Tvec.at<float>(2) = (float) t(2);
-	cv::Rodrigues(rotMat, mark.Rvec);
+	this->motionMarker.Tvec.at<double>(0) = t(0);
+	this->motionMarker.Tvec.at<double>(1) = t(1);
+	this->motionMarker.Tvec.at<double>(2) = t(2);
+	cv::Rodrigues(rotMat, this->motionMarker.Rvec);
 	return (P);
 }
