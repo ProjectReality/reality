@@ -110,8 +110,8 @@ aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 	double	radius = 0;
 
 	radius = cv::sqrt(this->motion.x*this->motion.x + this->motion.y*this->motion.y);
-	if (radius < 2)
-	{
+	//if (radius < 2)
+	//{
 		/*if (this->computedHisto.size() > 3)
 		{
 			aruco::Marker t3Marker, t2Marker, t1Marker;
@@ -155,27 +155,30 @@ aruco::Marker ARManager::computeMarker(std::pair<int, aruco::Marker> pMarker)
 				}
 			}
 		}*/
-	}
-	else
-	{
+	//}
+	//else
+	//{
 		switch (this->dAlgo)
 		{
 		case PATTERN_SIMPLE_MOTION:
-			pMarker.second.Tvec.at<float>(0) = pMarker.second.Tvec.at<float>(0) + (motion.x / (FRAME_WIDTH * 1.5));
-			pMarker.second.Tvec.at<float>(1) = pMarker.second.Tvec.at<float>(1) + (motion.y / (FRAME_HEIGHT * 3));
-			this->alphaVector.find(pMarker.first)->second.at(6) = 0;
+			if (radius > 2)
+			{
+				pMarker.second.Tvec.at<float>(0) = pMarker.second.Tvec.at<float>(0) + (motion.x / (FRAME_WIDTH * 1.5));
+				pMarker.second.Tvec.at<float>(1) = pMarker.second.Tvec.at<float>(1) + (motion.y / (FRAME_HEIGHT * 3));
+				this->alphaVector.find(pMarker.first)->second.at(6) = 0;
+			}
 			break;
 		case PATTERN_MATRIX_MOTION:
-			pMarker.second.Tvec.at<float>(0) += (motionMarker.Tvec.at<double>(0) / 2000);
-			pMarker.second.Tvec.at<float>(1) += (motionMarker.Tvec.at<double>(1) / 2000);
-			pMarker.second.Tvec.at<float>(2) += (motionMarker.Tvec.at<double>(2) / 2000);
-			pMarker.second.Rvec.at<float>(0) += (motionMarker.Rvec.at<double>(0) / 2000);
-			pMarker.second.Rvec.at<float>(1) += (motionMarker.Rvec.at<double>(1) / 2000);
-			pMarker.second.Rvec.at<float>(2) += (motionMarker.Rvec.at<double>(2) / 2000);
+			pMarker.second.Tvec.at<float>(0) += (motionMarker.Tvec.at<double>(0) / 800);
+			pMarker.second.Tvec.at<float>(1) += (motionMarker.Tvec.at<double>(1) / 800);
+			pMarker.second.Tvec.at<float>(2) += (motionMarker.Tvec.at<double>(2) / 800);
+			pMarker.second.Rvec.at<float>(0) += (motionMarker.Rvec.at<double>(0) / 800);
+			pMarker.second.Rvec.at<float>(1) += (motionMarker.Rvec.at<double>(1) / 800);
+			pMarker.second.Rvec.at<float>(2) += (motionMarker.Rvec.at<double>(2) / 800);
 			this->alphaVector.find(pMarker.first)->second.at(6) = 0;
 			break;
 		}
-	}
+	//}
 	return (pMarker.second);
 }
 
