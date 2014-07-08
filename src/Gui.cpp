@@ -2,10 +2,16 @@
 
 Gui::Gui(OgreRenderer *c) {
     OgreContext = c;
+	exiting = false;
 }
 
 Gui::~Gui() {
+	uialive = false;
+}
 
+void Gui::shutdown() {
+	RocketContext->RemoveReference();
+	Rocket::Core::Shutdown();
 }
 
 void Gui::ProcessEvent(Rocket::Core::Event& event)
@@ -88,6 +94,10 @@ void Gui::initRocket()
     std::cout << "Finish init rocket" << std::endl;
 }
 
+bool Gui::isExiting() {
+	return exiting;
+}
+
 void Gui::stop()
 {
     std::cout << "Sarting to stop ui rendering" << std::endl;
@@ -107,11 +117,9 @@ void Gui::start()
     while(uialive) {
         Ogre::WindowEventUtilities::messagePump();
         OgreContext->getRoot()->renderOneFrame();
-        if (OgreContext->getWindow()->isClosed())
-            exit(11);
-		if (!mFrameListener->isRunning()) {
-			std::cerr << "GUI stopped running" << std::endl;
-			exit(1111); 
+		if (OgreContext->getWindow()->isClosed() || !mFrameListener->isRunning()) {
+			exiting = true;
+			return;
 		}
     }
     std::cout << "out of ui rendering loop" << std::endl;

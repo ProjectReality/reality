@@ -28,6 +28,8 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
 
 OgreRenderer::~OgreRenderer()
 {
+	ui->shutdown();
+	Ogre::Root::getSingleton().queueEndRendering();
     delete ogre; // Apparently handle deletes for most ogre-related things.
 }
 

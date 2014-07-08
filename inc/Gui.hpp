@@ -73,6 +73,17 @@ public:
      */
     void stop();
 
+	/**
+	* @brief shutdown : shutting down the ui for exiting program
+	*/
+	void shutdown();
+
+
+	/**
+	* @brief exiting : do we need to exit project ?
+	*/
+	bool isExiting();
+
     /**
      * @brief ProcessEvent : Callback for all event in the UI
      * @param event
@@ -90,6 +101,7 @@ private:
     RocketFrameListener*        mFrameListener;
     Ogre::OverlaySystem* mOverlaySystem;
     bool uialive;
+	bool exiting;
 };
 
 

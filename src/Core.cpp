@@ -26,7 +26,12 @@ void Core::init()
 
 void Core::start()
 {
-    render->getGui()->start();
+	render->getGui()->start();
+
+	if (render->getGui()->isExiting()) {
+		render->getGui()->shutdown();
+		return;
+	}
 
     std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
 
