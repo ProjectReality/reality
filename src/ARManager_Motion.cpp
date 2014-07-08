@@ -24,10 +24,20 @@ void ARManager::motionLoop(ARManager *ar)
 				// Calcul the motion
 				cv::Mat curr, curr64f, prev64f;
 				cvtColor(fr, curr, CV_RGB2GRAY);
-				ar->prev_frame.convertTo(prev64f, CV_64F);
-				curr.convertTo(curr64f, CV_64F);
-				ar->motion = phaseCorrelate(prev64f, curr64f, ar->hann);
-				ar->FindCameraMatrices(curr, ar->prev_frame);
+				if (ar->dAlgo == PATTERN_SIMPLE_MOTION)
+				{
+					ar->prev_frame.convertTo(prev64f, CV_64F);
+					curr.convertTo(curr64f, CV_64F);
+					ar->motion = phaseCorrelate(prev64f, curr64f, ar->hann);
+				}
+				else if (ar->dAlgo == PATTERN_MATRIX_MOTION)
+				{
+					ar->FindCameraMatrices(curr, ar->prev_frame);
+				}
+				else
+				{
+					return;
+				}
 				ar->prev_frame = curr.clone();
 				// End motion set
 			}
@@ -145,7 +155,7 @@ bool ARManager::CheckCoherentRotation(cv::Mat_<double>& R)
 	return true;
 }
 
-cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
+void ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 {
 	//Find camera matrices
 	std::vector<cv::KeyPoint>	imgpts1;
@@ -154,9 +164,19 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	std::vector<cv::DMatch>		matches;
 
 	cv::FastFeatureDetector ffd;
-	ffd.detect(prev, imgpts1);
+	ffd.detect(prev, imgpts1); 
 	ffd.detect(curr, imgpts2);
+
+	/*
+	namespace pt = boost::posix_time;
+	pt::ptime now1 = pt::microsec_clock::universal_time();
+	pt::ptime now2 = pt::microsec_clock::universal_time();
+	pt::time_duration dur = now2 - now1;
+	std::cout << "before matcher : " << dur.total_microseconds() << std::endl;
+	*/
+
 	matches = this->getOpticalMatches(curr, prev, imgpts1, imgpts2);
+
 	//Get Fundamental Matrix
 	vector<cv::Point2f> pt1, pt2; // detected features
 	for( unsigned int i = 0; i < matches.size(); i++ )
@@ -170,7 +190,7 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	if (pt1.size() > 1 && pt2.size() > 1)
 		F = cv::findFundamentalMat(pt2, pt1);
 	else
-		return (0);
+		return ;
 
 	//Essential matrix: compute then extract cameras [R|t]
 	F.convertTo(F, K.type());
@@ -193,8 +213,21 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 		{
 			cout << "resulting rotation is not coherent" << std::endl;
 		}
-		P = 0;
-		return (P);
+		cv::Mat rotMat(3, 3, CV_32F);
+		rotMat.at<double>(0, 0) = 0;
+		rotMat.at<double>(0, 1) = 0;
+		rotMat.at<double>(0, 2) = 0;
+		rotMat.at<double>(1, 0) = 0;
+		rotMat.at<double>(1, 1) = 0;
+		rotMat.at<double>(1, 2) = 0;
+		rotMat.at<double>(2, 0) = 0;
+		rotMat.at<double>(2, 1) = 0;
+		rotMat.at<double>(2, 2) = 0;
+		this->motionMarker.Tvec.at<double>(0) = 0;
+		this->motionMarker.Tvec.at<double>(1) = 0;
+		this->motionMarker.Tvec.at<double>(2) = 0;
+		cv::Rodrigues(rotMat, this->motionMarker.Rvec);
+		return;
 	}
 
 	P = cv::Matx34d(R(0, 0), R(0, 1), R(0, 2), t(0),
@@ -226,5 +259,4 @@ cv::Matx34d ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 	this->motionMarker.Tvec.at<double>(1) = t(1);
 	this->motionMarker.Tvec.at<double>(2) = t(2);
 	cv::Rodrigues(rotMat, this->motionMarker.Rvec);
-	return (P);
 }
