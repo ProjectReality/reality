@@ -55,6 +55,8 @@ public:
     virtual bool keyPressed(const OIS::KeyEvent& e);
     virtual bool keyReleased(const OIS::KeyEvent& e);
 
+	bool isRunning();
+
 private:
     void BuildKeyMaps();
     int GetKeyModifierState();

@@ -261,6 +261,10 @@ void RocketFrameListener::BuildKeyMaps()
     key_identifiers[OIS::KC_MEDIASELECT] = Rocket::Core::Input::KI_LAUNCH_MEDIA_SELECT;
 }
 
+bool RocketFrameListener::isRunning() {
+	return running;
+}
+
 int RocketFrameListener::GetKeyModifierState()
 {
     int modifier_state = 0;

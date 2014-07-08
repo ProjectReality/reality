@@ -109,6 +109,10 @@ void Gui::start()
         OgreContext->getRoot()->renderOneFrame();
         if (OgreContext->getWindow()->isClosed())
             exit(11);
+		if (!mFrameListener->isRunning()) {
+			std::cerr << "GUI stopped running" << std::endl;
+			exit(1111); 
+		}
     }
     std::cout << "out of ui rendering loop" << std::endl;
 }
