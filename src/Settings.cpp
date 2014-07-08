@@ -1,7 +1,11 @@
 #include	"Settings.hpp"
 
+Settings::Settings()
+{
 
-Settings::Settings(int ac, char **av)
+}
+
+void	Settings::init(int ac, char **av)
 {
   alive = true;
 
@@ -85,3 +89,10 @@ bool		Settings::getFlag(std::string param)
 {
   return flags[param];
 }
+
+Settings::~Settings()
+{
+
+}
+
+Settings g_settings;

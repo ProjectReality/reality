@@ -1,4 +1,5 @@
 #include "Gui.hpp"
+#include	"Settings.hpp"
 
 Gui::Gui(OgreRenderer *c) {
     OgreContext = c;
@@ -10,12 +11,19 @@ Gui::~Gui() {
 
 void Gui::ProcessEvent(Rocket::Core::Event& event)
 {
-    string classname = event.GetCurrentElement()->GetClassNames().CString();
-    std::cout << "Processing event of " << classname << std::endl;
-    if (classname == "butlaunch" ) OgreContext->getGui()->stop();
-    else if (classname == "butsetogre" ) {
-        OgreContext->getRoot()->showConfigDialog();
+  Rocket::Core::Element *elem = event.GetCurrentElement();
+  string classname = elem->GetId().CString();
+  std::cout << "Processing event of " << elem->GetClassNames().CString() << ", Value: " << classname << std::endl;
+  if (classname == "button_launch" ) OgreContext->getGui()->stop();
+  else if (classname == "button_setogre" ) 
+    {
+      OgreContext->getRoot()->showConfigDialog();
     }
+  // else if (classname.find("select_") != std::string::npos)
+  //   {
+  //     Rocket::Controls::ElementFormControlSelect *select = (Rocket::Controls::ElementFormControlSelect)elem;
+  //     std::cout << (select->getSelection() << std::endl;
+  //   }
 }
 
 void Gui::initRocket()
@@ -72,10 +80,13 @@ void Gui::initRocket()
     Rocket::Core::ElementDocument* document = RocketContext->LoadDocument("assets/mainUI/mainui.rml");
     if (document)
     {
-        Rocket::Core::Element* element2 = document->GetElementById("butlaunch");
-        Rocket::Core::Element* element = document->GetElementById("butsetogre");
+        Rocket::Core::Element* element2 = document->GetElementById("button_launch");
+        Rocket::Core::Element* element = document->GetElementById("button_setogre");
         element->AddEventListener("click", this, false);
         element2->AddEventListener("click", this, false);
+	// document->GetElementById("select_scene")->AddEventListener("click", this, false);
+	// document->GetElementById("select_periph")->AddEventListener("click", this, false);
+	// document->GetElementById("select_algo")->AddEventListener("click", this, false);
         document->Show();
         document->RemoveReference();
     }

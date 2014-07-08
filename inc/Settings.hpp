@@ -7,9 +7,10 @@
 class Settings
 {
 public:
-		Settings(int ac, char **av);
+		Settings();
 		~Settings();
 
+  void		init(int ac, char **av);
   void		setRender(OgreRenderer *_render);
   void		setString(std::string, std::string);
   std::string	getString(std::string);
@@ -27,3 +28,5 @@ private:
   std::map<std::string, bool>		flags;
   bool					alive;
 };
+
+extern Settings g_settings;
