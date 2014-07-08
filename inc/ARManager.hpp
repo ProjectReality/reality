@@ -13,6 +13,7 @@
 #include	<boost/math/special_functions/round.hpp>
 
 #include	<boost/thread.hpp>
+#include	<time.h>
 
 #include	<opencv2/opencv.hpp>
 #include	<opencv2/highgui/highgui.hpp>
@@ -53,7 +54,7 @@ private:
 		PATTERN_MATRIX_MOTION
 	};
 private:
-	detect_algo										dAlgo = PATTERN_MATRIX_MOTION;
+	detect_algo										dAlgo = ONLY_PATTERN;
 	boost::mutex									m_marker; /**< This is a Boost mutex used to protect the tracking when it is building the list of detected marker. */
 	boost::thread									arThread; /**< This thread is used to create a detector routine. */
 	boost::thread									motionThread;
@@ -226,7 +227,7 @@ public:
 
 	std::vector<cv::DMatch> getOpticalMatches(cv::Mat curr, cv::Mat prev, std::vector<cv::KeyPoint>& left_keypoints, std::vector<cv::KeyPoint>& right_keypoints);
 	bool					CheckCoherentRotation(cv::Mat_<double>& R);
-	cv::Matx34d				FindCameraMatrices(cv::Mat curr, cv::Mat prev);
+	void					FindCameraMatrices(cv::Mat curr, cv::Mat prev);
 
 private:
 	/**
