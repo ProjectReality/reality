@@ -29,9 +29,9 @@
 	  Scène:
 
 	  <div width="320"><select id="select_scene">
-	      <option value="roman">Musée Gallo-Romain</option>
-	      <option value="space">Space Odyssey</option>
-	      <option value="epitech" selected>Demo Epitech</option>
+	      <option id="select_scene_roman" value="roman">Musée Gallo-Romain</option>
+	      <option id="select_scene_space" value="space">Space Odyssey</option>
+	      <option id="select_scene_epitech" value="epitech" selected>Demo Epitech</option>
 	  </select></div>
 
 	</div>
