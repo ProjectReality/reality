@@ -12,7 +12,6 @@ Gui::~Gui() {
 }
 
 void Gui::shutdown() {
-	RocketContext->RemoveReference();
 	Rocket::Core::Shutdown();
 }
 

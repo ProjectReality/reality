@@ -139,7 +139,7 @@ target_link_libraries(ProjectReality	${OGRE_LIBRARIES}
 										${Boost_SYSTEM_LIBRARY}
 										${Boost_THREAD_LIBRARY}
 										${Boost_PROGRAM_OPTIONS_LIBRARY}
-										${Boost_DATE_TIME_LIBRARY_RELEASE}
+										${Boost_DATE_TIME_LIBRARY}
 										${ARUCO_LIB})
 
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
