@@ -238,6 +238,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
 	$ENV{ROCKETDIR}/RocketControls_d.dll
 	$ENV{ROCKETDIR}/RocketDebugger_d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_video248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_ml248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgproc248d.dll
