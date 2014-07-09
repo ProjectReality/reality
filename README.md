@@ -26,6 +26,10 @@ download freetype : https://bitbucket.org/realityproject/reality/downloads/freet
 
 then read the README in https://github.com/libRocket/libRocket/tree/master/Build/vc2012 
 
+You also need the libboost_program_options.lib on windows you can find the binary here :  https://bitbucket.org/realityproject/reality/downloads/libboost_program_options.zip
+
+just copy all the libboost_program_options*.lib where you had your others boost libs.
+
 ## Env setup
 
 ```
