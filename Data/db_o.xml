@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone=no>
+<db>
+	<object>
+		<pattern>1024</pattern>
+		<board>Data/boards/board_1.yml</board>
+		<asset>tapisserie.mesh</asset>
+		<scale>0.1</scale>
+		<roll>90</roll>
+		<pitch>180</pitch>
+	</object>
+</db>
