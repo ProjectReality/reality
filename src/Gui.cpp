@@ -1,4 +1,5 @@
-#include "Gui.hpp"
+#include	<Rocket/Controls/ElementFormControlSelect.h>
+#include	"Gui.hpp"
 #include	"Settings.hpp"
 
 Gui::Gui(OgreRenderer *c) {
@@ -19,11 +20,11 @@ void Gui::ProcessEvent(Rocket::Core::Event& event)
     {
       OgreContext->getRoot()->showConfigDialog();
     }
-  // else if (classname.find("select_") != std::string::npos)
-  //   {
-  //     Rocket::Controls::ElementFormControlSelect *select = (Rocket::Controls::ElementFormControlSelect)elem;
-  //     std::cout << (select->getSelection() << std::endl;
-  //   }
+  else if (classname.find("select_") != std::string::npos)
+    {
+      Rocket::Controls::ElementFormControlSelect *select = (Rocket::Controls::ElementFormControlSelect*)elem;
+      std::cout << select->GetSelection() << std::endl;
+    }
 }
 
 void Gui::initRocket()
@@ -84,9 +85,9 @@ void Gui::initRocket()
         Rocket::Core::Element* element = document->GetElementById("button_setogre");
         element->AddEventListener("click", this, false);
         element2->AddEventListener("click", this, false);
-	// document->GetElementById("select_scene")->AddEventListener("click", this, false);
-	// document->GetElementById("select_periph")->AddEventListener("click", this, false);
-	// document->GetElementById("select_algo")->AddEventListener("click", this, false);
+	document->GetElementById("select_scene")->AddEventListener("click", this, false);
+	document->GetElementById("select_periph")->AddEventListener("click", this, false);
+	document->GetElementById("select_algo")->AddEventListener("click", this, false);
         document->Show();
         document->RemoveReference();
     }
