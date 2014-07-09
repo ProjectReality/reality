@@ -22,7 +22,8 @@ void Object::updateData(aruco::Marker info)
 	Ogre::Quaternion y(Ogre::Degree(this->getBaseYaw()), Ogre::Vector3::UNIT_Z);
 	Ogre::Quaternion p(Ogre::Degree(this->getBasePitch()), Ogre::Vector3::UNIT_Y);
 	Ogre::Quaternion r(Ogre::Degree(this->getBaseRoll()), Ogre::Vector3::UNIT_X);
-	this->setOrientation(q * y * p * r);
+	this->setOrientation(q);
+	this->rotate(this->getBaseYaw(), this->getBasePitch(), this->getBaseRoll());
 }
 
 int Object::getPatt_id() const

@@ -30,13 +30,11 @@ then read the README in https://github.com/libRocket/libRocket/tree/master/Build
 
 ```
 #!
-BOOST_INC=C:\Users\vayan\Libs\boost_1_55
 BOOST_ROOT=C:\Users\vayan\Libs\boost_1_55
 CMAKE_MODULE_PATH=C:\Users\vayan\Libs\OgreSDK\CMake
 OCULUS_SDK_ROOT_DIR=C:\Users\vayan\Libs\OculusSDK
 OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
 OPENCV_DIR=C:\Users\vayan\Libs\opencv\build
-OPENCV_ROOT=C:\Users\vayan\Libs\opencv\build
 ARUCO_ROOT=C:\Users\vayan\Libs\aruco\build
 ROCKETDIR=XX:\foo\libRocket\bin
 ```
@@ -53,4 +51,4 @@ Maybe you don't need every env but I don't remember which one work :)
 
 Copy the OculusSDK folder in /usr/lib and it'll work.
 
-If you have some error about plugins you'll maybe need to compile Ogre 1.9 Plugin_CgProgramManager 
+If you have some error about plugins you'll maybe need to compile Ogre 1.9 Plugin_CgProgramManager
