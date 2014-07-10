@@ -150,12 +150,6 @@ target_link_libraries(ProjectReality ${ROCKET_LIBRARIES})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
 
-# post-build copy for win32
-if(WIN32 AND NOT MINGW)
-  add_custom_command( TARGET ProjectReality POST_BUILD
-    COMMAND copy \"$(TargetPath)\" . )
-endif(WIN32 AND NOT MINGW)
-
 if(MINGW OR UNIX)
 	set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 endif(MINGW OR UNIX)
@@ -170,42 +164,49 @@ install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
   CONFIGURATIONS Release RelWithDebInfo)
 
 if(WIN32)
-install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
-  ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
-  DESTINATION .
-  CONFIGURATIONS Debug)
-endif(WIN32)
+  #FIX PROBLEM WITH VS2013
+	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
+  ${CMAKE_SOURCE_DIR}/config/resources.cfg
+  DESTINATION ./Release
+  CONFIGURATIONS Release RelWithDebInfo)
 
-install(FILES ${CMAKE_SOURCE_DIR}/config/ogre.cfg
-  DESTINATION .
-  CONFIGURATIONS Release RelWithDebInfo Debug)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
-  DESTINATION ./
-  CONFIGURATIONS Release RelWithDebInfo Debug)
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+  DESTINATION ./Release
+  CONFIGURATIONS Release RelWithDebInfo)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
-  DESTINATION ./
-  CONFIGURATIONS Release RelWithDebInfo Debug)
+  DESTINATION ./Release
+  CONFIGURATIONS Release RelWithDebInfo)
+	
 
-if(WIN32)
-  #FIX PROBLEM WITH VS2013
-  install(
-    FILES ${CMAKE_SOURCE_DIR}/dllfix/msvcp100d.dll
-    ${CMAKE_SOURCE_DIR}/dllfix/msvcr100d.dll ${CMAKE_SOURCE_DIR}/dllfix/cg.dll
-    DESTINATION .
-    CONFIGURATIONS Release RelWithDebInfo Debug)
+  install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
+    DESTINATION ./Release
+    CONFIGURATIONS Release RelWithDebInfo)
 
+  install(FILES ${ARUCO_ROOT}/bin/Debug/aruco125.dll
+    DESTINATION ./Debug
+    CONFIGURATIONS Debug)
 
   install(FILES ${OGRE_PLUGIN_DIR_REL}/OgreMain.dll
+	${OGRE_PLUGIN_DIR_REL}/OgreOverlay.dll
     ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
     ${OGRE_PLUGIN_DIR_REL}/Plugin_CgProgramManager.dll
     ${OGRE_PLUGIN_DIR_REL}/Plugin_OctreeSceneManager.dll
     ${OGRE_PLUGIN_DIR_REL}/OIS.dll
-    DESTINATION .
+	$ENV{ROCKETDIR}/RocketCore.dll
+	$ENV{ROCKETDIR}/RocketControls.dll
+	$ENV{ROCKETDIR}/RocketDebugger.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_video248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_ml248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgproc248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_flann248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_features2d248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_highgui248.dll
+    DESTINATION ./Release
     CONFIGURATIONS Release RelWithDebInfo)
-
-
+	
 	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
   ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
   DESTINATION ./Debug
@@ -213,21 +214,12 @@ if(WIN32)
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
   DESTINATION ./Debug
-  CONFIGURATIONS Release RelWithDebInfo Debug)
+  CONFIGURATIONS Debug)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
   DESTINATION ./Debug
-  CONFIGURATIONS Release RelWithDebInfo Debug)
-	
-
-  install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
-    DESTINATION .
-    CONFIGURATIONS Release RelWithDebInfo)
-
-  install(FILES ${ARUCO_ROOT}/bin/Debug/aruco125.dll
-    DESTINATION ./Debug
-    CONFIGURATIONS Debug)
-
+  CONFIGURATIONS Debug)
+  
   install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
 	${OGRE_PLUGIN_DIR_DBG}/OgreOverlay_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
