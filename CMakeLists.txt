@@ -164,9 +164,13 @@ install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
   DESTINATION .
   CONFIGURATIONS Release RelWithDebInfo)
 
+  install(FILES ${CMAKE_SOURCE_DIR}/config/ogre.cfg
+  DESTINATION .
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+
 if(WIN32)
   #FIX PROBLEM WITH VS2013
-	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
+        install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
   ${CMAKE_SOURCE_DIR}/config/resources.cfg
   DESTINATION ./Release
   CONFIGURATIONS Release RelWithDebInfo)
@@ -178,7 +182,7 @@ if(WIN32)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
   DESTINATION ./Release
   CONFIGURATIONS Release RelWithDebInfo)
-	
+
 
   install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
     DESTINATION ./Release
@@ -208,7 +212,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
     DESTINATION ./Release
     CONFIGURATIONS Release RelWithDebInfo)
 	
-	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
+        install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
   ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
   DESTINATION ./Debug
   CONFIGURATIONS Debug)
@@ -247,6 +251,18 @@ if(UNIX)
   install(TARGETS ProjectReality
     RUNTIME DESTINATION .
     CONFIGURATIONS All)
+
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/config
+  DESTINATION .
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+  DESTINATION .
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
+  DESTINATION .
+  CONFIGURATIONS Release RelWithDebInfo Debug)
 
 
   #unix need normal plugin file in debug
