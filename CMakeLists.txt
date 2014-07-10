@@ -52,6 +52,7 @@ find_package(OGRE REQUIRED)
 find_package(OculusSDK REQUIRED)
 find_package(OIS REQUIRED)
 find_package(Aruco REQUIRED)
+find_package(LibRocket REQUIRED)
 
 if(NOT OIS_FOUND)
   message(SEND_ERROR "Failed to find OIS.")
