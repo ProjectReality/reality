@@ -252,6 +252,10 @@ if(UNIX)
     RUNTIME DESTINATION .
     CONFIGURATIONS All)
 
+install(FILES ${CMAKE_SOURCE_DIR}/stuff/reanull.sh
+  DESTINATION .
+  CONFIGURATIONS Release RelWithDebInfo Debug)
+
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/config
   DESTINATION .
   CONFIGURATIONS Release RelWithDebInfo Debug)
