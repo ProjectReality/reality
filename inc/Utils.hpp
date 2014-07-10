@@ -1,4 +1,11 @@
+#ifndef __UTILS___
+#define __UTILS___
+
 #pragma once
+
+/**
+ * @brief The Utils class
+ */
 class Utils
 {
 public:
@@ -12,3 +19,4 @@ public:
 	static int c_to_i(const char* c);
 };
 
+#endif

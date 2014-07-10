@@ -1,5 +1,5 @@
-#include	"Core.hpp"
 #include	"Light.hpp"
+#include	"Core.hpp"
 #include	"aruco.h"
 
 Core::Core()
@@ -21,17 +21,28 @@ void Core::init()
 	video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
 	video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0); 
 	render = new OgreRenderer(video_size, rift);
-	camera.GrabFrames();
-	buildObjectsList();
-	for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
-		ar.addPatternInList(it->second->getName(), it->first);
 }
 
 
 void Core::start()
 {
+	render->getGui()->start();
+
+	if (render->getGui()->isExiting()) {
+		render->getGui()->shutdown();
+		return;
+	}
+
+    std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
+
+    render->startRealityRender();
+    camera.GrabFrames();
+    buildObjectsList();
+    for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
+        ar.addPatternInList(it->second->getName(), it->first);
+
 	ar.start();
-	Light	sun("sun", render->getScene());
+    Reality::Light	sun("sun", render->getScene());
 	sun.createSun();
 	while (render->isAlive())
 	{

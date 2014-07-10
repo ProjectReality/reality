@@ -1,31 +1,20 @@
+#ifndef __SENSOR_INPUT
+#define __SENSOR_INPUT
+
 #pragma once
 
-#include "OgreQuaternion.h"
-#include "OgreVector3.h"
-
-namespace OVR
-{
-	class HMDDevice;
-	class SensorFusion;
-	class DeviceManager;
-	class SensorDevice;
-
-	namespace Util
-	{
-		namespace Render
-		{
-			class StereoConfig;
-		}
-	}
-}
-
-namespace OIS
-{
-	class InputManager;
-	class Keyboard;
-	class Mouse;
-	class JoyStick;
-}
+#include <iostream>
+#include <fstream>
+#include <OIS/OIS.h>
+#include <OVR.h>
+#include <OGRE/OgreSceneManager.h>
+#include <OGRE/OgreRenderWindow.h>
+#include <OGRE/OgreCompositorManager.h>
+#include <OGRE/OgreCompositorInstance.h>
+#include <OGRE/OgreCompositionTargetPass.h>
+#include <OGRE/OgreCompositionPass.h>
+#include <OGRE/OgreQuaternion.h>
+#include <OGRE/OgreVector3.h>
 
 class SensorInput
 {
@@ -82,7 +71,7 @@ protected:
 	float centreOffset;
 
 public:
-
+	/*
 	OIS::JoyStick *main_joystick()
 	{
 		if (joystick_list.size() == 0) {
@@ -97,5 +86,7 @@ public:
 			return joystick_list[idx];
 		}
 		return nullptr;
-	}
+	}*/
 };
+
+#endif

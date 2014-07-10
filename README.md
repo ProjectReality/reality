@@ -11,14 +11,26 @@
 * Boost 1.55 ([All](https://bitbucket.org/realityproject/reality/downloads/boost_1_55.zip))  <[http://www.boost.org/](http://www.boost.org/)>
 * Cmake  <[http://www.cmake.org](http://www.cmake.org)>
 * Oculus SDK 0.2.5c ([Windows](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_win_0.2.5c.zip)) ([Linux](https://bitbucket.org/realityproject/reality/downloads/ovr_sdk_linux_0.2.5c.tar.gz))  <[https://developer.oculusvr.com/](https://developer.oculusvr.com/?action=dl)>
-* Aruco <[http://sourceforge.net/projects/aruco/files/)>
+* Aruco <[http://sourceforge.net/projects/aruco/files/](Aruco Source Files)>
+* Librocket <[http://librocket.com/](http://librocket.com/)]
 
 # Windows
 
 You can find everything you need in there : [realityproject/reality/downloads](https://bitbucket.org/realityproject/reality/downloads)
 
-## Env setup
+You need to build librocket first : 
 
+get the latest source https://github.com/libRocket/libRocket 
+
+download freetype : https://bitbucket.org/realityproject/reality/downloads/freetype-2.4.10.tar.bz2
+
+then read the README in https://github.com/libRocket/libRocket/tree/master/Build/vc2012 
+
+You also need the libboost_program_options.lib on windows you can find the binary here :  https://bitbucket.org/realityproject/reality/downloads/libboost_program_options.zip
+
+just copy all the libboost_program_options*.lib where you had your others boost libs.
+
+## Env setup
 
 ```
 #!
@@ -28,9 +40,14 @@ OCULUS_SDK_ROOT_DIR=C:\Users\vayan\Libs\OculusSDK
 OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
 OPENCV_DIR=C:\Users\vayan\Libs\opencv\build
 ARUCO_ROOT=C:\Users\vayan\Libs\aruco\build
+ROCKETDIR=XX:\foo\libRocket\bin
 ```
 
+
+
 Maybe you don't need every env but I don't remember which one work :)
+
+
 
 # Linux
 

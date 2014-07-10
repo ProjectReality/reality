@@ -73,7 +73,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   set(Boost_ADDITIONAL_VERSIONS "1.44" "1.44.0" "1.42" "1.42.0" "1.41.0" "1.41" "1.40.0" "1.40" "1.39.0" "1.39" "1.38.0" "1.38" "1.37.0" "1.37" )
   # Components that need linking (NB does not include header-only components like bind)
   set(OGRE_BOOST_COMPONENTS thread date_time system)
-  find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} QUIET)
+  find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} program_options QUIET)
   if (NOT Boost_FOUND)
     # Try again with the other type of libs
     set(Boost_USE_STATIC_LIBS NOT ${Boost_USE_STATIC_LIBS})
@@ -90,19 +90,22 @@ endif()
 set(HEADER_TXML inc/TinyXML/tinystr.h inc/TinyXML/tinyxml.h)
 set(HEADER_REALITY "inc/*.hpp")
 
-add_library(TinyXML src/TinyXML/tinystr.cpp 
-					src/TinyXML/tinyxml.cpp 
-					src/TinyXML/tinyxmlerror.cpp 
+
+add_library(TinyXML src/TinyXML/tinystr.cpp
+					src/TinyXML/tinyxml.cpp
+					src/TinyXML/tinyxmlerror.cpp
 					src/TinyXML/tinyxmlparser.cpp ${HEADER_TXML})
 
 file(GLOB ProjectReality_src
   "src/*.cpp"
+  "src/libRocketOgre/*.cpp"
+  "inc/libRocketOgre/*.h"
   ${HEADER_REALITY}
   ${HEADER_ARMA}
   ${HEADER_TXML}
   )
 
-  
+
 include_directories(
   ${OIS_INCLUDE_DIRS}
   ${OGRE_INCLUDE_DIRS}
@@ -110,7 +113,9 @@ include_directories(
   ${OGRE_Overlay_INCLUDE_DIRS}
   ${OCULUS_SDK_INCLUDE_DIRS}
   ${OPENCV_INCLUDE_DIR}
+  "./inc/libRocketOgre"
   ${ARUCO_INCLUDE_DIR}
+  ${ROCKET_INCLUDE_DIR}
   ./inc)
 
 add_executable(ProjectReality WIN32 ${ProjectReality_src})
@@ -127,24 +132,23 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality	${OGRE_LIBRARIES} 
-										${OIS_LIBRARIES} 
-										${OGRE_Overlay_LIBRARIES} 
-										${OCULUS_SDK_LIBRARIES} 
-										${Boost_SYSTEM_LIBRARY} 
-										${Boost_THREAD_LIBRARY} 
+target_link_libraries(ProjectReality	${OGRE_LIBRARIES}
+										${OIS_LIBRARIES}
+										${OGRE_Overlay_LIBRARIES}
+										${OCULUS_SDK_LIBRARIES}
+										${Boost_SYSTEM_LIBRARY}
+										${Boost_THREAD_LIBRARY}
+										${Boost_PROGRAM_OPTIONS_LIBRARY}
 										${Boost_DATE_TIME_LIBRARY}
 										${ARUCO_LIB})
+
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
+
+INCLUDE( cmake/FindLibRocket.cmake )
+target_link_libraries(ProjectReality ${ROCKET_LIBRARIES})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
-
-# post-build copy for win32
-if(WIN32 AND NOT MINGW)
-  add_custom_command( TARGET ProjectReality POST_BUILD
-    COMMAND copy \"$(TargetPath)\" . )
-endif(WIN32 AND NOT MINGW)
 
 if(MINGW OR UNIX)
 	set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
@@ -159,27 +163,50 @@ install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
   DESTINATION .
   CONFIGURATIONS Release RelWithDebInfo)
 
-install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
-  ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
-  DESTINATION .
-  CONFIGURATIONS Debug)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
-  DESTINATION ./
-  CONFIGURATIONS Release RelWithDebInfo Debug)
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
-  DESTINATION ./
-  CONFIGURATIONS Release RelWithDebInfo Debug)
-
 if(WIN32)
   #FIX PROBLEM WITH VS2013
-  install(
-    FILES ${CMAKE_SOURCE_DIR}/dllfix/msvcp100d.dll
-    ${CMAKE_SOURCE_DIR}/dllfix/msvcr100d.dll ${CMAKE_SOURCE_DIR}/dllfix/cg.dll
-    DESTINATION .
-    CONFIGURATIONS Release RelWithDebInfo Debug)
+	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
+  ${CMAKE_SOURCE_DIR}/config/resources.cfg
+  DESTINATION ./Release
+  CONFIGURATIONS Release RelWithDebInfo)
 
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+  DESTINATION ./Release
+  CONFIGURATIONS Release RelWithDebInfo)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
+  DESTINATION ./Release
+  CONFIGURATIONS Release RelWithDebInfo)
+	
+
+  install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
+    DESTINATION ./Release
+    CONFIGURATIONS Release RelWithDebInfo)
+
+  install(FILES ${ARUCO_ROOT}/bin/Debug/aruco125.dll
+    DESTINATION ./Debug
+    CONFIGURATIONS Debug)
+
+  install(FILES ${OGRE_PLUGIN_DIR_REL}/OgreMain.dll
+	${OGRE_PLUGIN_DIR_REL}/OgreOverlay.dll
+    ${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
+    ${OGRE_PLUGIN_DIR_REL}/Plugin_CgProgramManager.dll
+    ${OGRE_PLUGIN_DIR_REL}/Plugin_OctreeSceneManager.dll
+    ${OGRE_PLUGIN_DIR_REL}/OIS.dll
+	$ENV{ROCKETDIR}/RocketCore.dll
+	$ENV{ROCKETDIR}/RocketControls.dll
+	$ENV{ROCKETDIR}/RocketDebugger.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_video248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_ml248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgproc248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_flann248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_features2d248.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_highgui248.dll
+    DESTINATION ./Release
+    CONFIGURATIONS Release RelWithDebInfo)
+	
 	install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
   ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
   DESTINATION ./Debug
@@ -187,27 +214,23 @@ if(WIN32)
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
   DESTINATION ./Debug
-  CONFIGURATIONS Release RelWithDebInfo Debug)
+  CONFIGURATIONS Debug)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
   DESTINATION ./Debug
-  CONFIGURATIONS Release RelWithDebInfo Debug)
-	
-  install(FILES ${ARUCO_ROOT}/bin/Release/aruco125.dll
-    DESTINATION .
-    CONFIGURATIONS Release RelWithDebInfo)
-	
-  install(FILES ${ARUCO_ROOT}/bin/Debug/aruco125.dll
-    DESTINATION ./Debug
-    CONFIGURATIONS Debug)
-
+  CONFIGURATIONS Debug)
+  
   install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
 	${OGRE_PLUGIN_DIR_DBG}/OgreOverlay_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/Plugin_OctreeSceneManager_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
+	$ENV{ROCKETDIR}/RocketCore_d.dll
+	$ENV{ROCKETDIR}/RocketControls_d.dll
+	$ENV{ROCKETDIR}/RocketDebugger_d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d248d.dll
+	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_video248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_ml248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core248d.dll
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgproc248d.dll
@@ -224,6 +247,7 @@ if(UNIX)
     RUNTIME DESTINATION .
     CONFIGURATIONS All)
 
+
   #unix need normal plugin file in debug
   install(FILES ${CMAKE_SOURCE_DIR}/config/plugins.cfg
     ${CMAKE_SOURCE_DIR}/config/resources.cfg
@@ -237,7 +261,6 @@ if(UNIX)
       /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
-
   elseif(EXISTS /usr/lib/OGRE) #where are plugin in ArchLinux
     install(FILES
       /usr/lib/OGRE/RenderSystem_GL.so.${OGRE_VERSION}
@@ -245,6 +268,7 @@ if(UNIX)
       /usr/lib/OGRE/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
-
+  else()
+    message(SEND_ERROR "Failed to find Ogre Plugins.")
   endif()
 endif(UNIX)

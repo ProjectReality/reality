@@ -10,15 +10,32 @@
 *
 */
 
-class Object : public Entity
+class Object : public Reality::Entity
 {
 public:
     using Entity::Entity;
+
+    /**
+     * @brief Object
+     * @param _name
+     * @param _mesh
+     * @param scene
+     */
     Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene);
+
     void updateData(aruco::Marker info);
 
 
+    /**
+     * @brief getPatt_id
+     * @return
+     */
     int getPatt_id() const;
+
+    /**
+     * @brief setPatt_id
+     * @param value
+     */
     void setPatt_id(int value);
 
 private:

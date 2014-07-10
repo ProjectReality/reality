@@ -1,0 +1,81 @@
+<rml>
+  <head>
+    <title>Demo</title>
+    <link type="text/template" href="window.rml" />
+    <style>
+      body
+      {
+      width: 800px;
+      height: 600px;
+
+      margin: auto;
+      }
+
+      div#content
+      {
+      text-align: left;
+      }
+    </style>
+  </head>
+  <body template="window">
+
+    <tabset>
+      <tab> Project </tab>
+      <panel>
+	<!-- <div>QR Code Detection <input type="radio" name="algo" id="algQR" value="QR" checked="checked"/></div> -->
+	<!-- <div>Pattern Detection <input type="radio" name="algo" id="algPat" value="Pat" /></div> -->
+
+	<div>
+	  Scène:
+
+	  <div width="320"><select id="select_scene">
+	      <option id="select_scene_roman" value="roman">Musée Gallo-Romain</option>
+	      <option id="select_scene_space" value="space">Space Odyssey</option>
+	      <option id="select_scene_epitech" value="epitech" selected>Demo Epitech</option>
+	  </select></div>
+
+	</div>
+	<div>
+	  Périphérique:
+	  <div width="500"><select id="select_periph">
+	      <option value="oculus1" selected>Oculus Rift DK1</option>
+	      <option value="oculus2">Oculus Rift DK2</option>
+	  </select></div>
+	</div>
+
+	<div>
+	  Algorithme:
+	  <div width="500"><select id="select_algo">
+	      <option value="trackpat" selected>Tracking Pattern</option>
+	      <option value="trackobj">Tracking Objets</option>
+	      <option value="movsim">Patterns et Mouvements Simples</option>
+	      <option value="movmat">Patterns et Mouvements par Matrices</option>
+	  </select></div>
+	</div>
+
+	<!-- <div> -->
+	<!--   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut gravida lorem. Ut turpis felis, pulvinar a semper sed, adipiscing id dolor. Pellentesque auctor nisi id magna consequat sagittis. Curabitur dapibus enim sit amet elit pharetra tincidunt feugiat nisl imperdiet. Ut convallis libero in urna ultrices accumsan. Donec sed odio eros. Donec viverra mi quis quam pulvinar at malesuada arcu rhoncus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In rutrum accumsan ultricies. Mauris vitae nisi at sem facilisis semper ac in est. -->
+	<!-- </div> -->
+
+
+      </panel>
+      
+      <tab> Graphics </tab>
+      <panel>
+	<!-- <input type="text" /> -->
+        <!-- <div id="menutop"> -->
+        <!--   <label for="patchoose">Pattern : </label> -->
+        <!--   <select id="patchoose" name="patchoose"> -->
+        <!--     <option value="qrcode" selected>Select Patern</option> -->
+        <!--     <option value="qrcode" >QR Code</option> -->
+        <!--     <option value="qrcode" >Magic</option> -->
+        <!--   </select> -->
+        <!-- </div> -->
+	<div> </div><!-- Attention, espace insécable -->
+        <div><button id="button_setogre" class="button">Ogre Settings</button></div>
+      </panel>
+    </tabset>
+
+    <button id="button_launch" class="butlaunch">Launch reality</button>    
+  </body>
+</rml>

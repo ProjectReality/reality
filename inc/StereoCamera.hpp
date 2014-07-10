@@ -9,7 +9,6 @@
 #include    <boost/filesystem.hpp>
 #include    <boost/thread.hpp>
 
-using namespace cv;
 
 #define LEFT 0
 #define RIGHT 1
@@ -22,8 +21,8 @@ Class to capture frame from the two camera
 class StereoCamera
 {
 private:
-    VideoCapture camera[2];
-    Mat frame[2];
+    cv::VideoCapture camera[2];
+    cv::Mat frame[2];
     bool camera_open;
     bool frame_available;
 
@@ -97,11 +96,11 @@ public:
 
 
     //! To be used in a thread
-        static void FrameWorker(VideoCapture cm, Mat *frame);
+        static void FrameWorker(cv::VideoCapture cm, cv::Mat *frame);
 
         static void camWorker(StereoCamera camera);
 
-        Mat* GetFrame();
+        cv::Mat* GetFrame();
     };
 
 #endif //_R_STEREO_CAM_HPP_

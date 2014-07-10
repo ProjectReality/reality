@@ -2,6 +2,8 @@
 
 #include "Light.hpp"
 
+namespace Reality {
+
 Light::Light(std::string _name, Ogre::SceneManager* scene) : Entity(_name)
 {
     this->scene = scene;
@@ -108,4 +110,6 @@ void Light::getTime()
     date today = day_clock::local_day();
 
     std::cout << "Today is " << to_simple_string(today) << std::endl;
+}
+
 }
