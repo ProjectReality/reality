@@ -54,6 +54,12 @@ public:
 	**/
 	void	buildObjectsList(std::string filename = "Data/db.xml");
 
+    /**
+     * @brief return the number of argument given in the command line
+     * @return number
+     */
+    int get_n_arg();
+
 };
 
 #endif

@@ -134,3 +134,8 @@ void Core::buildObjectsList(std::string filename)
 	else
 		std::cerr << "Core.init() : Cannot load the database File" << std::endl;
 }
+
+int Core::get_n_arg()
+{
+    return this->argc;
+}
