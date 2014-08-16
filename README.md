@@ -31,6 +31,9 @@ You also need the libboost_program_options.lib on windows you can find the binar
 
 just copy all the libboost_program_options*.lib where you had your others boost libs.
 
+
+For Google Test you have to build it of course, but be careful to build gtest-md not the other one.
+
 ## Env setup
 
 ```
@@ -42,11 +45,14 @@ OGRE_HOME=C:\Users\vayan\Libs\OgreSDK
 OPENCV_DIR=C:\Users\vayan\Libs\opencv\build
 ARUCO_ROOT=C:\Users\vayan\Libs\aruco\build
 ROCKETDIR=XX:\foo\libRocket\bin
+GTEST_ROOT=X:\Dev\gtest-1.7.0
 ```
 Maybe you don't need every env but I don't remember which one work :)
 
 
 # Linux
+
+If you install Google Test from the package mnger you need to build it too, it only download the source.
 
 ## Env setup
 

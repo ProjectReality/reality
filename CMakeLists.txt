@@ -87,7 +87,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   endif ()
   set(Boost_ADDITIONAL_VERSIONS "1.44" "1.44.0" "1.42" "1.42.0" "1.41.0" "1.41" "1.40.0" "1.40" "1.39.0" "1.39" "1.38.0" "1.38" "1.37.0" "1.37" )
   # Components that need linking (NB does not include header-only components like bind)
-  set(OGRE_BOOST_COMPONENTS thread date_time)
+  set(OGRE_BOOST_COMPONENTS thread date_time system program_options)
   find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} program_options QUIET)
   if (NOT Boost_FOUND)
     # Try again with the other type of libs
@@ -178,7 +178,14 @@ set(DEP
 if(build_tests)
     message("=================== Test Enabled ===================")
     enable_testing()
-    find_package(GTest REQUIRED)
+
+    if(WIN32)
+      find_package(GTest REQUIRED)
+      include_directories($ENV{GTEST_ROOT}/include)
+    else()
+      find_package(GTest REQUIRED)
+    endif()
+    
     file(GLOB to_remove_in_testing src/main.cpp)
     file(GLOB sources_test "test/*.cpp")
 
@@ -192,9 +199,7 @@ if(build_tests)
     )
 
     target_link_libraries(Testing_suite
-                                        gtest
-                                        pthread
-                                        gtest_main
+                                        ${GTEST_BOTH_LIBRARIES}
                                         ${DEP}
     )
     add_test(all-test Testing_suite)

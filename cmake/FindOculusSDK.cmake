@@ -5,12 +5,10 @@
 #  OCULUS_SDK_LIBRARIES    - List of libraries when using OculusSDK.
 #  OCULUS_SDK_FOUND        - True if OculusSDK found.
 
-IF (DEFINED ENV{OCULUS_SDK_ROOT_DIR})
-  SET(OCULUS_SDK_ROOT_DIR "$ENV{OCULUS_SDK_ROOT_DIR}")
-ENDIF()
-
 if(EXISTS "/usr/lib/OculusSDK") #sdk oculus if installed here
     set(OCULUS_SDK_ROOT_DIR "/usr/lib/OculusSDK")
+elseif(DEFINED ENV{OCULUS_SDK_ROOT_DIR})
+  SET(OCULUS_SDK_ROOT_DIR "$ENV{OCULUS_SDK_ROOT_DIR}")
 else()
     SET(OCULUS_SDK_ROOT_DIR
       "${OCULUS_SDK_ROOT_DIR}"
