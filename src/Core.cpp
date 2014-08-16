@@ -25,11 +25,6 @@ void Core::init()
 	render = new OgreRenderer(video_size, rift);
 }
 
-void Core::boost_test()
-{
-
-}
-
 void Core::start()
 {
 	render->getGui()->start();

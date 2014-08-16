@@ -54,11 +54,6 @@ public:
 	**/
 	void	buildObjectsList(std::string filename = "Data/db.xml");
 
-    /**
-     * @brief start all the test
-     */
-    void boost_test();
-
 };
 
 #endif
