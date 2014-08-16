@@ -9,11 +9,19 @@ include(cmake/FindLibRocket.cmake)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+#####################################
+# OS SPECIFIC STUFF
+#####################################
+
+## WINDOWS
+
 if(WIN32)
   set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
   set(OGRE_SAMPLES_INCLUDEPATH $ENV{OGRE_HOME}/Samples/include)
   link_libraries (winmm)
 endif(WIN32)
+
+## LINUX
 
 if(UNIX)
   if(EXISTS "/usr/lib/OculusSDK") #sdk oculus if installed here
@@ -40,6 +48,8 @@ if(UNIX)
   endif()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(UNIX)
+
+#####################################
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
   # CMake defaults to leaving CMAKE_BUILD_TYPE empty. This screws up
@@ -92,8 +102,20 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
-set(HEADER_TXML inc/TinyXML/tinystr.h inc/TinyXML/tinyxml.h)
-set(HEADER_REALITY "inc/*.hpp")
+
+
+
+
+
+
+################
+# BUILD TINY XML
+#################
+
+set(HEADER_TXML
+                inc/TinyXML/tinystr.h
+                inc/TinyXML/tinyxml.h
+)
 
 add_library(TinyXML
                     src/TinyXML/tinystr.cpp
@@ -102,12 +124,15 @@ add_library(TinyXML
                     src/TinyXML/tinyxmlparser.cpp ${HEADER_TXML}
 )
 
+##########
+
 file(GLOB sources
                     src/*.cpp
                     src/libRocketOgre/*.cpp
 )
 
 file(GLOB headers
+                  inc/*.hpp
                   inc/libRocketOgre/*.h
                   ${HEADER_REALITY}
                   ${HEADER_ARMA}
@@ -130,16 +155,35 @@ include_directories(
 set(testing_sources ${sources})
 set(main_sources    ${sources})
 
+###################
+# dependencies
+###################
+
+set(DEP
+        TinyXML
+        ${ROCKET_LIBRARIES}
+        ${OGRE_LIBRARIES}
+        ${OIS_LIBRARIES}
+        ${OGRE_Overlay_LIBRARIES}
+        ${OCULUS_SDK_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_THREAD_LIBRARY}
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_DATE_TIME_LIBRARY}
+        ${ARUCO_LIB}
+        ${OpenCV_LIBS}
+)
+
+
 if(build_tests)
     message("=================== Test Enabled ===================")
     enable_testing()
     find_package(GTest REQUIRED)
     file(GLOB to_remove_in_testing src/main.cpp)
-    file(GLOB sources_test test/*.cpp)
+    file(GLOB sources_test "test/*.cpp")
 
     list(REMOVE_ITEM testing_sources ${to_remove_in_testing})
     list(REMOVE_ITEM main_sources ${sources_test})
-
 
     add_executable(Testing_suite
           ${sources_test}
@@ -151,18 +195,7 @@ if(build_tests)
                                         gtest
                                         pthread
                                         gtest_main
-                                        TinyXML
-                                        ${ROCKET_LIBRARIES}
-                                        ${OGRE_LIBRARIES}
-                                        ${OIS_LIBRARIES}
-                                        ${OGRE_Overlay_LIBRARIES}
-                                        ${OCULUS_SDK_LIBRARIES}
-                                        ${Boost_SYSTEM_LIBRARY}
-                                        ${Boost_THREAD_LIBRARY}
-                                        ${Boost_PROGRAM_OPTIONS_LIBRARY}
-                                        ${Boost_DATE_TIME_LIBRARY}
-                                        ${ARUCO_LIB}
-                                        ${OpenCV_LIBS}
+                                        ${DEP}
     )
     add_test(all-test Testing_suite)
 endif()
@@ -180,23 +213,11 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality
-                                        TinyXML
-                                        ${ROCKET_LIBRARIES}
-                                        ${OGRE_LIBRARIES}
-                                        ${OIS_LIBRARIES}
-                                        ${OGRE_Overlay_LIBRARIES}
-                                        ${OCULUS_SDK_LIBRARIES}
-                                        ${Boost_SYSTEM_LIBRARY}
-                                        ${Boost_THREAD_LIBRARY}
-                                        ${Boost_PROGRAM_OPTIONS_LIBRARY}
-                                        ${Boost_DATE_TIME_LIBRARY}
-                                        ${ARUCO_LIB}
-)
+target_link_libraries(ProjectReality ${DEP})
 
-target_link_libraries(ProjectReality    optimized
-                                                    ${OpenCV_LIBS}
-)
+#############################################
+# INSTALL INSTRUCTIONS (F*** UGLY)
+############################################
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
