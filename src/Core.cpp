@@ -2,9 +2,11 @@
 #include	"Core.hpp"
 #include	"aruco.h"
 
-Core::Core()
+Core::Core(int iargc, char** iargv)
 {
 	rift = new VirtualOculus();
+    argc = iargc;
+    argv = iargv;
 }
 
 Core::~Core()
@@ -23,6 +25,10 @@ void Core::init()
 	render = new OgreRenderer(video_size, rift);
 }
 
+void Core::boost_test()
+{
+
+}
 
 void Core::start()
 {

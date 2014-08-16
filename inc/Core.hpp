@@ -24,9 +24,11 @@ private:
 	ARManager						ar;
 	std::map<int, Object*>			objects;
 	VirtualOculus					*rift;
+    int                             argc;
+    char**                          argv;
 
 public:
-	Core();
+    Core(int argc, char** argv);
 	~Core();
 
 public:
@@ -51,6 +53,12 @@ public:
 	* @param filename The name of the xml database.
 	**/
 	void	buildObjectsList(std::string filename = "Data/db.xml");
+
+    /**
+     * @brief start all the test
+     */
+    void boost_test();
+
 };
 
 #endif

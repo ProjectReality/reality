@@ -73,7 +73,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   endif ()
   set(Boost_ADDITIONAL_VERSIONS "1.44" "1.44.0" "1.42" "1.42.0" "1.41.0" "1.41" "1.40.0" "1.40" "1.39.0" "1.39" "1.38.0" "1.38" "1.37.0" "1.37" )
   # Components that need linking (NB does not include header-only components like bind)
-  set(OGRE_BOOST_COMPONENTS thread date_time system)
+  set(OGRE_BOOST_COMPONENTS thread date_time system unit_test_framework)
   find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} program_options QUIET)
   if (NOT Boost_FOUND)
     # Try again with the other type of libs
@@ -99,6 +99,7 @@ add_library(TinyXML src/TinyXML/tinystr.cpp
 
 file(GLOB ProjectReality_src
   "src/*.cpp"
+  "test/*.cpp"
   "src/libRocketOgre/*.cpp"
   "inc/libRocketOgre/*.h"
   ${HEADER_REALITY}
@@ -141,6 +142,7 @@ target_link_libraries(ProjectReality	${OGRE_LIBRARIES}
 										${Boost_THREAD_LIBRARY}
 										${Boost_PROGRAM_OPTIONS_LIBRARY}
 										${Boost_DATE_TIME_LIBRARY}
+                                                                                ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 										${ARUCO_LIB})
 
 target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
