@@ -9,16 +9,21 @@ TEST(CoreTest, ArgcCorrect) {
 }
 
 TEST(CoreTest, ArgcSameadLenArgv) {
-    char* argv[] {"foo", "bar", "foo"};
+    char* argv[] {"foo", "bar", "foo", '\0'};
     int len = 0;
 
     Core *c = new Core(3, argv);
 
     for (; argv[len]; len++) {
     }
-    ASSERT_TRUE(c->get_n_arg() == len);
+    ASSERT_EQ(c->get_n_arg(), len);
 }
 
-TEST(CoreTest, FOO) {
+TEST(CoreTest, InitCameraWorking) {
+       Core *c = new Core(3, 0);
+       c->init();
 
+       ASSERT_EQ(c->get_camera().isOpen(), true);
+       ASSERT_GT(c->get_camera().CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0), 0);
+       ASSERT_GT(c->get_camera().CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0), 0);
 }
