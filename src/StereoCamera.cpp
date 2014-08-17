@@ -123,6 +123,11 @@ cv::Mat* StereoCamera::GetFrame()
     return frame;
 }
 
+cv::VideoCapture StereoCamera::getCamera(int c)
+{
+    return camera[c];
+}
+
 bool StereoCamera::isOpen()
 {
     return camera_open;

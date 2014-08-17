@@ -66,7 +66,7 @@ public:
         @param value Value of the property
         @param camera To set if we want to change the property of one cam.
     */
-        void CameraSet(int param, double value, int camera_id = -1);
+    void CameraSet(int param, double value, int camera_id = -1);
 
     //! Wrapper of the VideoCapture::get of OpenCV
     /*!
@@ -92,18 +92,24 @@ public:
         - CV_CAP_PROP_RECTIFICATION Rectification flag for stereo cameras (note: only supported by DC1394 v 2.x backend currently)
         @param id of the camera
     */
-        double CameraGet(int param, int camera = -1);
+    double CameraGet(int param, int camera = -1);
 
 
     //! To be used in a thread
-        static void FrameWorker(cv::VideoCapture cm, cv::Mat *frame);
+    static void FrameWorker(cv::VideoCapture cm, cv::Mat *frame);
 
-        static void camWorker(StereoCamera camera);
+    static void camWorker(StereoCamera camera);
 
-        cv::Mat* GetFrame();
+    cv::Mat* GetFrame();
 
+    /**
+     * @brief getCameras
+     * @param c : ID of the camera (LEFT or RIGHT)
+     * @return
+     */
+    cv::VideoCapture getCamera(int c);
 
-        bool isOpen();
-    };
+    bool isOpen();
+};
 
 #endif //_R_STEREO_CAM_HPP_
