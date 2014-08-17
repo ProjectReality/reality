@@ -60,6 +60,12 @@ public:
      */
     int get_n_arg();
 
+    /**
+     * @brief get_cam
+     * @return
+     */
+    StereoCamera get_camera();
+
 };
 
 #endif

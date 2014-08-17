@@ -101,6 +101,9 @@ public:
         static void camWorker(StereoCamera camera);
 
         cv::Mat* GetFrame();
+
+
+        bool isOpen();
     };
 
 #endif //_R_STEREO_CAM_HPP_

@@ -139,3 +139,8 @@ int Core::get_n_arg()
 {
     return this->argc;
 }
+
+StereoCamera Core::get_camera()
+{
+    return camera;
+}
