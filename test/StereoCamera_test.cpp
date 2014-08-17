@@ -16,5 +16,12 @@ TEST(StereoCameraTest, OpenCamera) {
     StereoCamera *s = new StereoCamera();
 
     s->OpenCamera();
-    s->TestCamera();
+
+
+    ASSERT_GT(s->CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0), 0);
+    ASSERT_GT(s->CameraGet(CV_CAP_PROP_FRAME_WIDTH, 1), 0);
+    ASSERT_GT(s->CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0), 0);
+    ASSERT_GT(s->CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 1), 0);
+
+    EXPECT_EQ(s->getCamera(LEFT).isOpened(), s->getCamera(RIGHT).isOpened());
 }

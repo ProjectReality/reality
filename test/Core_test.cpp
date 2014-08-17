@@ -6,8 +6,6 @@ TEST(CoreTest, ArgcCorrect) {
     Core *c = new Core(3, 0);
 
     ASSERT_EQ(3, c->get_n_arg());
-
-    delete c;
 }
 
 TEST(CoreTest, ArgcSameadLenArgv) {
@@ -19,8 +17,6 @@ TEST(CoreTest, ArgcSameadLenArgv) {
     for (; argv[len]; len++) {
     }
     ASSERT_EQ(c->get_n_arg(), len);
-
-    delete c;
 }
 
 TEST(CoreTest, InitCameraWorking) {
