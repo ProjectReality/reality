@@ -8,6 +8,8 @@ TEST(VirtualOculusTest, InitCorrect) {
     v = v->Init();
 
     ASSERT_TRUE(v != NULL);
+
+    delete v;
 }
 
 TEST(VirtualOculusTest, FakeDataifNoOulus) {
@@ -22,4 +24,6 @@ TEST(VirtualOculusTest, FakeDataifNoOulus) {
         ASSERT_TRUE(v->getResolution()[0] == 800);
         ASSERT_TRUE(v->getResolution()[1] == 600);
     }
+
+    delete v;
 }
