@@ -34,10 +34,9 @@ void StereoCamera::OpenCamera()
 
 void StereoCamera::CloseCamera()
 {
-    if (!camera[LEFT].isOpened())
-        camera[LEFT].release();
-    if (!camera[RIGHT].isOpened())
-        camera[RIGHT].release();
+    camera[LEFT].release();
+    camera[RIGHT].release();
+
     camera_open = false;
     frame_available = false;
 }
