@@ -187,7 +187,7 @@ if(build_tests)
     endif()
     
     file(GLOB to_remove_in_testing src/main.cpp)
-    file(GLOB sources_test "test/*.cpp")
+    file(GLOB sources_test test/*.cpp)
 
     list(REMOVE_ITEM testing_sources ${to_remove_in_testing})
     list(REMOVE_ITEM main_sources ${sources_test})
