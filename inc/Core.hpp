@@ -24,9 +24,11 @@ private:
 	ARManager						ar;
 	std::map<int, Object*>			objects;
 	VirtualOculus					*rift;
+    int                             argc;
+    char**                          argv;
 
 public:
-	Core();
+    Core(int argc, char** argv);
 	~Core();
 
 public:
@@ -51,6 +53,19 @@ public:
 	* @param filename The name of the xml database.
 	**/
 	void	buildObjectsList(std::string filename = "Data/db.xml");
+
+    /**
+     * @brief return the number of argument given in the command line
+     * @return number
+     */
+    int get_n_arg();
+
+    /**
+     * @brief get_cam
+     * @return
+     */
+    StereoCamera get_camera();
+
 };
 
 #endif

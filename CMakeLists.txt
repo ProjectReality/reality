@@ -1,15 +1,27 @@
 cmake_minimum_required(VERSION 2.8)
 
+option(build_tests "Build all of Reality's unit tests." OFF)
+
 project(ProjectReality)
+
+include(cmake/FindLibRocket.cmake)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+#####################################
+# OS SPECIFIC STUFF
+#####################################
+
+## WINDOWS
 
 if(WIN32)
   set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
   set(OGRE_SAMPLES_INCLUDEPATH $ENV{OGRE_HOME}/Samples/include)
   link_libraries (winmm)
 endif(WIN32)
+
+## LINUX
 
 if(UNIX)
   if(EXISTS "/usr/lib/OculusSDK") #sdk oculus if installed here
@@ -36,6 +48,8 @@ if(UNIX)
   endif()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(UNIX)
+
+#####################################
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
   # CMake defaults to leaving CMAKE_BUILD_TYPE empty. This screws up
@@ -73,7 +87,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   endif ()
   set(Boost_ADDITIONAL_VERSIONS "1.44" "1.44.0" "1.42" "1.42.0" "1.41.0" "1.41" "1.40.0" "1.40" "1.39.0" "1.39" "1.38.0" "1.38" "1.37.0" "1.37" )
   # Components that need linking (NB does not include header-only components like bind)
-  set(OGRE_BOOST_COMPONENTS thread date_time system)
+  set(OGRE_BOOST_COMPONENTS thread date_time system program_options)
   find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} program_options QUIET)
   if (NOT Boost_FOUND)
     # Try again with the other type of libs
@@ -88,24 +102,42 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
-set(HEADER_TXML inc/TinyXML/tinystr.h inc/TinyXML/tinyxml.h)
-set(HEADER_REALITY "inc/*.hpp")
 
 
-add_library(TinyXML src/TinyXML/tinystr.cpp
-					src/TinyXML/tinyxml.cpp
-					src/TinyXML/tinyxmlerror.cpp
-					src/TinyXML/tinyxmlparser.cpp ${HEADER_TXML})
 
-file(GLOB ProjectReality_src
-  "src/*.cpp"
-  "src/libRocketOgre/*.cpp"
-  "inc/libRocketOgre/*.h"
-  ${HEADER_REALITY}
-  ${HEADER_ARMA}
-  ${HEADER_TXML}
-  )
 
+
+
+################
+# BUILD TINY XML
+#################
+
+set(HEADER_TXML
+                inc/TinyXML/tinystr.h
+                inc/TinyXML/tinyxml.h
+)
+
+add_library(TinyXML
+                    src/TinyXML/tinystr.cpp
+                    src/TinyXML/tinyxml.cpp
+                    src/TinyXML/tinyxmlerror.cpp
+                    src/TinyXML/tinyxmlparser.cpp ${HEADER_TXML}
+)
+
+##########
+
+file(GLOB sources
+                    src/*.cpp
+                    src/libRocketOgre/*.cpp
+)
+
+file(GLOB headers
+                  inc/*.hpp
+                  inc/libRocketOgre/*.h
+                  ${HEADER_REALITY}
+                  ${HEADER_ARMA}
+                  ${HEADER_TXML}
+)
 
 include_directories(
   ${OIS_INCLUDE_DIRS}
@@ -117,10 +149,63 @@ include_directories(
   "./inc/libRocketOgre"
   ${ARUCO_INCLUDE_DIR}
   ${ROCKET_INCLUDE_DIR}
-  ./inc)
+  ./inc
+)
 
-add_executable(ProjectReality WIN32 ${ProjectReality_src})
-target_link_libraries(ProjectReality TinyXML)
+set(testing_sources ${sources})
+set(main_sources    ${sources})
+
+###################
+# dependencies
+###################
+
+set(DEP
+        TinyXML
+        ${ROCKET_LIBRARIES}
+        ${OGRE_LIBRARIES}
+        ${OIS_LIBRARIES}
+        ${OGRE_Overlay_LIBRARIES}
+        ${OCULUS_SDK_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_THREAD_LIBRARY}
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_DATE_TIME_LIBRARY}
+        ${ARUCO_LIB}
+        ${OpenCV_LIBS}
+)
+
+
+if(build_tests)
+    message("=================== Test Enabled ===================")
+    enable_testing()
+
+    if(WIN32)
+      find_package(GTest REQUIRED)
+      include_directories($ENV{GTEST_ROOT}/include)
+    else()
+      find_package(GTest REQUIRED)
+    endif()
+    
+    file(GLOB to_remove_in_testing src/main.cpp)
+    file(GLOB sources_test test/*.cpp)
+
+    list(REMOVE_ITEM testing_sources ${to_remove_in_testing})
+    list(REMOVE_ITEM main_sources ${sources_test})
+
+    add_executable(Testing_suite
+          ${sources_test}
+          ${testing_sources}
+          ${headers}
+    )
+
+    target_link_libraries(Testing_suite
+                                        ${GTEST_BOTH_LIBRARIES}
+                                        ${DEP}
+    )
+    add_test(all-test Testing_suite)
+endif()
+
+add_executable(ProjectReality WIN32 ${main_sources} ${headers})
 
 set_target_properties(ProjectReality PROPERTIES DEBUG_POSTFIX _d)
 
@@ -133,20 +218,11 @@ if(WIN32)
   set_target_properties(ProjectReality PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:CONSOLE")
 endif(WIN32)
 
-target_link_libraries(ProjectReality	${OGRE_LIBRARIES}
-										${OIS_LIBRARIES}
-										${OGRE_Overlay_LIBRARIES}
-										${OCULUS_SDK_LIBRARIES}
-										${Boost_SYSTEM_LIBRARY}
-										${Boost_THREAD_LIBRARY}
-										${Boost_PROGRAM_OPTIONS_LIBRARY}
-										${Boost_DATE_TIME_LIBRARY}
-										${ARUCO_LIB})
+target_link_libraries(ProjectReality ${DEP})
 
-target_link_libraries(ProjectReality optimized ${OpenCV_LIBS})
-
-INCLUDE( cmake/FindLibRocket.cmake )
-target_link_libraries(ProjectReality ${ROCKET_LIBRARIES})
+#############################################
+# INSTALL INSTRUCTIONS (F*** UGLY)
+############################################
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
@@ -293,3 +369,6 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
     message(SEND_ERROR "Failed to find Ogre Plugins.")
   endif()
 endif(UNIX)
+
+
+

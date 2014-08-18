@@ -1,11 +1,11 @@
 #include	"Core.hpp"
 
-int   main()
+int   main(int argc, char** argv)
 {
-	Core core;
+    Core core(argc, argv);
 
 	core.init();
-	core.start();
+    core.start();
 
     return 0;
 }

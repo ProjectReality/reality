@@ -34,10 +34,9 @@ void StereoCamera::OpenCamera()
 
 void StereoCamera::CloseCamera()
 {
-    if (!camera[LEFT].isOpened())
-        camera[LEFT].release();
-    if (!camera[RIGHT].isOpened())
-        camera[RIGHT].release();
+    camera[LEFT].release();
+    camera[RIGHT].release();
+
     camera_open = false;
     frame_available = false;
 }
@@ -122,5 +121,15 @@ bool StereoCamera::FrameAvailable()
 cv::Mat* StereoCamera::GetFrame()
 {
     return frame;
+}
+
+cv::VideoCapture StereoCamera::getCamera(int c)
+{
+    return camera[c];
+}
+
+bool StereoCamera::isOpen()
+{
+    return camera_open;
 }
 

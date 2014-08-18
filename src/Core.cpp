@@ -2,9 +2,11 @@
 #include	"Core.hpp"
 #include	"aruco.h"
 
-Core::Core()
+Core::Core(int iargc, char** iargv)
 {
 	rift = new VirtualOculus();
+    argc = iargc;
+    argv = iargv;
 }
 
 Core::~Core()
@@ -22,7 +24,6 @@ void Core::init()
 	video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0); 
 	render = new OgreRenderer(video_size, rift);
 }
-
 
 void Core::start()
 {
@@ -132,4 +133,14 @@ void Core::buildObjectsList(std::string filename)
 	}
 	else
 		std::cerr << "Core.init() : Cannot load the database File" << std::endl;
+}
+
+int Core::get_n_arg()
+{
+    return this->argc;
+}
+
+StereoCamera Core::get_camera()
+{
+    return camera;
 }
