@@ -7,6 +7,8 @@
 
 TEST(OgreTest, CreatOgre) {
 
+	Ogre::LogManager* logMgr = OGRE_NEW Ogre::LogManager;
+	logMgr->createLog("DefaultLog", true, false, false);
 
 	Ogre::Root* ogre = new Ogre::Root();
 
@@ -17,6 +19,8 @@ TEST(OgreTest, CreatOgre) {
 
 TEST(OgreTest, CreatScene) {
 
+	Ogre::LogManager* logMgr = OGRE_NEW Ogre::LogManager;
+	logMgr->createLog("DefaultLog", true, false, false);
 
 	Ogre::Root* ogre = new Ogre::Root();
 	if (!ogre->restoreConfig()){

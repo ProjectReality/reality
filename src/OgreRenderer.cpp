@@ -12,12 +12,11 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
         std::cerr << "Fatal Error: OgreRenderer(): frame size can't be 0, bye" << std::endl;
         exit(11);
     }
-
+	Ogre::LogManager* logMgr = OGRE_NEW Ogre::LogManager;
+	logMgr->createLog("DefaultLog", true, false, false);
     // Ogre init
-    ogre = new Ogre::Root();
-    ui = new Gui(this);
-
-    Ogre::LogManager::getSingleton().getDefaultLog()->setDebugOutputEnabled(false);
+	ogre = new Ogre::Root();
+	ui = new Gui(this);
 
     if (!ogre->restoreConfig()){
         ogre->showConfigDialog();
