@@ -2,7 +2,9 @@
 
 Oculus::Oculus()
 {
-	System::Init(Log::ConfigureDefaultLog(LogMask_All));
+	Log *OVRLogger = Log::ConfigureDefaultLog(LogMask_None);
+	OVRLogger->DefaultLogOutput("", 0);
+	System::Init(OVRLogger);
 	pManager = *DeviceManager::Create();
 	pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
 	pHMD->GetDeviceInfo(&hmd);
