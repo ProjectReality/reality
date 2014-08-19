@@ -67,7 +67,7 @@ public:
      */
 	StereoCamera get_camera();
 
-	void handStartOgre();
+	void startOgre();
 
 };
 

@@ -12,8 +12,10 @@ Core::Core(int iargc, char** iargv)
 Core::~Core()
 {
 	ar.stop();
-	delete render;
-	delete rift;
+	if (render != NULL)
+		delete render;
+	if (rift != NULL)
+		delete rift;
 }
 
 
@@ -37,8 +39,7 @@ void Core::start()
 
     std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
 
-	render->startRealityRender();
-	camera.GrabFrames();
+	startOgre();
     buildObjectsList();
     for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
         ar.addPatternInList(it->second->getName(), it->first);
@@ -149,7 +150,7 @@ StereoCamera Core::get_camera()
     return camera;
 }
 
-void Core::handStartOgre()
+void Core::startOgre()
 {
 	render->startRealityRender();
 	camera.GrabFrames();

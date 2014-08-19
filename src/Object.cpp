@@ -3,13 +3,16 @@
 
 Object::Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene) : Entity(_name)
 {
-	this->setEnt(scene->createEntity(_name, _mesh));
-    this->setNode(scene->getRootSceneNode()->createChildSceneNode());
-    this->getEnt()->setCastShadows(true);
-	this->getNode()->attachObject(this->getEnt());
-	this->setScale(Ogre::Vector3(0.00015, 0.00015, 0.00015));
-	this->visible(false);
-    this->update();
+	if (scene != NULL)
+	{
+		this->setEnt(scene->createEntity(_name, _mesh));
+		this->setNode(scene->getRootSceneNode()->createChildSceneNode());
+		this->getEnt()->setCastShadows(true);
+		this->getNode()->attachObject(this->getEnt());
+		this->setScale(Ogre::Vector3(0.00015, 0.00015, 0.00015));
+		this->visible(false);
+		this->update();
+	}
 }
 
 void Object::updateData(aruco::Marker info)
