@@ -7,24 +7,29 @@ VirtualOculus::VirtualOculus()
 
 VirtualOculus::~VirtualOculus()
 {
+	pHMD.Clear();
+	pManager.Clear();
+	System::Destroy();
 }
 
 VirtualOculus* VirtualOculus::Init()
 {
     VirtualOculus *ocu;
-
-    System::Init(Log::ConfigureDefaultLog(LogMask_All));
-
+	System::Init(Log::ConfigureDefaultLog(LogMask_All));
     pManager = *DeviceManager::Create();
     pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
 
     if (pHMD)
-    {
-        pHMD->GetDeviceInfo(&hmd);
-        ocu = new Oculus();
+	{
+		pHMD.Clear();
+		pManager.Clear();
+		System::Destroy();
+		ocu = new Oculus();
     }
     else
         ocu = this;
+	if (ocu == NULL)
+		std::cerr << ">>>> Error of oculus Initialisation..." << std::endl;
     return ocu;
 }
 

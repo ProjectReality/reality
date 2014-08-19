@@ -32,3 +32,16 @@ TEST(CoreTest, InitCameraWorking) {
 
     delete c;
 }
+
+TEST(CoreTest, LoadDataBase) {
+	Core *c = new Core(3, 0);
+
+	c->init();
+	c->handStartOgre();
+
+	EXPECT_EQ(9, c->buildObjectsList("Data/db_test.xml"));
+
+	c->get_camera().CloseCamera();
+
+	delete c;
+}

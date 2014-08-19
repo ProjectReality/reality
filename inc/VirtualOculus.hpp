@@ -48,7 +48,7 @@ public:
     virtual HMDInfo getHMDInfo();
     virtual StereoConfig getStereo();
 
-private:
+protected:
     OVR::Ptr<DeviceManager> pManager;
     OVR::Ptr<HMDDevice> pHMD;
     HMDInfo hmd;

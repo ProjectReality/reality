@@ -51,8 +51,9 @@ public:
 	* @details This list is built from a "database file" in xml which contain the name of all asset but also many information 
 	* as their scale and thair initial rotation. 
 	* @param filename The name of the xml database.
+	* @return the number of object initialized
 	**/
-	void	buildObjectsList(std::string filename = "Data/db.xml");
+	int	buildObjectsList(std::string filename = "Data/db.xml");
 
     /**
      * @brief return the number of argument given in the command line
@@ -64,7 +65,9 @@ public:
      * @brief get_cam
      * @return
      */
-    StereoCamera get_camera();
+	StereoCamera get_camera();
+
+	void handStartOgre();
 
 };
 

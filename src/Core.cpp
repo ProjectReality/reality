@@ -13,6 +13,7 @@ Core::~Core()
 {
 	ar.stop();
 	delete render;
+	delete rift;
 }
 
 
@@ -36,8 +37,8 @@ void Core::start()
 
     std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
 
-    render->startRealityRender();
-    camera.GrabFrames();
+	render->startRealityRender();
+	camera.GrabFrames();
     buildObjectsList();
     for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
         ar.addPatternInList(it->second->getName(), it->first);
@@ -75,7 +76,7 @@ void Core::start()
 	}
 }
 
-void Core::buildObjectsList(std::string filename)
+int Core::buildObjectsList(std::string filename)
 {
     int patternCount = 0;
     TiXmlDocument doc(filename.c_str());
@@ -122,6 +123,7 @@ void Core::buildObjectsList(std::string filename)
 						(objects[id])->setScale(Ogre::Vector3(s, s, s));
 
 					}
+					patternCount++;
 				}
 				child = child->NextSiblingElement("object");
 			}
@@ -133,6 +135,8 @@ void Core::buildObjectsList(std::string filename)
 	}
 	else
 		std::cerr << "Core.init() : Cannot load the database File" << std::endl;
+	std::cout << patternCount << std::endl;
+	return patternCount;
 }
 
 int Core::get_n_arg()
@@ -143,4 +147,10 @@ int Core::get_n_arg()
 StereoCamera Core::get_camera()
 {
     return camera;
+}
+
+void Core::handStartOgre()
+{
+	render->startRealityRender();
+	camera.GrabFrames();
 }
