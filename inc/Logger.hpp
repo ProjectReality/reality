@@ -1,59 +1,47 @@
-/*************************************************************
-*************Projet reality : fichier de log******************
-*************Cree par Najeeth balasingam, login : balasi_a****
-*************************************************************/
-
 #ifndef LOGGER_HPP_
 #define LOGGER_HPP_
 
-
-#define LOGGER_START(MIN_PRIORITY, FILE) Logger::Start(MIN_PRIORITY, FILE);
-#define LOGGER_STOP() Logger::Stop();
-#define LOGGER_WRITE(PRIORITY, MESSAGE) Logger::Write(PRIORITY, MESSAGE);
-
-
 #include <string>
-#include <fstream>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/sources/global_logger_storage.hpp>
+#include <boost/log/sources/severity_channel_logger.hpp>
 
-using namespace std;
-
+namespace logging = boost::log;
+namespace sinks = boost::log::sinks;
+namespace src = boost::log::sources;
+namespace expr = boost::log::expressions;
+namespace attrs = boost::log::attributes;
+namespace keywords = boost::log::keywords;
 
 class Logger
 {
 public:
-	enum Priority
+	static const unsigned short	LOG_TIMED = 1;
+	static const unsigned short	LOG_LINEID = 2;
+	static const unsigned short	LOG_SCOPED = 4;
+	static const unsigned short	LOG_TAG = 8;
+
+	static enum severity_level
 	{
-		DEBUG,
-		CONFIG,
-		INFO,
-		WARNING,
-		ERROR
+		debug,
+		normal,
+		info,
+		warning,
+		error,
+		fatal
 	};
 
-	static void Start(Priority minPriority, const string& logFile);
-	static void Stop();
-	static void Write(Priority priority, const string& message);
+	typedef boost::log::sources::severity_channel_logger_mt<
+		severity_level,     // the type of the severity level
+		std::string         // the type of the channel name
+	> reality_logger_mt;
 
-private:
-	Logger();
-	Logger(const Logger& logger) {}
-	Logger& operator = (const Logger& logger) {}
+//public:
+//	static reality_logger_mt reality_logger;
 
-	bool        active;
-	ofstream    fileStream;
-	Priority    minPriority;
-
-	static const string PRIORITY_NAMES[];
-	static Logger instance;
-};
-
-const string Logger::PRIORITY_NAMES[] =
-{
-	"DEBUG",
-	"CONFIG",
-	"INFO",
-	"WARNING",
-	"ERROR"
+public:
+	static void log(std::string msg);
 };
 
 #endif /*LOGGER_HPP_*/
