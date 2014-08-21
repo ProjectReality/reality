@@ -3,7 +3,6 @@
 
 int   main(int argc, char** argv)
 {
-	try {
 		Core core(argc, argv);
 
 		Logger::init();
@@ -13,7 +12,4 @@ int   main(int argc, char** argv)
 
 		core.init();
 		core.start();
-	}
-	catch (...) {}
-    return 0;
 }

@@ -27,7 +27,7 @@ void Gui::ProcessEvent(Rocket::Core::Event& event)
   // =======
   Rocket::Core::Element *elem = event.GetCurrentElement();
   string classname = elem->GetId().CString();
-  Logger::log("Processing event of %s, Value: %s", elem->GetClassNames().CString(), classname);
+  Logger::log("Processing event of %s, Value: %s", classname.c_str(), elem->GetClassNames().CString());
   if (classname == "button_launch" ) OgreContext->getGui()->stop();
   else if (classname == "button_setogre" ) 
     {
@@ -119,9 +119,9 @@ bool Gui::isExiting() {
 
 void Gui::stop()
 {
-    Logger::log("Sarting to stop ui rendering");
-    uialive = false;
-    mScene->getRootSceneNode()->setVisible(false);
+	Logger::log("Sarting to stop ui rendering");
+	uialive = false;
+	mScene->getRootSceneNode()->setVisible(false);
     //ogre->destroySceneManager(sceneUI);
 
     OgreContext->getWindow()->removeViewport(mViewport->getZOrder());

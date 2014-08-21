@@ -202,6 +202,5 @@ std::string Logger::getFullMsg(std::string msg, va_list vl)
 		}
 		pos = msg.find_first_of("%");
 	}
-
 	return (msg);
 }
