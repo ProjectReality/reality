@@ -37,6 +37,7 @@
 #include  "RocketFrameListener.h"
 #include  "Gui.hpp"
 #include  "aruco.h"
+#include  "Logger.hpp"
 
 class Gui; // forward declaration I <3 CPP
 

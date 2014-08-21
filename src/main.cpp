@@ -17,6 +17,7 @@ int   main(int argc, char** argv)
 	Logger::log_tag("Ceci est une info", "YannVaillant");
 	Logger::log_tag("Ceci est une info", "FilleAPoile");
 
+
 	core.init();
     core.start();
 

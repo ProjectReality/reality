@@ -16,10 +16,7 @@ VirtualOculus* VirtualOculus::Init()
 {
     VirtualOculus *ocu;
 
-	Log *OVRLogger = Log::ConfigureDefaultLog(LogMask_None);
-	OVRLogger->DefaultLogOutput("", 0);
-
-	System::Init(OVRLogger);
+	System::Init(Logger::log_OVR());
     pManager = *DeviceManager::Create();
     pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
 

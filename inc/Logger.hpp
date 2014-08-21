@@ -21,6 +21,9 @@
 #include <boost/log/sources/global_logger_storage.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 
+#include  <OgreLogManager.h>
+#include    <OVR.h>
+
 namespace logging = boost::log;
 namespace sinks = boost::log::sinks;
 namespace src = boost::log::sources;
@@ -52,9 +55,13 @@ public:
 	static void create_tag(std::string tag);
 	static void log(std::string msg, severity_level sev = info, std::string tag = "Global");
 	static void log_tag(std::string msg, std::string tag);
+	static void log_ogre();
+	static OVR::Log *log_OVR();
 
 public:
 	static bool isEnable;
+	static bool ogreEnable;
+	static bool OVREnable;
 	static std::vector<std::string> tag_vector;
 
 };

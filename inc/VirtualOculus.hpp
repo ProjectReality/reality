@@ -5,6 +5,8 @@
 #include    <array>
 #include    <OVR.h>
 
+#include "Logger.hpp"
+
 using namespace OVR;
 using namespace OVR::Util::Render;
 

@@ -1,6 +1,8 @@
 #include "Logger.hpp"
 
 bool Logger::isEnable = true;
+bool Logger::ogreEnable = false;
+bool Logger::OVREnable = false;
 std::vector<std::string> Logger::tag_vector;
 
 void Logger::init(bool active)
@@ -107,5 +109,35 @@ void Logger::log_tag(std::string msg, std::string tag)
 		reality_logger_mt reality_logger = getLogger();
 		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
 		BOOST_LOG_SEV(reality_logger, info) << msg;
+	}
+}
+
+void Logger::log_ogre()
+{
+	if (!ogreEnable)
+	{
+		Ogre::LogManager* logMgr = OGRE_NEW Ogre::LogManager;
+		logMgr->createLog("DefaultLog", true, false, false);
+	}
+	else
+	{
+		Ogre::LogManager* logMgr = OGRE_NEW Ogre::LogManager;
+		logMgr->createLog("DefaultLog", true, true, false);
+	}
+}
+
+OVR::Log *Logger::log_OVR()
+{
+	if (!OVREnable)
+	{
+		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_None);
+		OVRLogger->DefaultLogOutput("", 0);
+		return (OVRLogger);
+	}
+	else
+	{
+		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_All);
+		OVRLogger->DefaultLogOutput("", 0);
+		return (OVRLogger);
 	}
 }
