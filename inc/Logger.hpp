@@ -16,12 +16,8 @@
 #include <boost/log/sources/logger.hpp>
 
 #include <boost/log/support/date_time.hpp>
-
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/utility/setup/file.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
 
 namespace logging = boost::log;
 namespace sinks = boost::log::sinks;
@@ -33,11 +29,6 @@ namespace keywords = boost::log::keywords;
 class Logger
 {
 public:
-	static const unsigned short	LOG_TIMED = 1;
-	static const unsigned short	LOG_LINEID = 2;
-	static const unsigned short	LOG_SCOPED = 4;
-	static const unsigned short	LOG_TAG = 8;
-
 	static enum severity_level
 	{
 		debug,
@@ -47,16 +38,19 @@ public:
 		fatal
 	};
 
-	typedef boost::log::sources::severity_channel_logger_mt<
-		severity_level,     // the type of the severity level
-		std::string         // the type of the channel name
+	typedef boost::log::sources::severity_logger_mt<
+		severity_level     // the type of the severity level
 	> reality_logger_mt;
 
-//public:
-//	static reality_logger_mt reality_logger;
+private:
+	static reality_logger_mt getLogger(bool create = false);
 
 public:
-	static void log(std::string msg);
+	static void init();
+	static void create_tag(std::string tag);
+	static void log(std::string msg, severity_level sev = info, std::string tag = "Global");
+	static void log_tag(std::string msg, std::string tag);
+
 };
 
 // The formatting logic for the severity level
@@ -78,7 +72,10 @@ inline std::basic_ostream< CharT, TraitsT >& operator<< (
 		strm << static_cast< int >(lvl);
 	return strm;
 }
-
-
+//
+//namespace RealityLog
+//{
+//	Logger::reality_logger_mt reality_logger;
+//}
 
 #endif /*LOGGER_HPP_*/

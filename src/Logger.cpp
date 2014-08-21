@@ -1,30 +1,87 @@
 #include "Logger.hpp"
 
-void Logger::log(std::string msg)
+void Logger::init()
 {
-	logging::add_file_log("log/Global.log",
+	logging::add_file_log("log/All.log",
 		keywords::format = expr::stream
 		<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
-		<< "] [" << expr::format_named_scope("Scope", keywords::format = "%n (%f:%l)")
+		<< "] [" << expr::attr< std::string >("Tag")
 		<< "] <" << expr::attr< severity_level >("Severity")
 		<< "> " << expr::message
-		/*
-		keywords::format = expr::format("%1% [%2%] [%3%] <%4%> %5%")
-		% expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d, %H:%M:%S.%f")
-		% expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S")
-		% expr::format_named_scope("Scope", keywords::format = "%n (%f:%l)")
-		% expr::attr< severity_level >("Severity")
-		% expr::message
-		*/
 		);
+	logging::add_file_log("log/Global.log",
+		keywords::filter = expr::attr< std::string >("Tag") == "Global",
+		keywords::format = expr::stream
+		<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
+		<< "] [" << expr::attr< std::string >("Tag")
+		<< "] <" << expr::attr< severity_level >("Severity")
+		<< "> " << expr::message
+		);
+	logging::add_file_log("log/Debug.log",
+		keywords::filter = expr::attr< severity_level >("Severity") == debug,
+		keywords::format = expr::stream
+		<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
+		<< "] [" << expr::attr< std::string >("Tag")
+		<< "] " << expr::message
+		);
+	logging::add_file_log("log/Warning.log",
+		keywords::filter = expr::attr< severity_level >("Severity") == warning,
+		keywords::format = expr::stream
+		<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
+		<< "] [" << expr::attr< std::string >("Tag")
+		<< "] " << expr::message
+		);
+	logging::add_file_log("log/Error.log",
+		keywords::filter = expr::attr< severity_level >("Severity") == error,
+		keywords::format = expr::stream
+		<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
+		<< "] [" << expr::attr< std::string >("Tag")
+		<< "] " << expr::message
+		);
+	logging::add_file_log("log/Fatal.log",
+		keywords::filter = expr::attr< severity_level >("Severity") == fatal,
+		keywords::format = expr::stream
+		<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
+		<< "] [" << expr::attr< std::string >("Tag")
+		<< "] " << expr::message
+		);
+	getLogger(true);
+}
 
-	logging::add_common_attributes();
-	logging::core::get()->add_thread_attribute("Scope", attrs::named_scope());
+Logger::reality_logger_mt Logger::getLogger(bool create)
+{
+	static reality_logger_mt reality_logger;
 
+	if (create)
+	{
+		reality_logger.add_attribute("Uptime", attrs::timer());
+	}
 
-	reality_logger_mt slg; 
-	slg.add_attribute("Uptime", attrs::timer());
-	BOOST_LOG_SEV(slg, fatal) << msg;
-	BOOST_LOG_SEV(slg, fatal) << msg;
-	BOOST_LOG_SEV(slg, fatal) << msg;
+	return (reality_logger);
+}
+
+void Logger::log(std::string msg, severity_level sev, std::string tag)
+{
+	reality_logger_mt reality_logger = getLogger();
+	reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
+	BOOST_LOG_SEV(reality_logger, sev) << msg;
+}
+
+void Logger::create_tag(std::string tag)
+{
+	logging::add_file_log("log/tagged/" + tag + ".log",
+		keywords::filter = expr::attr< std::string >("Tag") == tag,
+		keywords::format = expr::stream
+		<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
+		//<< "] [" << attrs::constant< std::string >("Tag")
+		<< "] <" << expr::attr< severity_level >("Severity")
+		<< "> " << expr::message
+		);
+}
+
+void Logger::log_tag(std::string msg, std::string tag)
+{
+	reality_logger_mt reality_logger = getLogger();
+	reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
+	BOOST_LOG_SEV(reality_logger, info) << msg;
 }
