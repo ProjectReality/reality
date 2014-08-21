@@ -37,10 +37,10 @@ void Core::start()
 		return;
 	}
 
-    std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
+    Logger::log("UI Launcher stoped, launchin reality...", Logger::info);
 
 	startOgre();
-    buildObjectsList();
+	buildObjectsList();
     for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
         ar.addPatternInList(it->second->getName(), it->first);
 
@@ -96,7 +96,7 @@ int Core::buildObjectsList(std::string filename)
 					{
 						if (!child->FirstChildElement("board"))
 						{
-							std::cerr << "Core.cpp : Identifiant associé à une Board sans nom de board." << std::endl;
+							Logger::log_sev(Logger::error, "Core.cpp : Identifiant associé à une Board sans nom de board.");
 							exit(-1);
 						}
 						ar.addBoard(id, child->FirstChildElement("board")->GetText());
@@ -131,12 +131,11 @@ int Core::buildObjectsList(std::string filename)
 		}
 		else
 		{
-			std::cerr << "Core.init() : No root node found" << std::endl;
+			Logger::log_sev(Logger::fatal, "Core.init() : No root node found");
 		}
 	}
 	else
-		std::cerr << "Core.init() : Cannot load the database File" << std::endl;
-	std::cout << patternCount << std::endl;
+		Logger::log_sev(Logger::fatal, "Core.init() : Cannot load the database File");
 	return patternCount;
 }
 

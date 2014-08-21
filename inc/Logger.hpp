@@ -3,7 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <stdarg.h>
 #include <algorithm>
+#include <iostream>
 
 #include <boost/log/common.hpp>
 #include <boost/log/expressions.hpp>
@@ -53,10 +55,13 @@ private:
 public:
 	static void init(bool active = true);
 	static void create_tag(std::string tag);
-	static void log(std::string msg, severity_level sev = info, std::string tag = "Global");
-	static void log_tag(std::string msg, std::string tag);
+	static void log_tag_sev(std::string tag, severity_level sev, std::string msg, ...);
+	static void log_sev(severity_level sev, std::string msg, ...);
+	static void log(std::string msg, ...);
+	static void log_tag(std::string tag, std::string msg, ...);
 	static void log_ogre();
 	static OVR::Log *log_OVR();
+	static std::string getFullMsg(std::string msg, va_list vl);
 
 public:
 	static bool isEnable;

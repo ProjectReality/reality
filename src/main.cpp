@@ -3,23 +3,17 @@
 
 int   main(int argc, char** argv)
 {
-    Core core(argc, argv);
+	try {
+		Core core(argc, argv);
 
-	Logger::init();
-	Logger::log("Ceci est une erreur", Logger::error);
-	Logger::log("Ceci est une debug", Logger::debug);
-	Logger::log("Ceci est une warning", Logger::warning);
-	Logger::log("Ceci est une fatal", Logger::fatal);
+		Logger::init();
+		Logger::log("Initialisation of Reality");
+		Logger::log("Log Ogre is enable : %b", Logger::ogreEnable);
+		Logger::log("Log OVR is enable : %b", Logger::OVREnable);
 
-	Logger::create_tag("YannVaillant");
-
-	Logger::log("Ceci est une erreur", Logger::error, "YannVaillant");
-	Logger::log_tag("Ceci est une info", "YannVaillant");
-	Logger::log_tag("Ceci est une info", "FilleAPoile");
-
-
-	core.init();
-    core.start();
-
+		core.init();
+		core.start();
+	}
+	catch (...) {}
     return 0;
 }

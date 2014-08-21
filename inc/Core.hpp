@@ -7,6 +7,7 @@
 #include	"ARManager.hpp"
 #include    "Object.hpp"
 #include	"Utils.hpp"
+#include	"Logger.hpp"
 
 /**
 * @brief Core of the reality project.

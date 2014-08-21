@@ -69,7 +69,7 @@ Logger::reality_logger_mt Logger::getLogger(bool create)
 	return (reality_logger);
 }
 
-void Logger::log(std::string msg, severity_level sev, std::string tag)
+void Logger::log_tag_sev(std::string tag, severity_level sev, std::string msg, ...)
 {
 	if (isEnable)
 	{
@@ -79,8 +79,30 @@ void Logger::log(std::string msg, severity_level sev, std::string tag)
 		}
 		reality_logger_mt reality_logger = getLogger();
 		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
 		BOOST_LOG_SEV(reality_logger, sev) << msg;
 	}
+}
+
+void Logger::log_sev(severity_level sev, std::string msg, ...)
+{
+	va_list vl;
+	va_start(vl, msg);
+	msg = getFullMsg(msg, vl);
+	va_end(vl);
+	log_tag_sev("Global", sev, msg);
+}
+
+void Logger::log(std::string msg, ...)
+{
+	va_list vl;
+	va_start(vl, msg);
+	msg = getFullMsg(msg, vl);
+	va_end(vl);
+	log_tag_sev("Global", info, msg);
 }
 
 void Logger::create_tag(std::string tag)
@@ -98,7 +120,7 @@ void Logger::create_tag(std::string tag)
 	}
 }
 
-void Logger::log_tag(std::string msg, std::string tag)
+void Logger::log_tag(std::string tag, std::string msg, ...)
 {
 	if (isEnable)
 	{
@@ -108,6 +130,10 @@ void Logger::log_tag(std::string msg, std::string tag)
 		}
 		reality_logger_mt reality_logger = getLogger();
 		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
 		BOOST_LOG_SEV(reality_logger, info) << msg;
 	}
 }
@@ -140,4 +166,42 @@ OVR::Log *Logger::log_OVR()
 		OVRLogger->DefaultLogOutput("", 0);
 		return (OVRLogger);
 	}
+}
+
+std::string Logger::getFullMsg(std::string msg, va_list vl)
+{
+	int pos = msg.find_first_of('%');
+	while (pos != std::string::npos){
+		char c = msg.at(pos + 1);
+		std::ostringstream os;
+		switch (c)
+		{
+		case 's':
+			msg.replace(pos, 2, va_arg(vl, char *));
+			break;
+		case 'c':
+			os << va_arg(vl, char);
+			msg.replace(pos, 2, os.str());
+			break;
+		case 'f':
+			os << va_arg(vl, float);
+			msg.replace(pos, 2, os.str());
+			break;
+		case 'd':
+			os << va_arg(vl, double);
+			msg.replace(pos, 2, os.str());
+			break;
+		case 'i':
+			os << va_arg(vl, int);
+			msg.replace(pos, 2, os.str());
+			break;
+		case 'b':
+			os << va_arg(vl, bool);
+			msg.replace(pos, 2, os.str());
+			break;
+		}
+		pos = msg.find_first_of("%");
+	}
+
+	return (msg);
 }

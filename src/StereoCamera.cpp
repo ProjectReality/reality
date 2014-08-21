@@ -19,13 +19,13 @@ void StereoCamera::OpenCamera()
 
     if (!camera[LEFT].isOpened())
     {
-        std::cerr << "StereoCamera: OpenCamera() - Couldn't Open first Camera" << std::endl;
+		Logger::log_sev(Logger::error, "StereoCamera: OpenCamera() - Couldn't Open first Camera");
         exit(11);
     }
     if (!camera[RIGHT].isOpened())
     {
-        std::cerr << "StereoCamera: OpenCamera() - Couldn't Open second Camera" << std::endl <<
-        "StereoCamera: OpenCamera() - Mirroring the first camera" << std::endl;
+		Logger::log_sev(Logger::error, "StereoCamera: OpenCamera() - Couldn't Open second Camera");
+		Logger::log("StereoCamera: OpenCamera() - Mirroring the first camera");
         camera[RIGHT] = camera[LEFT];
     }
     camera_open = true;

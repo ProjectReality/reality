@@ -9,6 +9,7 @@
 #include    <boost/filesystem.hpp>
 #include    <boost/thread.hpp>
 
+#include	"Logger.hpp"
 
 #define LEFT 0
 #define RIGHT 1
