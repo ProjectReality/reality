@@ -99,6 +99,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   # Set up referencing of Boost
   include_directories(${Boost_INCLUDE_DIR})
   add_definitions(-DBOOST_ALL_NO_LIB)
+  ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
@@ -169,6 +170,10 @@ set(DEP
         ${Boost_SYSTEM_LIBRARY}
         ${Boost_THREAD_LIBRARY}
         ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_LOG_SETUP_LIBRARY}
+        ${Boost_LOG_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_CHRONO_LIBRARY}
         ${Boost_DATE_TIME_LIBRARY}
         ${ARUCO_LIB}
         ${OpenCV_LIBS}
