@@ -1,5 +1,7 @@
 #include "Logger.hpp"
 
+bool Logger::isEnable = true;
+
 void Logger::init(bool active)
 {
 	isEnable = active;

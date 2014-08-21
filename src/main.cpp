@@ -5,7 +5,7 @@ int   main(int argc, char** argv)
 {
     Core core(argc, argv);
 
-	Logger::init(true);
+	Logger::init();
 	Logger::log("Ceci est une erreur", Logger::error);
 	Logger::log("Ceci est une debug", Logger::debug);
 	Logger::log("Ceci est une warning", Logger::warning);

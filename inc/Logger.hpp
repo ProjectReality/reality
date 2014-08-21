@@ -29,7 +29,7 @@ namespace keywords = boost::log::keywords;
 class Logger
 {
 public:
-	static enum severity_level
+	enum severity_level
 	{
 		debug,
 		info,
@@ -46,12 +46,12 @@ private:
 	static reality_logger_mt getLogger(bool create = false);
 
 public:
-	static void init(bool active);
+	static void init(bool active = true);
 	static void create_tag(std::string tag);
 	static void log(std::string msg, severity_level sev = info, std::string tag = "Global");
 	static void log_tag(std::string msg, std::string tag);
 
-private:
+public:
 	static bool isEnable;
 
 };
