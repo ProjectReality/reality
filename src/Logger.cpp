@@ -2,7 +2,8 @@
 
 void Logger::init(bool active)
 {
-	if (RealityLog::isEnable)
+	isEnable = active;
+	if (isEnable)
 	{
 		logging::add_file_log("log/All.log",
 			keywords::format = expr::stream
@@ -65,7 +66,7 @@ Logger::reality_logger_mt Logger::getLogger(bool create)
 
 void Logger::log(std::string msg, severity_level sev, std::string tag)
 {
-	if (RealityLog::isEnable)
+	if (isEnable)
 	{
 		reality_logger_mt reality_logger = getLogger();
 		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
@@ -75,7 +76,7 @@ void Logger::log(std::string msg, severity_level sev, std::string tag)
 
 void Logger::create_tag(std::string tag)
 {
-	if (RealityLog::isEnable)
+	if (isEnable)
 	{
 		logging::add_file_log("log/tagged/" + tag + ".log",
 			keywords::filter = expr::attr< std::string >("Tag") == tag,
@@ -90,7 +91,7 @@ void Logger::create_tag(std::string tag)
 
 void Logger::log_tag(std::string msg, std::string tag)
 {
-	if (RealityLog::isEnable)
+	if (isEnable)
 	{
 		reality_logger_mt reality_logger = getLogger();
 		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));

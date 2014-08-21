@@ -26,11 +26,6 @@ namespace expr = boost::log::expressions;
 namespace attrs = boost::log::attributes;
 namespace keywords = boost::log::keywords;
 
-namespace RealityLog
-{
-	bool isEnable = true;
-}
-
 class Logger
 {
 public:
@@ -55,6 +50,9 @@ public:
 	static void create_tag(std::string tag);
 	static void log(std::string msg, severity_level sev = info, std::string tag = "Global");
 	static void log_tag(std::string msg, std::string tag);
+
+private:
+	static bool isEnable;
 
 };
 
