@@ -2,6 +2,8 @@
 #define LOGGER_HPP_
 
 #include <string>
+#include <vector>
+#include <algorithm>
 
 #include <boost/log/common.hpp>
 #include <boost/log/expressions.hpp>
@@ -53,6 +55,7 @@ public:
 
 public:
 	static bool isEnable;
+	static std::vector<std::string> tag_vector;
 
 };
 
