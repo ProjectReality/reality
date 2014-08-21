@@ -1,5 +1,8 @@
 #include "Logger.hpp"
 
+bool Logger::isEnable = true;
+std::vector<std::string> Logger::tag_vector;
+
 void Logger::init(bool active)
 {
 	isEnable = active;
@@ -68,6 +71,10 @@ void Logger::log(std::string msg, severity_level sev, std::string tag)
 {
 	if (isEnable)
 	{
+		if (tag != "Global" && find(tag_vector.begin(), tag_vector.end(), tag) == tag_vector.end())
+		{
+			create_tag(tag);
+		}
 		reality_logger_mt reality_logger = getLogger();
 		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
 		BOOST_LOG_SEV(reality_logger, sev) << msg;
@@ -93,6 +100,10 @@ void Logger::log_tag(std::string msg, std::string tag)
 {
 	if (isEnable)
 	{
+		if (tag != "Global" && find(tag_vector.begin(), tag_vector.end(), tag) == tag_vector.end())
+		{
+			create_tag(tag);
+		}
 		reality_logger_mt reality_logger = getLogger();
 		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
 		BOOST_LOG_SEV(reality_logger, info) << msg;
