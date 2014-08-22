@@ -168,6 +168,20 @@ OVR::Log *Logger::log_OVR()
 	}
 }
 
+void Logger::disableAll()
+{
+	bool Logger::isEnable = false;
+	bool Logger::ogreEnable = false;
+	bool Logger::OVREnable = false;
+}
+
+void Logger::enableAll()
+{
+	bool Logger::isEnable = true;
+	bool Logger::ogreEnable = true;
+	bool Logger::OVREnable = true;
+}
+
 std::string Logger::getFullMsg(std::string msg, va_list vl)
 {
 	int pos = msg.find_first_of('%');
@@ -180,7 +194,7 @@ std::string Logger::getFullMsg(std::string msg, va_list vl)
 			msg.replace(pos, 2, va_arg(vl, char *));
 			break;
 		case 'c':
-			os << va_arg(vl, char);
+			os << va_arg(vl, int);
 			msg.replace(pos, 2, os.str());
 			break;
 		case 'f':
@@ -196,7 +210,7 @@ std::string Logger::getFullMsg(std::string msg, va_list vl)
 			msg.replace(pos, 2, os.str());
 			break;
 		case 'b':
-			os << va_arg(vl, bool);
+			os << va_arg(vl, int);
 			msg.replace(pos, 2, os.str());
 			break;
 		}

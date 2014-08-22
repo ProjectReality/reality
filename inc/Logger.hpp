@@ -62,6 +62,8 @@ public:
 	static void log_ogre();
 	static OVR::Log *log_OVR();
 	static std::string getFullMsg(std::string msg, va_list vl);
+	static void enableAll();
+	static void disableAll();
 
 public:
 	static bool isEnable;
