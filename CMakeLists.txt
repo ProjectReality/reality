@@ -99,7 +99,9 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   # Set up referencing of Boost
   include_directories(${Boost_INCLUDE_DIR})
   add_definitions(-DBOOST_ALL_NO_LIB)
-  # ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+  if(UNIX)
+	ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+  endif()
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 

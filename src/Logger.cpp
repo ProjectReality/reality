@@ -75,6 +75,7 @@ void Logger::log_tag_sev(std::string tag, severity_level sev, std::string msg, .
 	{
 		if (tag != "Global" && find(tag_vector.begin(), tag_vector.end(), tag) == tag_vector.end())
 		{
+			tag_vector.push_back(tag);
 			create_tag(tag);
 		}
 		reality_logger_mt reality_logger = getLogger();
@@ -89,20 +90,26 @@ void Logger::log_tag_sev(std::string tag, severity_level sev, std::string msg, .
 
 void Logger::log_sev(severity_level sev, std::string msg, ...)
 {
-	va_list vl;
-	va_start(vl, msg);
-	msg = getFullMsg(msg, vl);
-	va_end(vl);
-	log_tag_sev("Global", sev, msg);
+	if (isEnable)
+	{
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
+		log_tag_sev("Global", sev, msg);
+	}
 }
 
 void Logger::log(std::string msg, ...)
 {
-	va_list vl;
-	va_start(vl, msg);
-	msg = getFullMsg(msg, vl);
-	va_end(vl);
-	log_tag_sev("Global", info, msg);
+	if (isEnable)
+	{
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
+		log_tag_sev("Global", info, msg);
+	}
 }
 
 void Logger::create_tag(std::string tag)
@@ -113,7 +120,6 @@ void Logger::create_tag(std::string tag)
 			keywords::filter = expr::attr< std::string >("Tag") == tag,
 			keywords::format = expr::stream
 			<< " [" << expr::format_date_time< attrs::timer::value_type >("Uptime", "%O:%M:%S.%f")
-			//<< "] [" << attrs::constant< std::string >("Tag")
 			<< "] <" << expr::attr< severity_level >("Severity")
 			<< "> " << expr::message
 			);
@@ -124,17 +130,11 @@ void Logger::log_tag(std::string tag, std::string msg, ...)
 {
 	if (isEnable)
 	{
-		if (tag != "Global" && find(tag_vector.begin(), tag_vector.end(), tag) == tag_vector.end())
-		{
-			create_tag(tag);
-		}
-		reality_logger_mt reality_logger = getLogger();
-		reality_logger.add_attribute("Tag", attrs::constant< std::string >(tag));
 		va_list vl;
 		va_start(vl, msg);
 		msg = getFullMsg(msg, vl);
 		va_end(vl);
-		BOOST_LOG_SEV(reality_logger, info) << msg;
+		log_tag_sev(tag, info, msg);
 	}
 }
 
@@ -170,16 +170,16 @@ OVR::Log *Logger::log_OVR()
 
 void Logger::disableAll()
 {
-	bool Logger::isEnable = false;
-	bool Logger::ogreEnable = false;
-	bool Logger::OVREnable = false;
+	isEnable = false;
+	ogreEnable = false;
+	OVREnable = false;
 }
 
 void Logger::enableAll()
 {
-	bool Logger::isEnable = true;
-	bool Logger::ogreEnable = true;
-	bool Logger::OVREnable = true;
+	isEnable = true;
+	ogreEnable = true;
+	OVREnable = true;
 }
 
 std::string Logger::getFullMsg(std::string msg, va_list vl)

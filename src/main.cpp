@@ -10,6 +10,11 @@ int   main(int argc, char** argv)
 		Logger::log("Log Ogre is enable : %b", Logger::ogreEnable);
 		Logger::log("Log OVR is enable : %b", Logger::OVREnable);
 
+		Logger::log_tag("Main msg", "This is a simple message tagged by the main");
+		Logger::log_tag_sev("Main msg", Logger::fatal, "This is a fatal message send by the main : %s", "vive Reality");
+		Logger::log_tag_sev("Main msg", Logger::fatal, "This is a fatal message send by the main : %s", "vive Reality");
+		Logger::log_tag_sev("Main msg", Logger::fatal, "This is a fatal message send by the main : %s", "vive Reality");
+
 		core.init();
 		core.start();
 }
