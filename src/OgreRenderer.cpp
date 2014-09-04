@@ -28,7 +28,6 @@ OgreRenderer::~OgreRenderer()
 {
 	ui->shutdown();
 	Ogre::Root::getSingleton().queueEndRendering();
-    delete ogre; // Apparently handle deletes for most ogre-related things.
 }
 
 void OgreRenderer::startRealityRender()
