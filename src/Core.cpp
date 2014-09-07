@@ -68,7 +68,7 @@ void Core::start()
 					objects[p.first]->visible(true);
 				}
 			}
-			render->loadCam(frame[0], frame[1]);
+			render->loadCam(frame[0], frame[0]);
 			boost::thread new_pic(&StereoCamera::camWorker, camera);
 		}
 		render->render();
