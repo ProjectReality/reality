@@ -358,11 +358,11 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
     DESTINATION .
     CONFIGURATIONS Debug)
 
-  if(EXISTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}) #where are plugin in ubuntu
+  if(EXISTS /usr/local/lib/OGRE) #where are plugin in ubuntu
     install(FILES
-      /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/RenderSystem_GL.so.${OGRE_VERSION}
-      /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_CgProgramManager.so.${OGRE_VERSION}
-      /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/OGRE-${OGRE_VERSION}/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
+      /usr/local/lib/OGRE/RenderSystem_GL.so.${OGRE_VERSION}
+      /usr/local/lib/OGRE/Plugin_CgProgramManager.so.${OGRE_VERSION}
+      /usr/local/lib/OGRE/Plugin_OctreeSceneManager.so.${OGRE_VERSION}
       DESTINATION .
       CONFIGURATIONS Release RelWithDebInfo Debug)
   elseif(EXISTS /usr/lib/OGRE) #where are plugin in ArchLinux
