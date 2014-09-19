@@ -87,7 +87,7 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   endif ()
   set(Boost_ADDITIONAL_VERSIONS "1.44" "1.44.0" "1.42" "1.42.0" "1.41.0" "1.41" "1.40.0" "1.40" "1.39.0" "1.39" "1.38.0" "1.38" "1.37.0" "1.37" )
   # Components that need linking (NB does not include header-only components like bind)
-  set(OGRE_BOOST_COMPONENTS thread date_time system program_options)
+  set(OGRE_BOOST_COMPONENTS thread date_time system program_options log_setup log filesystem chrono)
   find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} program_options QUIET)
   if (NOT Boost_FOUND)
     # Try again with the other type of libs
@@ -99,6 +99,9 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
   # Set up referencing of Boost
   include_directories(${Boost_INCLUDE_DIR})
   add_definitions(-DBOOST_ALL_NO_LIB)
+  if(UNIX)
+	ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+  endif()
   set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
@@ -169,6 +172,10 @@ set(DEP
         ${Boost_SYSTEM_LIBRARY}
         ${Boost_THREAD_LIBRARY}
         ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_LOG_SETUP_LIBRARY}
+        ${Boost_LOG_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_CHRONO_LIBRARY}
         ${Boost_DATE_TIME_LIBRARY}
         ${ARUCO_LIB}
         ${OpenCV_LIBS}

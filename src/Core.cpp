@@ -12,13 +12,16 @@ Core::Core(int iargc, char** iargv)
 Core::~Core()
 {
 	ar.stop();
-	delete render;
+	if (render != NULL)
+		delete render;
+	if (rift != NULL)
+		delete rift;
 }
 
 
 void Core::init()
 {
-	rift = rift->Init();
+    rift = rift->Init();
 	camera.OpenCamera();
 	video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
 	video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0); 
@@ -34,11 +37,10 @@ void Core::start()
 		return;
 	}
 
-    std::cout << "UI Launcher stoped, launchin reality..." << std::endl;
+    Logger::log("UI Launcher stoped, launchin reality...", Logger::info);
 
-    render->startRealityRender();
-    camera.GrabFrames();
-    buildObjectsList();
+	startOgre();
+	buildObjectsList();
     for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
         ar.addPatternInList(it->second->getName(), it->first);
 
@@ -68,14 +70,14 @@ void Core::start()
 					objects[p.first]->visible(true);
 				}
 			}
-			render->loadCam(frame[0], frame[0]);
+            render->loadCam(frame[0], frame[1]);
 			boost::thread new_pic(&StereoCamera::camWorker, camera);
 		}
 		render->render();
 	}
 }
 
-void Core::buildObjectsList(std::string filename)
+int Core::buildObjectsList(std::string filename)
 {
     int patternCount = 0;
     TiXmlDocument doc(filename.c_str());
@@ -94,7 +96,7 @@ void Core::buildObjectsList(std::string filename)
 					{
 						if (!child->FirstChildElement("board"))
 						{
-							std::cerr << "Core.cpp : Identifiant associé à une Board sans nom de board." << std::endl;
+							Logger::log_sev(Logger::error, "Core.cpp : Identifiant associé à une Board sans nom de board.");
 							exit(-1);
 						}
 						ar.addBoard(id, child->FirstChildElement("board")->GetText());
@@ -122,17 +124,19 @@ void Core::buildObjectsList(std::string filename)
 						(objects[id])->setScale(Ogre::Vector3(s, s, s));
 
 					}
+					patternCount++;
 				}
 				child = child->NextSiblingElement("object");
 			}
 		}
 		else
 		{
-			std::cerr << "Core.init() : No root node found" << std::endl;
+			Logger::log_sev(Logger::fatal, "Core.init() : No root node found");
 		}
 	}
 	else
-		std::cerr << "Core.init() : Cannot load the database File" << std::endl;
+		Logger::log_sev(Logger::fatal, "Core.init() : Cannot load the database File");
+	return patternCount;
 }
 
 int Core::get_n_arg()
@@ -143,4 +147,10 @@ int Core::get_n_arg()
 StereoCamera Core::get_camera()
 {
     return camera;
+}
+
+void Core::startOgre()
+{
+	render->startRealityRender();
+	camera.GrabFrames();
 }

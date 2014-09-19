@@ -12,12 +12,10 @@ OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
         std::cerr << "Fatal Error: OgreRenderer(): frame size can't be 0, bye" << std::endl;
         exit(11);
     }
-
+	Logger::log_ogre();
     // Ogre init
-    ogre = new Ogre::Root();
-    ui = new Gui(this);
-
-    Ogre::LogManager::getSingleton().getDefaultLog()->setDebugOutputEnabled(false);
+	ogre = new Ogre::Root();
+	ui = new Gui(this);
 
     if (!ogre->restoreConfig()){
         ogre->showConfigDialog();
@@ -30,7 +28,6 @@ OgreRenderer::~OgreRenderer()
 {
 	ui->shutdown();
 	Ogre::Root::getSingleton().queueEndRendering();
-    delete ogre; // Apparently handle deletes for most ogre-related things.
 }
 
 void OgreRenderer::startRealityRender()
@@ -69,8 +66,8 @@ void OgreRenderer::startRealityRender()
     // param used in the oculus cg program files
     pParamsLeft->setNamedConstant("HmdWarpParam", hmdwarp);
     pParamsRight->setNamedConstant("HmdWarpParam", hmdwarp);
-    pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
-    pParamsRight->setNamedConstant("LensCentre", 0.5f - (rift->getStereo().GetProjectionCenterOffset() / 2.0f));
+    pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 50.0f));
+    pParamsRight->setNamedConstant("LensCentre", 0.5f - (rift->getStereo().GetProjectionCenterOffset() / 50.0f));
 
     Ogre::CompositorPtr comp = Ogre::CompositorManager::getSingleton().getByName("OculusRight");
     comp->getTechnique(0)->getOutputTargetPass()->getPass(0)->setMaterialName("Ogre/Compositor/Oculus/Right");
@@ -128,7 +125,7 @@ void OgreRenderer::init_viewports()
 
 	for (size_t i = 0; i < 2; i++)
 	{
-		viewports[i] = window->addViewport(cameras[1], i, 0.5f * i, 0, 0.5f, 1.0f);
+		viewports[i] = window->addViewport(cameras[1], i, i == 0 ? 0.015f : 0.485f, 0, 0.5f, 1.0f);
 		viewports[i]->setBackgroundColour(g_defaultViewportColour);
 		viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0); //to hide some stuff between each viewport
 	}

@@ -5,6 +5,8 @@
 #include    <array>
 #include    <OVR.h>
 
+#include "Logger.hpp"
+
 using namespace OVR;
 using namespace OVR::Util::Render;
 
@@ -48,7 +50,7 @@ public:
     virtual HMDInfo getHMDInfo();
     virtual StereoConfig getStereo();
 
-private:
+protected:
     OVR::Ptr<DeviceManager> pManager;
     OVR::Ptr<HMDDevice> pHMD;
     HMDInfo hmd;

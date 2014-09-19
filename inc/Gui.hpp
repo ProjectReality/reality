@@ -4,6 +4,7 @@
 #include  "RenderInterfaceOgre3D.h"
 #include  "SystemInterfaceOgre3D.h"
 #include  "OgreRenderer.hpp"
+#include  "Logger.hpp"
 
 class OgreRenderer; // forward declaration I <3 CPP
 

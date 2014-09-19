@@ -27,7 +27,7 @@ void Gui::ProcessEvent(Rocket::Core::Event& event)
   // =======
   Rocket::Core::Element *elem = event.GetCurrentElement();
   string classname = elem->GetId().CString();
-  std::cout << "Processing event of " << elem->GetClassNames().CString() << ", Value: " << classname << std::endl;
+  Logger::log("Processing event of %s, Value: %s", classname.c_str(), elem->GetClassNames().CString());
   if (classname == "button_launch" ) OgreContext->getGui()->stop();
   else if (classname == "button_setogre" ) 
     {
@@ -110,7 +110,7 @@ void Gui::initRocket()
     mScene->addRenderQueueListener(this);
     mScene->addRenderQueueListener(mOverlaySystem);
 
-    std::cout << "Finish init rocket" << std::endl;
+    Logger::log("Finish init rocket");
 }
 
 bool Gui::isExiting() {
@@ -119,9 +119,9 @@ bool Gui::isExiting() {
 
 void Gui::stop()
 {
-    std::cout << "Sarting to stop ui rendering" << std::endl;
-    uialive = false;
-    mScene->getRootSceneNode()->setVisible(false);
+	Logger::log("Sarting to stop ui rendering");
+	uialive = false;
+	mScene->getRootSceneNode()->setVisible(false);
     //ogre->destroySceneManager(sceneUI);
 
     OgreContext->getWindow()->removeViewport(mViewport->getZOrder());
@@ -135,13 +135,13 @@ void Gui::start()
     uialive = true;
     while(uialive) {
         Ogre::WindowEventUtilities::messagePump();
-        OgreContext->getRoot()->renderOneFrame();
+		OgreContext->getRoot()->renderOneFrame();
 		if (OgreContext->getWindow()->isClosed() || !mFrameListener->isRunning()) {
 			exiting = true;
 			return;
 		}
-    }
-    std::cout << "out of ui rendering loop" << std::endl;
+	}
+	Logger::log("out of ui rendering loop");
 }
 
 void Gui::createFrameListener()
