@@ -4,16 +4,16 @@
 
 Core::Core(int iargc, char** iargv)
 {
-	rift = new VirtualOculus();
+    rift = new VirtualOculus();
     argc = iargc;
     argv = iargv;
 }
 
 Core::~Core()
 {
-	ar.stop();
-	if (render != NULL)
-		delete render;
+    ar.stop();
+    if (render != NULL)
+        delete render;
 	if (rift != NULL)
 		delete rift;
 }
