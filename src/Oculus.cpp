@@ -3,7 +3,7 @@
 Oculus::Oculus()
 {
 	Log *OVRLogger = Log::ConfigureDefaultLog(LogMask_None);
-	OVRLogger->DefaultLogOutput("", 0);
+	OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
 	ovr_Initialize();
 	System::Init(OVRLogger);
 	pHMD = ovrHmd_Create(0);
@@ -25,15 +25,15 @@ int* Oculus::getResolution()
 
 void Oculus::setDistordScale()
 {
-    getStereo().SetFullViewport(Viewport(0, 0, getHMDInfo().HResolution, getHMDInfo().VResolution));
+	/*getStereo().SetFullViewport(Viewport(0, 0, pHMD->Resolution.w, pHMD->Resolution.h));
     getStereo().SetStereoMode(Stereo_LeftRight_Multipass);
     getStereo().SetHMDInfo(getHMDInfo());
-    getStereo().SetDistortionFitPointVP(-1.f, 0.f);
+    getStereo().SetDistortionFitPointVP(-1.f, 0.f);*/
 }
 
 float Oculus::getDistordScale()
 {
-    return getStereo().GetDistortionScale();
+	return 1.7f;
 }
 
 ovrEyeRenderDesc* Oculus::getEyesParams()
