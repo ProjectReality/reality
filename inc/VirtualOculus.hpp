@@ -4,6 +4,7 @@
 #include    <iostream>
 #include    <array>
 #include    <OVR.h>
+#include    <../Src/Util/Util_Render_Stereo.h>
 
 #include "Logger.hpp"
 
@@ -45,14 +46,12 @@ public:
         virtual VirtualOculus *Init();
 
 
-    virtual OVR::Ptr<DeviceManager> getpManager();
-    virtual OVR::Ptr<HMDDevice> getpHMD();
+	virtual ovrHmd getpHMD();
     virtual HMDInfo getHMDInfo();
     virtual StereoConfig getStereo();
 
 protected:
-    OVR::Ptr<DeviceManager> pManager;
-    OVR::Ptr<HMDDevice> pHMD;
+	ovrHmd pHMD;
     HMDInfo hmd;
     StereoConfig stereo;
 };

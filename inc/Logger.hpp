@@ -23,8 +23,9 @@
 #include <boost/log/sources/global_logger_storage.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 
-#include  <OgreLogManager.h>
+#include    <OgreLogManager.h>
 #include    <OVR.h>
+#include    <../Src/Kernel/OVR_Log.h>
 
 namespace logging = boost::log;
 namespace sinks = boost::log::sinks;

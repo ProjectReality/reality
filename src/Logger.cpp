@@ -157,13 +157,13 @@ OVR::Log *Logger::log_OVR()
 	if (!OVREnable)
 	{
 		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_None);
-		OVRLogger->DefaultLogOutput("", 0);
+		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
 		return (OVRLogger);
 	}
 	else
 	{
 		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_All);
-		OVRLogger->DefaultLogOutput("", 0);
+		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
 		return (OVRLogger);
 	}
 }

@@ -8,7 +8,6 @@ VirtualOculus::VirtualOculus()
 VirtualOculus::~VirtualOculus()
 {
 	pHMD.Clear();
-	pManager.Clear();
 	System::Destroy();
 }
 
@@ -17,13 +16,11 @@ VirtualOculus* VirtualOculus::Init()
     VirtualOculus *ocu;
 
 	System::Init(Logger::log_OVR());
-    pManager = *DeviceManager::Create();
-    pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
+	pHMD = ovrHmd_Create(0);
 
     if (pHMD)
 	{
 		pHMD.Clear();
-		pManager.Clear();
 		System::Destroy();
 		ocu = new Oculus();
     }
@@ -61,7 +58,6 @@ StereoEyeParams* VirtualOculus::getEyesParams()
     return Eyes;
 }
 
-OVR::Ptr<DeviceManager> VirtualOculus::getpManager() { return pManager; }
-OVR::Ptr<HMDDevice> VirtualOculus::getpHMD() { return pHMD; }
+ovrHmd VirtualOculus::getpHMD() { return pHMD; }
 HMDInfo VirtualOculus::getHMDInfo() { return hmd; }
 StereoConfig VirtualOculus::getStereo() { return stereo; }
