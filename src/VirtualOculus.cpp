@@ -7,21 +7,22 @@ VirtualOculus::VirtualOculus()
 
 VirtualOculus::~VirtualOculus()
 {
-	pHMD.Clear();
-	System::Destroy();
+	ovrHmd_Destroy(pHMD); 
+	ovr_Shutdown();
 }
 
 VirtualOculus* VirtualOculus::Init()
 {
     VirtualOculus *ocu;
 
+	ovr_Initialize();
 	System::Init(Logger::log_OVR());
 	pHMD = ovrHmd_Create(0);
 
     if (pHMD)
 	{
-		pHMD.Clear();
-		System::Destroy();
+		ovrHmd_Destroy(pHMD);
+		ovr_Shutdown();
 		ocu = new Oculus();
     }
     else
@@ -50,7 +51,7 @@ float VirtualOculus::getDistordScale()
     return 1.7f;
 }
 
-StereoEyeParams* VirtualOculus::getEyesParams()
+ovrEyeRenderDesc* VirtualOculus::getEyesParams()
 {
     static StereoEyeParams Eyes[2];
     //TODO
@@ -59,5 +60,4 @@ StereoEyeParams* VirtualOculus::getEyesParams()
 }
 
 ovrHmd VirtualOculus::getpHMD() { return pHMD; }
-HMDInfo VirtualOculus::getHMDInfo() { return hmd; }
 StereoConfig VirtualOculus::getStereo() { return stereo; }

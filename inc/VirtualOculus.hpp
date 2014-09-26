@@ -5,6 +5,7 @@
 #include    <array>
 #include    <OVR.h>
 #include    <../Src/Util/Util_Render_Stereo.h>
+#include    <../Src/OVR_CAPI.h>
 
 #include "Logger.hpp"
 
@@ -35,7 +36,7 @@ public:
 
     virtual int* getResolution();
 
-    virtual StereoEyeParams* getEyesParams();
+	virtual ovrEyeRenderDesc* getEyesParams();
 
 
     //! Init and return correct oculus
@@ -47,12 +48,10 @@ public:
 
 
 	virtual ovrHmd getpHMD();
-    virtual HMDInfo getHMDInfo();
     virtual StereoConfig getStereo();
 
 protected:
 	ovrHmd pHMD;
-    HMDInfo hmd;
     StereoConfig stereo;
 };
 

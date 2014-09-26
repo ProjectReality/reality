@@ -4,24 +4,22 @@ Oculus::Oculus()
 {
 	Log *OVRLogger = Log::ConfigureDefaultLog(LogMask_None);
 	OVRLogger->DefaultLogOutput("", 0);
+	ovr_Initialize();
 	System::Init(OVRLogger);
-	pManager = *DeviceManager::Create();
-	pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
-	pHMD->GetDeviceInfo(&hmd);
+	pHMD = ovrHmd_Create(0);
     setDistordScale();
 }
 
 Oculus::~Oculus()
 {
-	pHMD.Clear();
-	pManager.Clear();
-	System::Destroy();
+	ovrHmd_Destroy(pHMD);
+	ovr_Shutdown();
 }
 
 int* Oculus::getResolution()
 {
-    res[0] = getHMDInfo().HResolution;
-    res[1] = getHMDInfo().VResolution;
+	res[0] = pHMD->Resolution.w;
+	res[1] = pHMD->Resolution.h;
     return res;
 }
 
@@ -38,10 +36,10 @@ float Oculus::getDistordScale()
     return getStereo().GetDistortionScale();
 }
 
-StereoEyeParams* Oculus::getEyesParams()
+ovrEyeRenderDesc* Oculus::getEyesParams()
 {
-    Eyes[0] = getStereo().GetEyeRenderParams(StereoEye_Left);
-    Eyes[1] = getStereo().GetEyeRenderParams(StereoEye_Right);
+	Eyes[0] = ovrHmd_GetRenderDesc(pHMD, ovrEye_Left, eyeFov[0]);
+	Eyes[1] = ovrHmd_GetRenderDesc(pHMD, ovrEye_Left, eyeFov[1]);
 
     return Eyes;
 }
