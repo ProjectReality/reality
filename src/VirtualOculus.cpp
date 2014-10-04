@@ -51,13 +51,5 @@ float VirtualOculus::getDistordScale()
     return 1.7f;
 }
 
-ovrEyeRenderDesc* VirtualOculus::getEyesParams()
-{
-    static StereoEyeParams Eyes[2];
-    //TODO
-
-    return Eyes;
-}
-
 ovrHmd VirtualOculus::getpHMD() { return pHMD; }
 //StereoConfig VirtualOculus::getStereo() { return stereo; }

@@ -4,9 +4,9 @@
 #include    <iostream>
 #include    <array>
 #include    <OVR.h>
-#include    <../Src/OVR_CAPI.h>
 
 #include "Logger.hpp"
+#include "IGlasses.hpp"
 
 using namespace OVR;
 //using namespace OVR::Util::Render;
@@ -23,7 +23,7 @@ Implement all SDK
 
 */
 
-class VirtualOculus
+class VirtualOculus : public IGlasses
 {
 public:
     VirtualOculus();
@@ -34,9 +34,6 @@ public:
     virtual float getDistordScale();
 
     virtual int* getResolution();
-
-	virtual ovrEyeRenderDesc* getEyesParams();
-
 
     //! Init and return correct oculus
     /*!

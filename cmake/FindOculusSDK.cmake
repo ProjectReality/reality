@@ -37,13 +37,13 @@ ENDIF()
 
 # Look for the library.
 FIND_LIBRARY(OCULUS_SDK_LIBRARY NAMES libovr ovr HINTS ${OCULUS_SDK_ROOT_DIR}
-  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32
+  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32/VS2013
   ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Release/${OCULUS_SDK_LIB_ARCH})
 
 # This will find release lib on Linux if no debug is available - on Linux this is no problem and avoids
 # having to compile in debug when not needed
 FIND_LIBRARY(OCULUS_SDK_LIBRARY_d NAMES libovr${CMAKE_DEBUG_POSTFIX} ovr${CMAKE_DEBUG_POSTFIX} ovr HINTS
-  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32
+  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32/VS2013
   ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Debug/${OCULUS_SDK_LIB_ARCH}
   ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Release/${OCULUS_SDK_LIB_ARCH})
 
