@@ -4,11 +4,10 @@
 class IGlasses
 {
 public:
-    IGlasses();
-    ~IGlasses();
-
-private:
-
+	virtual IGlasses*   Init() = 0;
+	virtual void        setDistordScale() = 0;
+	virtual float       getDistordScale() = 0;
+	virtual int*        getResolution() = 0;
 };
 
 
