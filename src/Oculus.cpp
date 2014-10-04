@@ -5,7 +5,7 @@ Oculus::Oculus()
 	Log *OVRLogger = Log::ConfigureDefaultLog(LogMask_None);
 	OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
 	ovr_Initialize();
-	System::Init(OVRLogger);
+	//OVR::System::Init(OVRLogger);
 	pHMD = ovrHmd_Create(0);
     setDistordScale();
 }

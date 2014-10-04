@@ -16,7 +16,7 @@ VirtualOculus* VirtualOculus::Init()
     VirtualOculus *ocu;
 
 	ovr_Initialize();
-	System::Init(Logger::log_OVR());
+	//System::Init(Logger::log_OVR());
 	pHMD = ovrHmd_Create(0);
 
     if (pHMD)
@@ -60,4 +60,4 @@ ovrEyeRenderDesc* VirtualOculus::getEyesParams()
 }
 
 ovrHmd VirtualOculus::getpHMD() { return pHMD; }
-StereoConfig VirtualOculus::getStereo() { return stereo; }
+//StereoConfig VirtualOculus::getStereo() { return stereo; }

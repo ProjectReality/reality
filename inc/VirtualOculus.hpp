@@ -4,13 +4,12 @@
 #include    <iostream>
 #include    <array>
 #include    <OVR.h>
-#include    <../Src/Util/Util_Render_Stereo.h>
 #include    <../Src/OVR_CAPI.h>
 
 #include "Logger.hpp"
 
 using namespace OVR;
-using namespace OVR::Util::Render;
+//using namespace OVR::Util::Render;
 
 //! VirtualOculus
 /*!
@@ -48,11 +47,11 @@ public:
 
 
 	virtual ovrHmd getpHMD();
-    virtual StereoConfig getStereo();
+    //virtual StereoConfig getStereo();
 
 protected:
 	ovrHmd pHMD;
-    StereoConfig stereo;
+   // StereoConfig stereo;
 };
 
 #endif // _R_VIRTUAL_OCULUS_HPP_
