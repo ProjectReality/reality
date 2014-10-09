@@ -55,7 +55,7 @@ class Gui; // forward declaration I <3 CPP
      * @param camsize
      * @param rift
      */
-    OgreRenderer(double camsize[2], VirtualOculus *rift);
+	 OgreRenderer(double camsize[2], IGlasses *rift);
 
     ~OgreRenderer();
 
@@ -191,7 +191,7 @@ class Gui; // forward declaration I <3 CPP
     void startRealityRender();
 
 private:
-    VirtualOculus               *rift;
+	IGlasses	               *rift;
     double                      cam_frame_size[2];
 
     Ogre::Root*                 ogre;

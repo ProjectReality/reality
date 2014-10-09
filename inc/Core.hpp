@@ -24,7 +24,7 @@ private:
 	double							video_size[2];
 	ARManager						ar;
 	std::map<int, Object*>			objects;
-	VirtualOculus					*rift;
+	IGlasses						*rift;
     int                             argc;
     char**                          argv;
 

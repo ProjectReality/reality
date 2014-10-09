@@ -1,6 +1,6 @@
 #include "OgreRenderer.hpp"
 
-OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
+OgreRenderer::OgreRenderer(double camsize[2], IGlasses *rift)
 {
     this->rift = rift;
 
