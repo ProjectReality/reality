@@ -1,6 +1,10 @@
 #ifndef _R_IGLASSES_HPP_
 #define _R_IGLASSES_HPP_
 
+#if WIN32
+	#pragma comment(lib, "Ws2_32.lib")
+#endif
+
 class IGlasses
 {
 public:

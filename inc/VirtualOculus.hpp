@@ -1,6 +1,5 @@
 #ifndef _R_VIRTUAL_OCULUS_HPP_
 #define _R_VIRTUAL_OCULUS_HPP_
-
 #include    <iostream>
 #include    <array>
 #include    <OVR.h>
