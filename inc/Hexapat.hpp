@@ -7,13 +7,14 @@
 
 /**
  * @brief Class for Hexagonal pattern
- * @details Handle all the lights in Ogre, shadow settings, and
- * light placement
+ * @details This class is designed for reality project to create hexagonal pattern built from 6 simple pattern.
+ * This is to permit to walk and turn around it.
  */
 
 class Hexapat
 {
 private:
+	int id;
 	int	hexa[6];
 
 public:
@@ -22,7 +23,8 @@ public:
 	* @details Construct an Hexapat object for detextion
 	* @param _hexa[] the array of six pattern int the order
 	**/
-	Hexapat(int _hexa[6]);
+	Hexapat(int _id, int _hexa[6]);
+
 	/**
 	* @brief Detructor of the Hexapat
 	**/
