@@ -46,7 +46,8 @@ void Core::start()
 
     ar.start();
     Reality::Light    sun("sun", render->getScene());
-    sun.createSun();
+	sun.createSun();
+	render->getGui()->createFrameListener();
     while (render->isAlive())
     {
         if (render->getShutDown())
@@ -73,7 +74,7 @@ void Core::start()
             render->loadCam(frame[0], frame[1]);
             boost::thread new_pic(&StereoCamera::camWorker, camera);
         }
-        render->render();
+		render->render();
     }
 }
 
