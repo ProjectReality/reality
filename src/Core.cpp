@@ -47,7 +47,6 @@ void Core::start()
     ar.start();
     Reality::Light    sun("sun", render->getScene());
 	sun.createSun();
-	render->getGui()->createFrameListener();
     while (render->isAlive())
     {
         if (render->getShutDown())
