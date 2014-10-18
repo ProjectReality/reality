@@ -2,8 +2,9 @@
 #define __HEXAPAT_HPP__
 
 #include    <string>
+#include    <map>
 
-#include    "ARManager.hpp"
+#include	"aruco.h"
 
 /**
  * @brief Class for Hexagonal pattern
