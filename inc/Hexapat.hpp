@@ -15,15 +15,17 @@ class Hexapat
 {
 private:
 	int id;
-	int	hexa[6];
+	int	basePatt;
 
 public:
 	/**
 	* @brief Contructor for Hexapat
 	* @details Construct an Hexapat object for detextion
-	* @param _hexa[] the array of six pattern int the order
+	* @param _basePatt the id of the first of the six pattern (all other must have the five next value 
+	* eg : 
+	* _basePatt = 101, the other pattern will be between 102 and 106 included).
 	**/
-	Hexapat(int _id, int _hexa[6]);
+	Hexapat(int _id, int _basePatt);
 
 	/**
 	* @brief Detructor of the Hexapat
