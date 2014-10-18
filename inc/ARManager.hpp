@@ -26,7 +26,7 @@
 #include	"TinyXML/tinyxml.h"
 #include	"Object.hpp"
 #include	"aruco.h"
-
+#include    "Hexapat.hpp"
 
 /**
 * @brief Class for the tracking of Marker
@@ -65,6 +65,7 @@ private:
 	std::map<int, std::string>						listObjects; /**< This is a list of mesh name linked to their Marker Id. */
 	std::map<int, aruco::Marker>					markerFound; /**< The map markerFound is a map of all found marker in one cycle of the tracking routine. */
 	std::vector<t_board>							boards;
+	std::vector<Hexapat>							hexapats;
 	bool											frameChange; /**< This boolean is used in the tracking routine to know if the frame is a new one. */
 	bool											motionFrameChange;
 	bool											markerChange; /**< This boolean is used to signified that the actual fram was analized. */
@@ -217,6 +218,13 @@ public:
 	* @param boardName The file name of the board parameters
 	**/
 	void		addBoard(int id, const char* boardName);
+
+	/**
+	* @brief This function create the parameter for the detection of specific Hexapat
+	* @param id The identifier of the board
+	* @param basepat The name of the first simple pattern of the Hexapat
+	**/
+	void		addHexapat(int id, int basepat);
 
 	/**
 	* @brief This function compute id this marker is in motion, if it's false send the previous position to avoir flickering

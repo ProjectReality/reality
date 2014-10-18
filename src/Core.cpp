@@ -92,7 +92,7 @@ int Core::buildObjectsList(std::string filename)
                 if (child->FirstChildElement("pattern") && child->FirstChildElement("asset"))
                 {
                     int id = Utils::c_to_i(child->FirstChildElement("pattern")->GetText());
-                    if (id > 1023)
+                    if (id > 1023 && id < 2048)
                     {
                         if (!child->FirstChildElement("board"))
                         {
@@ -101,6 +101,15 @@ int Core::buildObjectsList(std::string filename)
                         }
                         ar.addBoard(id, child->FirstChildElement("board")->GetText());
                     }
+					else if (id > 2048)
+					{
+						if (!child->FirstChildElement("pat"))
+						{
+							Logger::log_sev(Logger::error, "Core.cpp : Identifiant associé à une Hexapat sans numero de pattern simple (balise <pat>.");
+							exit(-1);
+						}
+						ar.addHexapat(id, Utils::c_to_i(child->FirstChildElement("pat")->GetText()));
+					}
                     objects[id] = new Object(child->FirstChildElement("pattern")->GetText(), child->FirstChildElement("asset")->GetText(), render->getScene());
                     if (child->FirstChildElement("avisible"))
                         (objects[id])->setAVisible(true);

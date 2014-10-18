@@ -13,12 +13,12 @@ std::map<int, aruco::Marker>	Hexapat::detect(std::map<int, aruco::Marker> marker
 
 	for (int i = 0; i < 6; i++)
 	{
-		if ((tmpMarker = markerFound.find(basePatt +i)) != markerFound.end())
+		if ((tmpMarker = markerFound.find(basePatt + i)) != markerFound.end())
 		{
 			if (!isFound)
 			{
 				isFound = true;
-				tmpMarker->second.Rvec.at<float>(0) += 90 * i;
+				tmpMarker->second.Rvec.at<float>(0) += 60 * i;
 			}
 			else
 			{
