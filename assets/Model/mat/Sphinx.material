@@ -1,0 +1,19 @@
+material SphinxMat
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.360784 0.360784 0.360784 1
+			diffuse 0.360784 0.360784 0.360784 1
+			specular 0.9 0.9 0.9 0 20
+
+			texture_unit
+			{
+				texture SphinxMat.jpg
+			}
+		}
+
+	}
+
+}

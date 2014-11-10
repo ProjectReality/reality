@@ -1,0 +1,51 @@
+material PICT
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.168627 0.117647 0.0196078 1
+			diffuse 0.937255 0.937255 0.937255 1
+			specular 0.498039 0.498039 0.498039 0.05 1
+
+			texture_unit
+			{
+				texture PictureOfPainting.JPG
+			}
+		}
+
+	}
+
+}
+
+
+material WHITEMATTE
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.164706 0.164706 0.164706 1
+			diffuse 0.941177 0.941177 0.941177 1
+			specular 1 1 1 0.05 5
+		}
+
+	}
+
+}
+
+
+material WoodMix
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.392157 0.392157 0.392157 1
+			specular 1 1 1 0.95 45
+		}
+
+	}
+
+}
