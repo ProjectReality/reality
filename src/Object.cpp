@@ -25,7 +25,13 @@ void Object::updateData(aruco::Marker info)
 	Ogre::Quaternion y(Ogre::Degree(this->getBaseYaw()), Ogre::Vector3::UNIT_Z);
 	Ogre::Quaternion p(Ogre::Degree(this->getBasePitch()), Ogre::Vector3::UNIT_Y);
 	Ogre::Quaternion r(Ogre::Degree(this->getBaseRoll()), Ogre::Vector3::UNIT_X);
-	this->setOrientation(q);
+	if (info.ssize > 19999)
+	{
+		Ogre::Quaternion roll(Ogre::Degree(60 * info.ssize - 20000), Ogre::Vector3::UNIT_X);
+		this->setOrientation(q * roll);
+	}
+	else
+		this->setOrientation(q);
 	this->rotate(this->getBaseYaw(), this->getBasePitch(), this->getBaseRoll());
 }
 

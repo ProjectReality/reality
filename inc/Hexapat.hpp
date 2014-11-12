@@ -1,10 +1,14 @@
 #ifndef __HEXAPAT_HPP__
 #define __HEXAPAT_HPP__
 
+#include	<opencv2/opencv.hpp>
 #include    <string>
 #include    <map>
+#include	<math.h>
 
 #include	"aruco.h"
+
+#define PI 3.14159265
 
 /**
  * @brief Class for Hexagonal pattern
@@ -38,6 +42,12 @@ public:
 	* @param markerFound the found marker in the current frame.
 	**/
 	std::map<int, aruco::Marker>	detect(std::map<int, aruco::Marker> markerFound);
+
+	/**
+	* @brief Calcul the rotation of the object in function of the pattern numbers
+	* @param markerFound the found marker in the current frame.
+	**/
+	cv::Mat							calcRotation(cv::Mat Rvec, int index);
 };
 
 #endif
