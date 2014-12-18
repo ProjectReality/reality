@@ -24,7 +24,7 @@ void Core::init()
     rift = rift->Init();
     camera.OpenCamera();
     video_size[0] = camera.CameraGet(CV_CAP_PROP_FRAME_WIDTH, 0);
-    video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0); 
+    video_size[1] = camera.CameraGet(CV_CAP_PROP_FRAME_HEIGHT, 0);
     render = new OgreRenderer(video_size, rift);
 }
 
@@ -40,6 +40,7 @@ void Core::start()
     Logger::log("UI Launcher stoped, launchin reality...", Logger::info);
 
     startOgre();
+    std::cout << "DEBUG ALL" << std::endl;
     buildObjectsList();
     for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
         ar.addPatternInList(it->second->getName(), it->first);

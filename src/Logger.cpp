@@ -152,21 +152,21 @@ void Logger::log_ogre()
 	}
 }
 
-OVR::Log *Logger::log_OVR()
-{
-	if (!OVREnable)
-	{
-		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_None);
-		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
-		return (OVRLogger);
-	}
-	else
-	{
-		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_All);
-		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
-		return (OVRLogger);
-	}
-}
+// OVR::Log *Logger::log_OVR()
+// {
+// 	if (!OVREnable)
+// 	{
+// 		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_None);
+// 		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
+// 		return (OVRLogger);
+// 	}
+// 	else
+// 	{
+// 		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_All);
+// 		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
+// 		return (OVRLogger);
+// 	}
+// }
 
 void Logger::disableAll()
 {
