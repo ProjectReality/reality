@@ -40,15 +40,17 @@ void Core::start()
     Logger::log("UI Launcher stoped, launchin reality...", Logger::info);
 
     startOgre();
-    std::cout << "DEBUG ALL" << std::endl;
+
     buildObjectsList();
     for (std::map<int, Object*>::iterator it = objects.begin(); it != objects.end(); it++)
         ar.addPatternInList(it->second->getName(), it->first);
 
     ar.start();
+
     Reality::Light    sun("sun", render->getScene());
 	sun.createSun();
-	render->getGui()->createFrameListener();
+	//render->getGui()->createFrameListener();
+
     while (render->isAlive())
     {
         if (render->getShutDown())
