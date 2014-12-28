@@ -1,14 +1,14 @@
 #ifndef _R_VIRTUAL_OCULUS_HPP_
 #define _R_VIRTUAL_OCULUS_HPP_
-
 #include    <iostream>
 #include    <array>
 #include    <OVR.h>
 
 #include "Logger.hpp"
+#include "IGlasses.hpp"
 
 using namespace OVR;
-using namespace OVR::Util::Render;
+//using namespace OVR::Util::Render;
 
 //! VirtualOculus
 /*!
@@ -22,7 +22,7 @@ Implement all SDK
 
 */
 
-class VirtualOculus
+class VirtualOculus : public IGlasses
 {
 public:
     VirtualOculus();
@@ -34,9 +34,6 @@ public:
 
     virtual int* getResolution();
 
-    virtual StereoEyeParams* getEyesParams();
-
-
     //! Init and return correct oculus
     /*!
     Detect if Oculus Rift exist and create a true Oculus class.
@@ -45,16 +42,12 @@ public:
         virtual VirtualOculus *Init();
 
 
-    virtual OVR::Ptr<DeviceManager> getpManager();
-    virtual OVR::Ptr<HMDDevice> getpHMD();
-    virtual HMDInfo getHMDInfo();
-    virtual StereoConfig getStereo();
+	virtual ovrHmd getpHMD();
+    //virtual StereoConfig getStereo();
 
 protected:
-    OVR::Ptr<DeviceManager> pManager;
-    OVR::Ptr<HMDDevice> pHMD;
-    HMDInfo hmd;
-    StereoConfig stereo;
+	ovrHmd pHMD;
+   // StereoConfig stereo;
 };
 
 #endif // _R_VIRTUAL_OCULUS_HPP_

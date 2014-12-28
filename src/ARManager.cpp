@@ -53,11 +53,6 @@ void ARManager::arLoop(ARManager *ar)
 			ar->clearMarker();
 			ar->addMarker(markerDetected);
 		}
-#ifdef _WIN32
-		Sleep(10);
-#else
-		usleep(10);
-#endif
 		markerDetected.clear();
 	}
 }

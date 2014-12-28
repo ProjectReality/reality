@@ -19,8 +19,7 @@ else()
 endif()
 
 # Look for the header file.
-FIND_PATH(OCULUS_SDK_INCLUDE_DIRS NAMES OVR.h HINTS
-  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Include )
+FIND_PATH(OCULUS_SDK_INCLUDE_DIRS NAMES OVR.h HINTS ${OCULUS_SDK_ROOT_DIR}/LibOVR/Include )
 
 # Determine architecture
 IF(CMAKE_SIZEOF_VOID_P MATCHES "8")
@@ -37,13 +36,13 @@ ENDIF()
 
 # Look for the library.
 FIND_LIBRARY(OCULUS_SDK_LIBRARY NAMES libovr ovr HINTS ${OCULUS_SDK_ROOT_DIR}
-  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32
+  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32/VS2013
   ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Release/${OCULUS_SDK_LIB_ARCH})
 
 # This will find release lib on Linux if no debug is available - on Linux this is no problem and avoids
 # having to compile in debug when not needed
 FIND_LIBRARY(OCULUS_SDK_LIBRARY_d NAMES libovr${CMAKE_DEBUG_POSTFIX} ovr${CMAKE_DEBUG_POSTFIX} ovr HINTS
-  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32
+  ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Win32/VS2013
   ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Debug/${OCULUS_SDK_LIB_ARCH}
   ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Release/${OCULUS_SDK_LIB_ARCH})
 
@@ -55,7 +54,7 @@ SET(OCULUS_SDK_LIBRARIES optimized ${OCULUS_SDK_LIBRARY} debug ${OCULUS_SDK_LIBR
 IF(UNIX)
   SET(OCULUS_SDK_LIBRARIES ${OCULUS_SDK_LIBRARIES} X11 Xinerama udev)
 ELSE(UNIX)
-  SET(OCULUS_SDK_LIBRARIES ${OCULUS_SDK_LIBRARIES})  
+  SET(OCULUS_SDK_LIBRARIES ${OCULUS_SDK_LIBRARIES})
 ENDIF(UNIX)
 
 # handle the QUIETLY and REQUIRED arguments and set OCULUS_SDK_FOUND to TRUE if

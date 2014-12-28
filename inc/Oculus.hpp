@@ -38,11 +38,12 @@ public:
         int* getResolution();
 
     //! Get the stereo paramaters for each eyes first left [0] then right [1]
-        StereoEyeParams* getEyesParams();
+		ovrEyeRenderDesc* getEyesParams();
 
 private:
-	int				res[2];
-	StereoEyeParams Eyes[2];
+	int				 res[2];
+	ovrEyeRenderDesc Eyes[2];
+	ovrFovPort       eyeFov[2];
 };
 
 

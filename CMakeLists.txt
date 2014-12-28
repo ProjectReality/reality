@@ -47,6 +47,7 @@ if(UNIX)
     message(SEND_ERROR "Failed to find module path.")
   endif()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  link_libraries(rt GL Xrandr udev X11)
 endif(UNIX)
 
 #####################################
@@ -192,7 +193,7 @@ if(build_tests)
     else()
       find_package(GTest REQUIRED)
     endif()
-    
+
     file(GLOB to_remove_in_testing src/main.cpp)
     file(GLOB sources_test test/*.cpp)
 
@@ -294,7 +295,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
 	${OpenCV_CONFIG_PATH}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_highgui248.dll
     DESTINATION ./Release
     CONFIGURATIONS Release RelWithDebInfo)
-	
+
         install(FILES ${CMAKE_SOURCE_DIR}/config/plugins_d.cfg
   ${CMAKE_SOURCE_DIR}/config/resources_d.cfg
   DESTINATION ./Debug
@@ -307,7 +308,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/Data
   DESTINATION ./Debug
   CONFIGURATIONS Debug)
-  
+
   install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
 	${OGRE_PLUGIN_DIR_DBG}/OgreOverlay_d.dll
     ${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll

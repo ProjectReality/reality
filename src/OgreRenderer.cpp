@@ -1,6 +1,6 @@
 #include "OgreRenderer.hpp"
 
-OgreRenderer::OgreRenderer(double camsize[2], VirtualOculus *rift)
+OgreRenderer::OgreRenderer(double camsize[2], IGlasses *rift)
 {
     this->rift = rift;
 
@@ -56,18 +56,18 @@ void OgreRenderer::startRealityRender()
     Ogre::MaterialPtr matRight = matLeft->clone("Ogre/Compositor/Oculus/Right");
     Ogre::GpuProgramParametersSharedPtr pParamsLeft = matLeft->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
     Ogre::GpuProgramParametersSharedPtr pParamsRight = matRight->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
-
+/*
     Ogre::Vector4 hmdwarp = Ogre::Vector4(
                 rift->getStereo().GetDistortionK(0),
                 rift->getStereo().GetDistortionK(1),
                 rift->getStereo().GetDistortionK(2),
-                rift->getStereo().GetDistortionK(3));
+                rift->getStereo().GetDistortionK(3));*/
 
-    // param used in the oculus cg program files
-    pParamsLeft->setNamedConstant("HmdWarpParam", hmdwarp);
-    pParamsRight->setNamedConstant("HmdWarpParam", hmdwarp);
-    pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 50.0f));
-    pParamsRight->setNamedConstant("LensCentre", 0.5f - (rift->getStereo().GetProjectionCenterOffset() / 50.0f));
+    //// param used in the oculus cg program files
+    //pParamsLeft->setNamedConstant("HmdWarpParam", hmdwarp);
+    //pParamsRight->setNamedConstant("HmdWarpParam", hmdwarp);
+    //pParamsLeft->setNamedConstant("LensCentre", 0.5f + (rift->getStereo().GetProjectionCenterOffset() / 50.0f));
+    //pParamsRight->setNamedConstant("LensCentre", 0.5f - (rift->getStereo().GetProjectionCenterOffset() / 50.0f));
 
     Ogre::CompositorPtr comp = Ogre::CompositorManager::getSingleton().getByName("OculusRight");
     comp->getTechnique(0)->getOutputTargetPass()->getPass(0)->setMaterialName("Ogre/Compositor/Oculus/Right");
@@ -96,10 +96,10 @@ void OgreRenderer::init_cameras()
 	{
 
 		cameras[i] = scene->createCamera(i == 0 ? "Left" : "Right");
-		cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
+		//cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
 		cameras[i]->setFarClipDistance(10.0f);
 		cameras[i]->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-		cameras[i]->setPosition((i * 2 - 1) * rift->getStereo().GetIPD() * 0.5f, 0, 500);
+		cameras[i]->setPosition((i * 2 - 1) /** rift->getStereo().GetIPD()*/ * 0.5f, 0, 500);
 		cameras[i]->lookAt(0, 0, 1);
 		double pMatrix[16];
 		camParams.OgreGetProjectionMatrix(camParams.CamSize, camParams.CamSize, pMatrix, 0.05, 10, false);
@@ -109,7 +109,7 @@ void OgreRenderer::init_cameras()
 			pMatrix[12], pMatrix[13], pMatrix[14], pMatrix[15]);
 		cameras[i]->setCustomProjectionMatrix(true, PM);
 		cameras[i]->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
-		cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
+		//cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
     }
 }
 
