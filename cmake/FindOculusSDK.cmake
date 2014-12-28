@@ -19,7 +19,7 @@ else()
 endif()
 
 # Look for the header file.
-FIND_PATH(OCULUS_SDK_INCLUDE_DIRS ${OCULUS_SDK_ROOT_DIR}/LibOVR/Include )
+FIND_PATH(OCULUS_SDK_INCLUDE_DIRS NAMES OVR.h HINTS ${OCULUS_SDK_ROOT_DIR}/LibOVR/Include )
 
 # Determine architecture
 IF(CMAKE_SIZEOF_VOID_P MATCHES "8")
