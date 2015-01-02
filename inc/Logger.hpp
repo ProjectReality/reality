@@ -25,7 +25,7 @@
 
 #include    <OgreLogManager.h>
 #include    <OVR.h>
-#include    <../Src/Kernel/OVR_Log.h>
+//#include    <../Src/Kernel/OVR_Log.h>
 
 namespace logging = boost::log;
 namespace sinks = boost::log::sinks;
@@ -61,16 +61,18 @@ public:
 	static void log(std::string msg, ...);
 	static void log_tag(std::string tag, std::string msg, ...);
 	static void log_ogre();
-	static OVR::Log *log_OVR();
+	//static OVR::Log *log_OVR();
 	static std::string getFullMsg(std::string msg, va_list vl);
 	static void enableAll();
 	static void disableAll();
+	static void enableDirectLog(bool ena);
 
 public:
 	static bool isEnable;
 	static bool ogreEnable;
 	static bool OVREnable;
 	static std::vector<std::string> tag_vector;
+	static bool eDirect;
 
 };
 

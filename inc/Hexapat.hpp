@@ -21,6 +21,7 @@ class Hexapat
 private:
 	int id;
 	int	basePatt;
+	int previous = 0;
 
 public:
 	/**

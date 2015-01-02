@@ -11,6 +11,16 @@ std::map<int, aruco::Marker>	Hexapat::detect(std::map<int, aruco::Marker> marker
 {
 	bool isFound = false;
 	std::map<int, aruco::Marker>::iterator tmpMarker;
+	if (previous != 0 && ((tmpMarker = markerFound.find(previous)) != markerFound.end()))
+	{
+		isFound = true;
+		aruco::Marker m = tmpMarker->second;
+		m.Rvec = m.Rvec;
+		m.ssize = 20000 + (m.id - basePatt);
+		m.id = id;
+		markerFound.insert(std::pair<int, aruco::Marker>(id, m));
+	}
+
 	for (int i = 0; i < 6; i++)
 	{
 		if ((tmpMarker = markerFound.find(basePatt + i)) != markerFound.end())
@@ -20,6 +30,7 @@ std::map<int, aruco::Marker>	Hexapat::detect(std::map<int, aruco::Marker> marker
 				isFound = true;
 				aruco::Marker m = tmpMarker->second;
 				m.Rvec = m.Rvec;
+				previous = m.id;
 				m.id = id;
 				m.ssize = 20000 + i;
 				markerFound.insert(std::pair<int, aruco::Marker>(id, m));

@@ -21,6 +21,36 @@ void Object::updateData(aruco::Marker info)
 	double distance = -0.1;
 
 	info.OgreGetPoseParameters(position, orientation);
+	if (info.id > 2048)
+	{
+		double a, b, c, d, x, y, z, rotVect[3];
+		a = orientation[0];
+		b = orientation[1];
+		c = orientation[2];
+		d = orientation[3];
+		x = 0;
+		y = 0;
+		z = -0.05;
+		double rotMat[3][3];
+
+		rotMat[0][0] = pow(a, 2) + pow(b, 2) - pow(c, 2) - pow(d, 2);
+		rotMat[0][1] = (2 * b * c) - (2 * a * d);
+		rotMat[0][2] = (2 * b * d) + (2 * a * c);
+		rotMat[1][0] = (2 * b * c) + (2 * a * d);
+		rotMat[1][1] = pow(a, 2) - pow(b, 2) + pow(c, 2) - pow(d, 2);
+		rotMat[1][2] = (2 * c * d) - (2 * a * b);
+		rotMat[2][0] = (2 * b * d) + (2 * a * c);
+		rotMat[2][1] = (2 * c * d) - (2 * a * b);
+		rotMat[2][2] = pow(a, 2) - pow(b, 2) - pow(c, 2) + pow(d, 2);
+
+		rotVect[0] = (rotMat[0][0] * x) + (rotMat[0][1] * y) + (rotMat[0][2] * z);
+		rotVect[1] = (rotMat[1][0] * x) + (rotMat[1][1] * y) + (rotMat[1][2] * z);
+		rotVect[2] = (rotMat[2][0] * x) + (rotMat[2][1] * y) + (rotMat[2][2] * z);
+
+		position[0] += rotVect[0];
+		position[1] += rotVect[1];
+		position[2] += rotVect[2];
+	}
 	this->setPosition(position[0], position[1], position[2]);
 	Ogre::Quaternion q(orientation[0], orientation[1], orientation[2], orientation[3]);
 	Ogre::Quaternion y(Ogre::Degree(this->getBaseYaw()), Ogre::Vector3::UNIT_Z);
@@ -31,31 +61,6 @@ void Object::updateData(aruco::Marker info)
 
 	if (info.ssize > 19999)
 	{
-		double mat[16];		// numérotée en colonne puis ligne 	
-		double Y_quat = orientation[2];
-		double w = orientation[0];
-		double x = orientation[1];
-		double z = orientation[3];
-		mat[0] = 1 - 2 * ((Y_quat*Y_quat) + (z*z));
-		mat[1] = 2 * ((x*Y_quat) - (z*w));
-		mat[2] = 2 * ((x*z) + (Y_quat*w));
-		mat[4] = 2 * ((x*Y_quat) + (z*w));
-		mat[5] = 1 - 2 * ((x*x) + (z*z));
-		mat[6] = 2 * ((Y_quat*z) - (x*w));
-		mat[8] = 2 * ((x*z) - (Y_quat*w));
-		mat[9] = 2 * ((Y_quat*z) + (x*w));
-		mat[10] = 1 - 2 * ((x*x) + (Y_quat*Y_quat));
-		mat[3] = mat[7] = mat[11] = 0;
-		mat[15] = 1;
-		double x1 = 0;
-		double y1 = 0;
-		double z1 = 0.2;
-		double z2 = 0.005;
-		double z3 = -0.1;
-		double newpos_x = position[0] + (x1*mat[0]) + (y1*mat[4]) + (z1*mat[8]);
-		double newpos_y = position[1] + (x1*mat[1]) + (y1*mat[5]) + (z2*mat[9]);
-		double newpos_z = position[2] + (x1*mat[2]) + (y1*mat[6]) + (z3*mat[10]);
-		this->setPosition(newpos_x, newpos_y, newpos_z);
 		Ogre::Quaternion roll(Ogre::Degree(60 * info.ssize - 20000), Ogre::Vector3::UNIT_X);
 		this->setOrientation(q * roll);
 	}
