@@ -3,6 +3,7 @@
 bool Logger::isEnable = true;
 bool Logger::ogreEnable = false;
 bool Logger::OVREnable = false;
+bool Logger::eDirect = false;
 std::vector<std::string> Logger::tag_vector;
 
 void Logger::init(bool active)
@@ -86,6 +87,14 @@ void Logger::log_tag_sev(std::string tag, severity_level sev, std::string msg, .
 		va_end(vl);
 		BOOST_LOG_SEV(reality_logger, sev) << msg;
 	}
+	if (eDirect)
+	{
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
+		std::cout << tag << "\t:" << sev << "\t:" << msg << std::endl;
+	}
 }
 
 void Logger::log_sev(severity_level sev, std::string msg, ...)
@@ -98,6 +107,14 @@ void Logger::log_sev(severity_level sev, std::string msg, ...)
 		va_end(vl);
 		log_tag_sev("Global", sev, msg);
 	}
+	if (eDirect)
+	{
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
+		std::cout << sev << "\t:" << msg << std::endl;
+	}
 }
 
 void Logger::log(std::string msg, ...)
@@ -109,6 +126,14 @@ void Logger::log(std::string msg, ...)
 		msg = getFullMsg(msg, vl);
 		va_end(vl);
 		log_tag_sev("Global", info, msg);
+	}
+	if (eDirect)
+	{
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
+		std::cout << msg << std::endl;
 	}
 }
 
@@ -136,6 +161,14 @@ void Logger::log_tag(std::string tag, std::string msg, ...)
 		va_end(vl);
 		log_tag_sev(tag, info, msg);
 	}
+	if (eDirect)
+	{
+		va_list vl;
+		va_start(vl, msg);
+		msg = getFullMsg(msg, vl);
+		va_end(vl);
+		std::cout << tag << "\t:" << msg << std::endl;
+	}
 }
 
 void Logger::log_ogre()
@@ -152,21 +185,21 @@ void Logger::log_ogre()
 	}
 }
 
-// OVR::Log *Logger::log_OVR()
-// {
-// 	if (!OVREnable)
-// 	{
-// 		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_None);
-// 		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
-// 		return (OVRLogger);
-// 	}
-// 	else
-// 	{
-// 		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_All);
-// 		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
-// 		return (OVRLogger);
-// 	}
-// }
+//OVR::Log *Logger::log_OVR()
+//{
+//	if (!OVREnable)
+//	{
+//		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_None);
+//		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
+//		return (OVRLogger);
+//	}
+//	else
+//	{
+//		OVR::Log *OVRLogger = OVR::Log::ConfigureDefaultLog(OVR::LogMask_All);
+//		OVRLogger->DefaultLogOutput("", OVR::LogMessageType::Log_Debug);
+//		return (OVRLogger);
+//	}
+//}
 
 void Logger::disableAll()
 {
@@ -180,6 +213,11 @@ void Logger::enableAll()
 	isEnable = true;
 	ogreEnable = true;
 	OVREnable = true;
+}
+
+void Logger::enableDirectLog(bool ena)
+{
+	eDirect = true;
 }
 
 std::string Logger::getFullMsg(std::string msg, va_list vl)

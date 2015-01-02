@@ -95,6 +95,10 @@ void ARManager::addMarker(std::vector<aruco::Marker> markers)
 		}
 		t_b.likelihood = 0.0;
 	}
+	for (Hexapat hex : this->hexapats)
+	{
+		this->markerFound = hex.detect(this->markerFound);
+	}
 	this->markerChange = true;
 	markerFoundCopy = std::map<int, aruco::Marker>(this->markerFound.begin(), this->markerFound.end());
 }
@@ -335,6 +339,12 @@ void		ARManager::addBoard(int id, const char* boardName)
 	boards.push_back(tmp);
 }
 
+void		ARManager::addHexapat(int id, int basepat)
+{
+	Hexapat tmp(id, basepat);
+
+	hexapats.push_back(tmp);
+}
 //---------------------------------------- GETTER & SETTER --------------------------------------//
 bool ARManager::setFrame(cv::Mat p_frame)
 {

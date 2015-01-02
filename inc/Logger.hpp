@@ -65,12 +65,14 @@ public:
 	static std::string getFullMsg(std::string msg, va_list vl);
 	static void enableAll();
 	static void disableAll();
+	static void enableDirectLog(bool ena);
 
 public:
 	static bool isEnable;
 	static bool ogreEnable;
 	static bool OVREnable;
 	static std::vector<std::string> tag_vector;
+	static bool eDirect;
 
 };
 

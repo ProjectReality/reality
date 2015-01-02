@@ -1,6 +1,15 @@
 <?xml version="1.0" standalone=no>
 <db>
 	<object>
+		<pattern>2049</pattern>
+		<asset>Sphinx.mesh</asset>
+		<scale>0.01</scale>
+		<pitch>-90</pitch>
+		<yaw>90</yaw>
+		<pat>101</pat>
+		<size>10</size>
+	</object>
+	<object>
 		<pattern>76</pattern>
 		<asset>Shield.mesh</asset>
 		<scale>0.05</scale>
