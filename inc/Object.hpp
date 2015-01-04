@@ -41,6 +41,9 @@ public:
 private:
     std::string		assetName;
     int				patt_id;
+
+public:
+	int				frameCpt;
 };
 
  std::ostream& operator<<(std::ostream& os, const Object& obj);
