@@ -62,7 +62,7 @@ void Core::start()
             std::map<int, aruco::Marker> mFound = ar.getMarkers();
             for (std::pair<int, Object*> p : objects)
             {
-				if (!objects[p.first]->isHide() && objects[p.first]->frameCpt >= 30)
+                if (!objects[p.first]->isHide() && objects[p.first]->frameCpt >= 8)
 					objects[p.first]->visible(false);
 				else if (!objects[p.first]->isHide())
 					objects[p.first]->frameCpt += 1;
