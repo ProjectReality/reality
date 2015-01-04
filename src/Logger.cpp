@@ -217,7 +217,7 @@ void Logger::enableAll()
 
 void Logger::enableDirectLog(bool ena)
 {
-	eDirect = true;
+    eDirect = ena;
 }
 
 std::string Logger::getFullMsg(std::string msg, va_list vl)

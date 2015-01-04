@@ -234,17 +234,6 @@ void ARManager::FindCameraMatrices(cv::Mat curr, cv::Mat prev)
 		R(1, 0), R(1, 1), R(1, 2), t(1),
 		R(2, 0), R(2, 1), R(2, 2), t(2));
 
-	if (this->verbose)
-	{
-		std::cout << "________________________________________________________________________________" << std::endl;
-		std::cout << "Camera Rotation Matrix : " << std::endl;
-		std::cout << P.row(0).col(0) << " : " << P.row(0).col(1) << " : " << P.row(0).col(2) << std::endl;
-		std::cout << P.row(1).col(0) << " : " << P.row(1).col(1) << " : " << P.row(1).col(2) << std::endl;
-		std::cout << P.row(2).col(0) << " : " << P.row(2).col(1) << " : " << P.row(2).col(2) << std::endl;
-		std::cout << "Camera Translation Vector : " << std::endl;
-		std::cout << P.row(0).col(3).val[0] << " : " << P.row(1).col(3).val[0] << " : " << P.row(2).col(3).val[0] << std::endl;
-		std::cout << "________________________________________________________________________________" << std::endl;
-	}
 	cv::Mat rotMat(3, 3, CV_32F);
 	rotMat.at<double>(0, 0) = R(0, 0);
 	rotMat.at<double>(0, 1) = R(0, 1);
