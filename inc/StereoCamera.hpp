@@ -25,6 +25,7 @@ private:
     cv::VideoCapture camera[2];
     cv::Mat frame[2];
     bool camera_open;
+    bool mono_cam;
     bool frame_available;
 
 public:
@@ -111,6 +112,7 @@ public:
     cv::VideoCapture getCamera(int c);
 
     bool isOpen();
+    bool isMono();
 };
 
 #endif //_R_STEREO_CAM_HPP_
