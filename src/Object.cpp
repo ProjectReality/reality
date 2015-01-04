@@ -3,6 +3,7 @@
 
 Object::Object(std::string _name, std::string _mesh, Ogre::SceneManager* scene) : Entity(_name)
 {
+	frameCpt = 0;
 	if (scene != NULL)
 	{
 		this->setEnt(scene->createEntity(_name, _mesh));

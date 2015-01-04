@@ -62,7 +62,10 @@ void Core::start()
             std::map<int, aruco::Marker> mFound = ar.getMarkers();
             for (std::pair<int, Object*> p : objects)
             {
-                objects[p.first]->visible(false);
+                if (!objects[p.first]->isHide() && objects[p.first]->frameCpt >= 8)
+					objects[p.first]->visible(false);
+				else if (!objects[p.first]->isHide())
+					objects[p.first]->frameCpt += 1;
             }
             for (std::pair<int, aruco::Marker> p : mFound)
             {
@@ -70,6 +73,7 @@ void Core::start()
                 {
                     objects[p.first]->updateData(p.second);
                     objects[p.first]->visible(true);
+					objects[p.first]->frameCpt = 0;
                 }
             }
             render->loadCam(frame[0], (camera.isMono() ? frame[0] : frame[1]));
