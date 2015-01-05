@@ -16,6 +16,7 @@ void StereoCamera::OpenCamera()
 {
     camera[LEFT].open(0);
     camera[RIGHT].open(1);
+    mono_cam = false;
 
     if (!camera[LEFT].isOpened())
     {
@@ -26,7 +27,7 @@ void StereoCamera::OpenCamera()
     {
 		Logger::log_sev(Logger::error, "StereoCamera: OpenCamera() - Couldn't Open second Camera");
 		Logger::log("StereoCamera: OpenCamera() - Mirroring the first camera");
-        camera[RIGHT] = camera[LEFT];
+        mono_cam = true;
     }
     camera_open = true;
     frame_available = true;
@@ -106,10 +107,12 @@ void StereoCamera::GrabFrames()
 {
     frame_available = false;
     boost::thread Thread_FrameLEFT(&StereoCamera::FrameWorker, camera[LEFT], &frame[LEFT]);
-    boost::thread Thread_FrameRIGHT(&StereoCamera::FrameWorker, camera[RIGHT], &frame[RIGHT]);
 
+    if (!isMono()) {
+        boost::thread Thread_FrameRIGHT(&StereoCamera::FrameWorker, camera[RIGHT], &frame[RIGHT]);
+        Thread_FrameRIGHT.join();
+    }
     Thread_FrameLEFT.join();
-    Thread_FrameRIGHT.join();
     frame_available = true;
 }
 
@@ -133,3 +136,7 @@ bool StereoCamera::isOpen()
     return camera_open;
 }
 
+bool StereoCamera::isMono()
+{
+    return mono_cam;
+}
