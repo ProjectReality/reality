@@ -76,7 +76,7 @@ void Core::start()
 					objects[p.first]->frameCpt = 0;
                 }
             }
-            render->loadCam(frame[0], frame[1]);
+            render->loadCam(frame[0], (camera.isMono() ? frame[0] : frame[1]));
             StereoCamera::camWorker(camera);
         }
 		render->render();
