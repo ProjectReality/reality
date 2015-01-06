@@ -89,27 +89,52 @@ void OgreRenderer::init_all()
 
 void OgreRenderer::init_cameras()
 {
-	aruco::CameraParameters camParams;
-	camParams.readFromXMLFile("Data/camera.yml");
+  aruco::CameraParameters camParams;
+  camParams.readFromXMLFile("Data/camera.yml");
 
-    for (size_t i = 0; i < 2; i++)
+  double pMatrix[16];
+  for (size_t i = 0; i < 2; i++)
+    {
+
+      cameras[i] = scene->createCamera(i == 0 ? "Left" : "Right");
+      cameras[i]->setFarClipDistance(10.0f);
+      cameras[i]->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
+      cameras[i]->setPosition((i * 2 - 1) * 0.5f, 0, 500);
+      if (i == 0)
 	{
+	  std::cout << "0" << i << std::endl;
+	  cameras[i]->setPosition(-0.5f, 0, 500);
+	  cameras[i]->lookAt(2, 1, 1);
 
-		cameras[i] = scene->createCamera(i == 0 ? "Left" : "Right");
-		//cameras[i]->setNearClipDistance(rift->getStereo().GetEyeToScreenDistance());
-		cameras[i]->setFarClipDistance(10.0f);
-		cameras[i]->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-		cameras[i]->setPosition((i * 2 - 1) /** rift->getStereo().GetIPD()*/ * 0.5f, 0, 500);
-		cameras[i]->lookAt(0, 0, 1);
-		double pMatrix[16];
-		camParams.OgreGetProjectionMatrix(camParams.CamSize, camParams.CamSize, pMatrix, 0.05, 10, false);
-		Ogre::Matrix4 PM(pMatrix[0], pMatrix[1], pMatrix[2], pMatrix[3],
-			pMatrix[4], pMatrix[5], pMatrix[6], pMatrix[7],
-			pMatrix[8], pMatrix[9], pMatrix[10], pMatrix[11],
-			pMatrix[12], pMatrix[13], pMatrix[14], pMatrix[15]);
-		cameras[i]->setCustomProjectionMatrix(true, PM);
-		cameras[i]->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
-		//cameras[i]->setAspectRatio(rift->getStereo().GetAspect());
+	  Ogre::Vector3 posvec = cameras[i]->getPosition();
+	  std::cout << "Pos camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
+	  camParams.OgreGetProjectionMatrix(camParams.CamSize, camParams.CamSize, pMatrix, 0.05, 10, false);
+	  Ogre::Matrix4 PM(pMatrix[0], pMatrix[1], pMatrix[2] +0.1f, pMatrix[3],
+			   pMatrix[4], pMatrix[5], pMatrix[6], pMatrix[7],
+			   pMatrix[8], pMatrix[9], pMatrix[10], pMatrix[11],
+			   pMatrix[12], pMatrix[13], pMatrix[14], pMatrix[15]);
+	  cameras[i]->setCustomProjectionMatrix(true, PM);
+	  cameras[i]->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
+	  std::cout << "Pro camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
+	}
+      else
+	{
+	  std::cout << "1 " << i << std::endl;
+	  cameras[i]->setPosition(0.5f, 0, 500);
+	  cameras[i]->lookAt(0, 0, 1);
+
+	  Ogre::Vector3 posvec = cameras[i]->getPosition();
+	  std::cout << "Pos camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
+
+	  camParams.OgreGetProjectionMatrix(camParams.CamSize, camParams.CamSize, pMatrix, 0.05, 10, false);
+	  Ogre::Matrix4 PM(pMatrix[0], pMatrix[1], pMatrix[2] -0.1f, pMatrix[3],
+			   pMatrix[4], pMatrix[5], pMatrix[6], pMatrix[7],
+			   pMatrix[8], pMatrix[9], pMatrix[10], pMatrix[11],
+			   pMatrix[12], pMatrix[13], pMatrix[14], pMatrix[15]);
+	  cameras[i]->setCustomProjectionMatrix(true, PM);
+	  cameras[i]->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
+	  std::cout << "Pro camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
+	}
     }
 }
 
@@ -125,9 +150,10 @@ void OgreRenderer::init_viewports()
 
 	for (size_t i = 0; i < 2; i++)
 	{
-		viewports[i] = window->addViewport(cameras[1], i, i == 0 ? 0.015f : 0.485f, 0, 0.5f, 1.0f);
-		viewports[i]->setBackgroundColour(g_defaultViewportColour);
-		viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0); //to hide some stuff between each viewport
+	  std::cout << "v " << i << std::endl;
+	  viewports[i] = window->addViewport(cameras[i], i, i == 0 ? 0.015f : 0.485f, 0, 0.5f, 1.0f);
+	  viewports[i]->setBackgroundColour(g_defaultViewportColour);
+	  viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0); //to hide some stuff between each viewport
 	}
 }
 
