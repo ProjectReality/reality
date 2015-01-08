@@ -1,3 +1,4 @@
+#include	"Settings.hpp"
 #include    "Light.hpp"
 #include    "Core.hpp"
 #include    "aruco.h"
@@ -86,6 +87,17 @@ void Core::start()
 int Core::buildObjectsList(std::string filename)
 {
     int patternCount = 0;
+
+    std::cout << "DATABASE=" << Settings::getString("Database") << std::endl;;
+    if (Settings::getString("Database") == "EMPTY")
+      {
+	std::cout << "Empty database, using default" << std::endl;
+      }
+    else
+      {
+	filename = Settings::getString("Database");
+      }
+    
     TiXmlDocument doc(filename.c_str());
     if (doc.LoadFile())
     {

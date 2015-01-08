@@ -1,10 +1,12 @@
 #include	"Core.hpp"
+#include	"Settings.hpp"
 #include	"Logger.hpp"
 
 int   main(int argc, char** argv)
 {
 		Core core(argc, argv);
-
+		Settings::init(argc, argv);
+		
 		Logger::init();
 		Logger::log("Initialisation of Reality");
 		Logger::log("Log Ogre is enable : %b", Logger::ogreEnable);

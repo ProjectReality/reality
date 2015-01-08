@@ -29,9 +29,9 @@
 	  Scène:
 
 	  <div width="320"><select id="select_scene">
-	      <option id="select_scene_roman" value="roman">Musée Gallo-Romain</option>
-	      <option id="select_scene_space" value="space">Space Odyssey</option>
-	      <option id="select_scene_epitech" value="epitech" selected>Demo Epitech</option>
+	      <!-- <option id="select_scene_roman" value="roman">Musée Gallo-Romain</option> -->
+	      <!-- <option id="select_scene_space" value="space">Space Odyssey</option> -->
+	      <!-- <option id="select_scene_epitech" value="epitech" selected>Demo Epitech</option> -->
 	  </select></div>
 
 	</div>
@@ -46,10 +46,9 @@
 	<div>
 	  Algorithme:
 	  <div width="500"><select id="select_algo">
-	      <option value="trackpat" selected>Tracking Pattern</option>
-	      <option value="trackobj">Tracking Objets</option>
-	      <option value="movsim">Patterns et Mouvements Simples</option>
-	      <option value="movmat">Patterns et Mouvements par Matrices</option>
+	      <option value="ONLY_PATTERN" selected>Tracking Pattern</option>
+	      <option value="PATTERN_SIMPLE_MOTION">Patterns et Mouvements Simples</option>
+	      <option value="PATTERN_MATRIX_MOTION">Patterns et Mouvements par Matrices</option>
 	  </select></div>
 	</div>
 
@@ -75,7 +74,11 @@
         <div><button id="button_setogre" class="button">Ogre Settings</button></div>
       </panel>
     </tabset>
+<div>
+    <div><button id="button_test" class="butlaunch">Test</button>    </div>
 
-    <button id="button_launch" class="butlaunch">Launch reality</button>    
+    <div><button id="button_quit" class="butlaunch">Quit</button>   </div>
+    <div><button id="button_launch" class="butlaunch">Launch</button>    </div>
+</div>
   </body>
 </rml>

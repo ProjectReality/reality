@@ -4,7 +4,7 @@
 
 Gui::Gui(OgreRenderer *c) {
     OgreContext = c;
-	exiting = false;
+    exiting = false;
 }
 
 Gui::~Gui() {
@@ -17,28 +17,43 @@ void Gui::shutdown() {
 
 void Gui::ProcessEvent(Rocket::Core::Event& event)
 {
-  // <<<<<<< HEAD
-  // 	string classname = event.GetCurrentElement()->GetClassNames().CString();
- 
-  // 	std::cout << "Processing event of " << classname << std::endl;
-  // 	if (classname == "butlaunch") OgreContext->getGui()->stop();
-  // 	else if (classname == "butsetogre") {
-  //         OgreContext->getRoot()->showConfigDialog();
-  // =======
   Rocket::Core::Element *elem = event.GetCurrentElement();
   string classname = elem->GetId().CString();
-  Logger::log("Processing event of %s, Value: %s", classname.c_str(), elem->GetClassNames().CString());
-  if (classname == "button_launch" ) OgreContext->getGui()->stop();
+  // std::cout << "Processing event of " << elem->GetClassNames().CString() << ", Value: " << classname << std::endl;
+  if (classname == "button_launch" )
+    {
+      Rocket::Controls::ElementFormControlSelect *select_db = (Rocket::Controls::ElementFormControlSelect*)document->GetElementById("select_scene");
+      if (select_db->GetSelection() > -1)
+	{
+	  Settings::setString("Database", this->xmlfiles[select_db->GetSelection()]);
+	  // std::cout << "Selected DB: " << Settings::getValue("Database") << std::endl;
+	}
+      else
+	{
+	  Settings::setString("Database", "Data/db.xml");
+	  // std::cout << "Selected DB default: " << Settings::getValue("Database") << std::endl;
+	}
+      Rocket::Controls::ElementFormControlSelect *select_alg = (Rocket::Controls::ElementFormControlSelect*)document->GetElementById("select_algo");
+      // std::cout << "Selected Algo: " << select_alg->GetSelection() << std::endl;
+      Settings::setValue("Algo", select_alg->GetSelection());
+
+
+      OgreContext->getGui()->stop();
+    }
   else if (classname == "button_setogre" ) 
     {
       OgreContext->getRoot()->showConfigDialog();
     }
-  else if (classname.find("select_") != std::string::npos)
+  else if (classname == "button_test" ) 
     {
-      Rocket::Controls::ElementFormControlSelect *select = (Rocket::Controls::ElementFormControlSelect*)elem;
-      std::cout << select->GetSelection() << std::endl;
-      // >>>>>>> settings
+      //      Rocket::Controls::ElementFormControlSelect *select = (Rocket::Controls::ElementFormControlSelect*)document->GetElementById("select_scene");
+      //      std::cout << select->GetSelection() << std::endl;
     }
+  // else if (classname.find("select_") != std::string::npos)
+  //   {
+  //     Rocket::Controls::ElementFormControlSelect *select = (Rocket::Controls::ElementFormControlSelect*)elem;
+  //     std::cout << "Prout: " << select->GetSelection() << std::endl;
+  //   }
 }
 
 void Gui::initRocket()
@@ -92,25 +107,54 @@ void Gui::initRocket()
     RocketContext = Rocket::Core::CreateContext("main", Rocket::Core::Vector2i(OgreContext->getWindow()->getWidth(), OgreContext->getWindow()->getHeight()));
     Rocket::Debugger::Initialise(RocketContext);
 
-    Rocket::Core::ElementDocument* document = RocketContext->LoadDocument("assets/mainUI/mainui.rml");
+    this->document = RocketContext->LoadDocument("assets/mainUI/mainui.rml");
     if (document)
     {
         Rocket::Core::Element* element2 = document->GetElementById("button_launch");
         Rocket::Core::Element* element = document->GetElementById("button_setogre");
         element->AddEventListener("click", this, false);
         element2->AddEventListener("click", this, false);
+
+
+	document->GetElementById("button_test")->AddEventListener("click", this, false);
 	document->GetElementById("select_scene")->AddEventListener("click", this, false);
 	document->GetElementById("select_periph")->AddEventListener("click", this, false);
 	document->GetElementById("select_algo")->AddEventListener("click", this, false);
+
+
+	// document->GetElementById("select_scene_roman")->AddEventListener("click", this, false);
+	// document->GetElementById("select_scene_space")->AddEventListener("submit", this, false);
+	// document->GetElementById("select_scene_epitech")->AddEventListener("click", this, false);
         document->Show();
         document->RemoveReference();
-    }
+    
+	  
+	boost::filesystem::path lookup("./Data");
+	boost::filesystem::directory_iterator end_itr;
+	Rocket::Controls::ElementFormControlSelect *select_db = (Rocket::Controls::ElementFormControlSelect*)document->GetElementById("select_scene");
 
+
+	for (boost::filesystem::directory_iterator itr(lookup); itr != end_itr; ++itr)
+	  {
+	    if (boost::filesystem::is_regular_file(itr->path()))
+	      {   
+		string potentialXML = itr->path().string();
+		if (!potentialXML.compare(potentialXML.size() - 4, 4, ".xml"))
+		  {
+		    // cout << "Added: " << potentialXML << endl;
+		    xmlfiles.push_back(potentialXML);
+		    select_db->Add(potentialXML.c_str(), potentialXML.c_str(), -1, true);
+		  }
+	      }
+	  }
+	
+    }
+    
     // Add the application as a listener to Ogre's render queue so we can render during the overlay.
     mScene->addRenderQueueListener(this);
     mScene->addRenderQueueListener(mOverlaySystem);
 
-    Logger::log("Finish init rocket");
+    // std::cout << "Finish init rocket" << std::endl;
 }
 
 bool Gui::isExiting() {
@@ -119,9 +163,9 @@ bool Gui::isExiting() {
 
 void Gui::stop()
 {
-	Logger::log("Sarting to stop ui rendering");
-	uialive = false;
-	mScene->getRootSceneNode()->setVisible(false);
+    // std::cout << "Sarting to stop ui rendering" << std::endl;
+    uialive = false;
+    mScene->getRootSceneNode()->setVisible(false);
     //ogre->destroySceneManager(sceneUI);
 
     OgreContext->getWindow()->removeViewport(mViewport->getZOrder());
@@ -135,13 +179,13 @@ void Gui::start()
     uialive = true;
     while(uialive) {
         Ogre::WindowEventUtilities::messagePump();
-		OgreContext->getRoot()->renderOneFrame();
+        OgreContext->getRoot()->renderOneFrame();
 		if (OgreContext->getWindow()->isClosed() || !mFrameListener->isRunning()) {
 			exiting = true;
 			return;
 		}
-	}
-	Logger::log("out of ui rendering loop");
+    }
+    std::cout << "out of ui rendering loop" << std::endl;
 }
 
 void Gui::createFrameListener()

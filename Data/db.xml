@@ -13,8 +13,9 @@
 		<pattern>76</pattern>
 		<asset>Shield.mesh</asset>
 		<scale>0.05</scale>
-		<pitch>-90</pitch>
-		<yaw>90</yaw>
+		<pitch>-180</pitch>
+		<yaw>180</yaw>
+		<roll>90</roll>
 	</object>
 	<object>
 		<pattern>181</pattern>

@@ -1,9 +1,12 @@
 #include	"Settings.hpp"
 
-Settings::Settings()
-{
+OgreRenderer				*Settings::render;
+boost::program_options::variables_map	Settings::options; 
+std::map<std::string, std::string>	Settings::strings;
+std::map<std::string, int>		Settings::values;
+std::map<std::string, bool>		Settings::flags;
+bool					Settings::alive;
 
-}
 
 void	Settings::init(int ac, char **av)
 {
@@ -47,8 +50,13 @@ void	Settings::init(int ac, char **av)
       alive = false; 
     } 
 
+
+  // Initial Settings
+  Settings::setValue("Algo", 0);
+  
 }
 
+  
 bool	Settings::isAlive()
 {
   return alive;
@@ -67,7 +75,14 @@ void		Settings::setString(std::string param, std::string val)
 
 std::string	Settings::getString(std::string param)
 {
-  return strings[param];
+  if (strings.find(param) == strings.end())
+    {
+      return ("EMPTY");
+    }
+  else
+    {
+      return strings[param];
+    }
 }
  
 void		Settings::setValue(std::string param, int val)
@@ -77,7 +92,14 @@ void		Settings::setValue(std::string param, int val)
  
 int		Settings::getValue(std::string param)
 {
-  return values[param];
+  if (values.find(param) == values.end())
+    {
+      return 0;
+    }
+  else
+    {
+      return values[param];
+    }
 }
  
 void		Settings::setFlag(std::string param, bool val)
@@ -87,12 +109,18 @@ void		Settings::setFlag(std::string param, bool val)
  
 bool		Settings::getFlag(std::string param)
 {
-  return flags[param];
+    if (flags.find(param) == flags.end())
+    {
+      return false;
+    }
+    else
+    {
+      return flags[param];
+    }
+
 }
 
 Settings::~Settings()
 {
 
 }
-
-Settings g_settings;

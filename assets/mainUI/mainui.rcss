@@ -50,6 +50,22 @@ select, dataselect, datacombo, inset
 }
 
 
+select, option
+{
+    color : white;
+    width: 320px;
+    height: 28;
+    background : #39A61B;
+    /* background : blue; */
+    border-top: 2px #287513;
+    border-bottom: 2px #287513;
+    border-left: 2px #287513;
+    border-right: 2px #287513;
+    /* padding: 5px; */
+    text-align: center;
+}
+
+
 
 /* Force the tabset element to a fixed size. */
 tabset
@@ -203,6 +219,8 @@ div#content
     text-align: center;
     background-color:#84AF84;
 }
+/* ul { position: absolute; bottom: 0 } */
+/* li { display: block; } */
 
 .butlaunch {
     margin: 0 auto;

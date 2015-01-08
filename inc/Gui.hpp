@@ -1,10 +1,12 @@
 #ifndef __GUI_HPP___
 #define __GUI_HPP___
 
+#include  <vector>
+#include <string>
+#include  "boost/filesystem.hpp"
 #include  "RenderInterfaceOgre3D.h"
 #include  "SystemInterfaceOgre3D.h"
 #include  "OgreRenderer.hpp"
-#include  "Logger.hpp"
 
 class OgreRenderer; // forward declaration I <3 CPP
 
@@ -92,17 +94,19 @@ public:
     void ProcessEvent(Rocket::Core::Event& event);
 
 private:
-    OgreRenderer*               OgreContext;
-    Ogre::SceneManager*         mScene;
-    Ogre::Viewport*             mViewport;
-    Ogre::Camera*               mCamera;
-    Rocket::Core::Context*      RocketContext;
-    SystemInterfaceOgre3D*      ogre_system;
-    RenderInterfaceOgre3D*      ogre_renderer;
-    RocketFrameListener*        mFrameListener;
-    Ogre::OverlaySystem* mOverlaySystem;
-    bool uialive;
-	bool exiting;
+  OgreRenderer*               OgreContext;
+  Ogre::SceneManager*         mScene;
+  Ogre::Viewport*             mViewport;
+  Ogre::Camera*               mCamera;
+  Rocket::Core::Context*      RocketContext;
+  SystemInterfaceOgre3D*      ogre_system;
+  RenderInterfaceOgre3D*      ogre_renderer;
+  RocketFrameListener*        mFrameListener;
+  Ogre::OverlaySystem* mOverlaySystem;
+  bool uialive;
+  bool exiting;
+  std::vector<string>		xmlfiles;
+  Rocket::Core::ElementDocument* document;
 };
 
 
