@@ -8,4 +8,12 @@
 		<roll>90</roll>
 		<pitch>180</pitch>
 	</object>
+	<object>
+		<pattern>76</pattern>
+		<asset>Shield.mesh</asset>
+		<scale>0.05</scale>
+		<pitch>-180</pitch>
+		<yaw>180</yaw>
+		<roll>90</roll>
+	</object>
 </db>
