@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone=no>
 <db>
-	<!--<object>
+	<object>
 		<pattern>2049</pattern>
 		<asset>Sphinx.mesh</asset>
 		<scale>0.01</scale>
@@ -8,14 +8,14 @@
 		<yaw>90</yaw>
 		<pat>101</pat>
 		<size>10</size>
-	</object>-->
+	</object>
 	<object>
-		<pattern>101</pattern>
-		<asset>Mona.mesh</asset>
-		<scale>0.0005</scale>
-		<pitch>-0</pitch>
-		<yaw>180</yaw>
-		<roll>0</roll>
+		<pattern>1</pattern>
+		<asset>OtherPainting.mesh</asset>
+		<scale>0.005</scale>
+		<pitch>0</pitch>
+		<yaw>0</yaw>
+		<roll>90</roll>
 	</object>
 	<object>
 		<pattern>2</pattern>
