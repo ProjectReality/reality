@@ -102,12 +102,10 @@ void OgreRenderer::init_cameras()
       cameras[i]->setPosition((i * 2 - 1) * 0.5f, 0, 500);
       if (i == 0)
 	{
-	  std::cout << "0" << i << std::endl;
 	  cameras[i]->setPosition(-0.5f, 0, 500);
 	  cameras[i]->lookAt(2, 1, 1);
 
 	  Ogre::Vector3 posvec = cameras[i]->getPosition();
-	  std::cout << "Pos camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
 	  camParams.OgreGetProjectionMatrix(camParams.CamSize, camParams.CamSize, pMatrix, 0.05, 10, false);
 	  Ogre::Matrix4 PM(pMatrix[0], pMatrix[1], pMatrix[2] +0.1f, pMatrix[3],
 			   pMatrix[4], pMatrix[5], pMatrix[6], pMatrix[7],
@@ -115,16 +113,13 @@ void OgreRenderer::init_cameras()
 			   pMatrix[12], pMatrix[13], pMatrix[14], pMatrix[15]);
 	  cameras[i]->setCustomProjectionMatrix(true, PM);
 	  cameras[i]->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
-	  std::cout << "Pro camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
 	}
       else
 	{
-	  std::cout << "1 " << i << std::endl;
 	  cameras[i]->setPosition(0.5f, 0, 500);
 	  cameras[i]->lookAt(0, 0, 1);
 
 	  Ogre::Vector3 posvec = cameras[i]->getPosition();
-	  std::cout << "Pos camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
 
 	  camParams.OgreGetProjectionMatrix(camParams.CamSize, camParams.CamSize, pMatrix, 0.05, 10, false);
 	  Ogre::Matrix4 PM(pMatrix[0], pMatrix[1], pMatrix[2] -0.1f, pMatrix[3],
@@ -133,7 +128,6 @@ void OgreRenderer::init_cameras()
 			   pMatrix[12], pMatrix[13], pMatrix[14], pMatrix[15]);
 	  cameras[i]->setCustomProjectionMatrix(true, PM);
 	  cameras[i]->setCustomViewMatrix(true, Ogre::Matrix4::IDENTITY);
-	  std::cout << "Pro camera " << i << "-> X: " << posvec.x << " Y: " << posvec.y << " Z: " << posvec.z << std::endl;
 	}
     }
 }
@@ -150,7 +144,6 @@ void OgreRenderer::init_viewports()
 
 	for (size_t i = 0; i < 2; i++)
 	{
-	  std::cout << "v " << i << std::endl;
 	  viewports[i] = window->addViewport(cameras[i], i, i == 0 ? 0.015f : 0.485f, 0, 0.5f, 1.0f);
 	  viewports[i]->setBackgroundColour(g_defaultViewportColour);
 	  viewports[i]->setVisibilityMask(i == 0 ? 0xFFFFFF00 : 0xFFFF0F0); //to hide some stuff between each viewport
