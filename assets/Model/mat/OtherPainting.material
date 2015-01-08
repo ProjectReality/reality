@@ -1,0 +1,74 @@
+material FrameCornice
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.611765 0.611765 0.611765 1
+			diffuse 0.611765 0.611765 0.611765 1
+			specular 1 0.737255 0.235294 0.71 50
+
+			texture_unit
+			{
+				texture Cornice1O.JPG
+				
+			}
+
+			texture_unit
+			{
+				texture Cornice1O_Spc.JPG
+				texture Cornice2O_Bump.JPG
+			}
+		}
+
+	}
+
+}
+
+
+material FrameExtCorn
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.611765 0.611765 0.611765 1
+			diffuse 0.611765 0.611765 0.611765 1
+			specular 1 0.701961 0.235294 0.71 50
+
+			texture_unit
+			{
+				texture Cornice1O.JPG
+			}
+
+			texture_unit
+			{
+				texture Cornice1O_Spc.JPG
+				texture Cornice2O_Bump.JPG
+			}
+		}
+
+	}
+
+}
+
+
+material Paintbrighto
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.611765 0.611765 0.611765 1
+			diffuse 0.611765 0.611765 0.611765 1
+			specular 1 1 1 0.71 50
+
+			texture_unit
+			{
+				texture brighton.jpg
+			}
+		}
+
+	}
+
+}
